@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/cadastro.css">
 <div class="container" style="margin-left:5%;">
-        <header>Edição de pessoa - {{$dataAtual}}</header>
+        <header>Edição de pessoa - {{date('d/m/Y')}}</header>
 
         <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
             @method('PUT')
