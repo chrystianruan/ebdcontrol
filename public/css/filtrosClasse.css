@@ -1,0 +1,289 @@
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+*, *:before, *:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #1d1b31;  
+  font-family: 'Open Sans', sans-serif;
+}
+
+table {
+  
+  background: #7b4ea51a;
+  border-radius: 0.40em;
+  border-collapse: collapse;
+  margin: 1em;
+  width: 60%;
+}
+th {
+  background-color: #7B4EA5;
+  border-bottom: 1px solid #364043;
+  color: white;
+  font-size: 0.85em;
+  font-weight: 600;
+  padding: 0.5em 1em;
+  text-align: left;
+}
+td {
+  color: white;
+  font-weight: 400;
+  padding: 0.65em 1em;
+}
+tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.disabled td {
+  background-color: rgba(235, 229, 229, 0.11);
+  color: #4F5F64;
+}
+tbody tr {
+  transition: background 0.25s ease;
+}
+tbody tr:hover {
+  background: rgba(17, 16, 16, 0.877);
+}
+
+button {
+  cursor: pointer;
+}
+
+.filter {
+  background-color: blue;
+  color: white;
+
+}
+
+.resett {
+  background-color: red;
+  color: white;
+  
+}
+
+.filter:hover {
+  background-color: rgb(165, 172, 167);
+  color: white;
+  transition: all 0.2s linear;
+
+}
+
+.notRegister {
+  background-color: yellow;
+  color: red;
+   text-align: center;
+   margin: 20%;
+   padding: 15px;
+   font-weight: bold;
+   font-size: 20px;
+   border-radius: 15px;
+}
+
+
+.resett:hover {
+  background-color: rgb(165, 172, 167);
+  color: white;
+  transition: all 0.2s linear;
+  
+}
+
+tbody .disabled:hover  {
+  background: none;
+}
+
+form .title{
+  display: block;
+  margin-bottom: 2px;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 6px 0;
+  color: white;
+}
+
+.itens {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:  baseline;
+  margin: 0.8%;
+
+}
+
+.btnFilter {
+  float: left;
+  margin: 0.4%;
+  cursor: pointer;
+  
+}
+
+.btnFilter2 {
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 0 0 10px 10px;
+  text-align: center;
+
+}
+
+.btnFilter button {
+  height: 25px;
+  margin: 5px 0;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+}
+
+.btnFilter2 button {
+  height: 25px;
+  padding: 0 12px;
+  border: 1px solid #aaa;
+  border-radius: 5px;
+  background: dodgerblue
+
+  
+}
+.itens input {
+  width: 300px;
+}
+
+.itens input, select{
+  font-size: 14px;
+  font-weight: 400;
+  color: #002333;
+  background-color: #B4BEC9;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  padding: 0 15px;
+  height: 30px;
+  margin: 7px 3px;
+}
+
+
+.busca {
+
+  color: white;
+  padding: 7px;
+  margin: 1%;
+  border-radius: 10px;
+}
+
+.tit {
+  color: white;
+  margin: 0 20px;
+}
+
+.result{
+  color: rgb(9, 150, 115);
+  font-weight: 650;
+
+}
+
+/*  
+i {
+  color: #7B4EA5;
+  font-weight: 650;
+  
+}
+*/
+ 
+.ponto {
+  float: left;
+  margin: 5px 20px;
+}
+
+.cont {
+  background-color: #7B4EA5;
+  padding: 2px;
+  color: white;
+  position: sticky;
+  border-radius: 10px 10px 0 0;
+  margin: 0 40% 0 40%;
+}
+
+table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+table tbody tr:last-of-type {
+  border-bottom: 2px solid #7B4EA5;
+}
+.ngm {
+  background-color: #FFFF8A;
+  color: black;
+  font-weight: bold;
+  border: 1px solid #C3E6CB;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20%;
+  max-width: 50%;
+  width: 100%;
+  margin-left:25%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 8%;
+
+}
+.blog_post {
+    background: #fff;
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 2rem rgba(0, 0, 0, 0.3);
+
+  }
+  
+  
+  .container_copy {
+    padding: 3rem 2rem 3rem 2rem;
+  }
+  
+
+  h3 {
+    margin: 0 0 0.5rem 0;
+    color: #999;
+ 
+  }
+  
+  h1 {
+    margin: 0 0 1rem 0;
+
+    letter-spacing: 0.5px;
+    color: #333;
+  }
+  
+  p {
+    margin: 0 0 2.5rem 0;
+    text-align: justify;
+    line-height: 1.45;
+    color: #333;
+  }
+  
+  .btn_primary {
+    border: none;
+    outline: none;
+    background: linear-gradient(90deg, #a166ff, #d95eff);
+    padding: 1rem 1rem;
+    border-radius: 50px;
+    color: white;
+    font-size: 1rem;
+    box-shadow: 1px 10px 2rem rgba(250, 94, 255, 0.5);
+    transition: all 0.2s ease-in;
+    text-decoration: none;
+  }
+  
+  .btn_primary:hover {
+    box-shadow: 0px 5px 1rem rgba(255, 94, 98, 0.5);
+  }
+  
+  

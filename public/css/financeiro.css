@@ -1,0 +1,86 @@
+.nivers{
+    margin: 1%;
+    color: white;
+    padding: 15px;
+    border-radius: 10px;
+    max-width: 650px;
+    border: 0.2px solid #ccc;
+    box-shadow: 1px 0.5px #ccc;
+
+}
+h2{
+  color: #ccc;
+  text-shadow: #fff 0 1px;
+}
+
+.twoGraphics {
+    display:flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+}
+
+/* graficos Dash */
+.graficos {
+    margin: 4%;
+    background-color: #7b4ea51a;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+.Gpie {
+    height: 400px;
+}
+
+/* graficos Financeiro */
+.graficos2 {
+    margin: 2%;
+    background-color: #7b4ea51a;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+.Gpie2 {
+    height:400px;
+    max-width: 550px;
+}
+
+.entradas {
+    
+    padding: 1px;
+    border-radius:5px;
+}
+
+.saidas {
+    padding: 1px;
+    border-radius:5px;
+}
+
+
+
+legend {
+  font-size: 25px;
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  
+}
+
+
+.positions {
+    display:flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    align-items: center;
+
+}
+
+
+
+
+.lists {
+    margin-left: 5%;
+}
+

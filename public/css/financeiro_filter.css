@@ -1,0 +1,185 @@
+
+
+table {
+  
+    background: #7b4ea51a;
+    border-radius: 0.40em;
+    border-collapse: collapse;
+    margin: 1em;
+    width: 95%;
+  }
+  th {
+    background-color: #7B4EA5;
+    border-bottom: 1px solid #364043;
+    color: white;
+    font-size: 0.85em;
+    font-weight: 600;
+    padding: 0.5em 1em;
+    text-align: left;
+  }
+  td {
+    color: white;
+    font-weight: 400;
+    padding: 0.65em 1em;
+  }
+  tbody tr {
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+  }
+
+mark {
+  border-radius: 5px;
+  padding: 0 1px;
+  background: none;
+  color: yellow
+}
+  
+  .disabled td {
+    background-color: rgba(235, 229, 229, 0.11);
+    color: #4F5F64;
+  }
+  tbody tr {
+    transition: background 0.25s ease;
+  }
+  tbody tr:hover {
+    background: rgba(17, 16, 16, 0.877);
+  }
+  
+  button {
+    cursor: pointer;
+  }
+  .filter {
+    background-color: blue;
+    color: white;
+  
+  }
+  
+  .resett {
+    background-color: red;
+    color: white;
+    
+  }
+  
+  .filter:hover {
+    background-color: rgb(165, 172, 167);
+    color: white;
+    transition: all 0.2s linear;
+  
+  }
+  
+  
+  .resett:hover {
+    background-color: rgb(165, 172, 167);
+    color: white;
+    transition: all 0.2s linear;
+    
+  }
+  
+  tbody .disabled:hover  {
+    background: none;
+  }
+  
+  form .title{
+    display: block;
+    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 6px 0;
+    color: white;
+  }
+  
+  .itens {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.8%;
+  
+  }
+
+  .datas {
+    padding: 1px;
+    border: 1px solid #ccc;
+    border-radius: 5px ;
+    
+  }
+  
+  .btnFilter {
+  
+    margin: 1%;
+    cursor: pointer;
+    
+  }
+  
+  .btnFilter button {
+    height: 25px;
+    margin: 0 0;
+    padding: 0 12px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+  }
+  .itens input {
+    width: 300px;
+  }
+  
+  .itens input, select{
+    font-size: 14px;
+    font-weight: 400;
+    color: #002333;
+    background-color: #B4BEC9;
+    border-radius: 5px;
+    border: 1px solid #aaa;
+    padding: 0 15px;
+    height: 30px;
+    margin: 15px 3px;
+  }
+  
+  .busca {
+    background-color: #7b4ea51a;
+    color: white;
+    float: left;
+    padding: 7px;
+    margin: 2%;
+    border-radius: 10px;
+  }
+  
+  .it {
+    margin: 0 20px;
+  }
+  
+  .result{
+    color: black;
+    font-weight: 650;
+  
+  }
+  i{
+    color: #7B4EA5;
+    font-weight: 650;
+    
+  }
+   
+  .ponto {
+    float: left;
+    margin: 0 20px;
+  }
+  
+  .cont {
+    padding: 2px;
+    color: white;
+  }
+  .cont2 {
+    background-color: #7B4EA5;
+    padding: 2px;
+    color: white;
+    position: sticky;
+    border-radius: 10px 10px 0 0;
+    margin: 0 80% 0 0;
+  }
+  
+  table tbody tr {
+    border-bottom: 1px solid #ddd;
+  }
+  table tbody tr:last-of-type {
+    border-bottom: 2px solid #7B4EA5;
+  }

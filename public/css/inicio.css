@@ -1,0 +1,76 @@
+.grid-container {
+    max-width: 1200px;
+    margin: 1% auto;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  
+  }
+
+  h2{
+    text-align: center;
+  }
+  
+  .grid-container > div {
+    
+    border-radius: 10px;
+    color: white;
+    background-color: #7b4ea51a;
+    border: 0.2px solid #ccc;
+    box-shadow: 1px 0.5px #ccc;
+
+    padding: 10px 20px;
+    font-size: 18px;
+  }
+
+  .info {
+    line-height: 2.2;
+  }
+
+
+
+
+@media (min-width: 900px) {
+    .cards { grid-template-columns: repeat(3, 1fr); }
+  }
+
+/* graficos Dash */
+
+
+/* graficos Financeiro */
+.graficos2 {
+    margin: 2%;
+    background-color: #7b4ea51a;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 15px;
+}
+
+.Gpie2 {
+    height:400px;
+    max-width: 550px;
+}
+
+.entradas {
+    
+    padding: 1px;
+    border-radius:5px;
+}
+
+.saidas {
+    
+    padding: 1px;
+    border-radius:5px;
+}
+
+
+.infos {
+
+    display:flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.lists {
+    margin-left: 5%;
+}
