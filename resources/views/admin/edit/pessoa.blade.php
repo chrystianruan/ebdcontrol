@@ -29,9 +29,9 @@
                         <label>Menor de idade?</label>
                         <input type="checkbox"  id="scales"  @if($pessoa -> responsavel != null) checked @endif>
                         <label>Situação</label>
-                        <select name="situacao" required>
-                            <option value="1">Ativo</option>
-                            <option value="2">Inativo</option>
+                        <select style="background: none; padding: 0; margin: 0; height: auto" name="situacao" required>
+                            <option @if($pessoa -> situacao == 1) selected @endif value="1">Ativo</option>
+                            <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
                         </select>
                     </div>
                     <span class="title">Informações pessoais</span>
