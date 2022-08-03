@@ -302,7 +302,7 @@ class DatabaseSeeder extends Seeder
         
         \App\Models\User::factory()->create([
             'name' => 'Chrystian Ruan',
-            'username' => fake()->username(),
+            'username' => 'chrys.admin',
             'password' => bcrypt('ebd@chrystian2003'), // password
             'remember_token' => Str::random(10),
             'id_nivel' => 1,
