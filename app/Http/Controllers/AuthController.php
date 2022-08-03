@@ -28,6 +28,32 @@ class AuthController extends Controller
         }
     }
 
+    public function indexFirstUser() {
+        $users = User::count();
+        if($users <= 0) {
+            return view('/first-user');
+        } else {
+            return redirect('/');
+        }
+
+    }
+
+    public function storeFirstUser() {
+        $users = User::count();
+        if($users <= 0) {
+            $user = new User;
+            $user -> name = 'Chrystian Ruan';
+            $user -> username = 'chrys.master';
+            $user -> password = bcrypt('ebd@chrys2003');
+            $user -> id_nivel = 1;
+            $user -> status = 0;
+            $user -> save();
+            return redirect('/')->with('msg', 'Usuário cadastrado com sucesso');
+        } else {
+            return redirect('/');
+        }
+    }
+
     public function index() {
         return view('welcome');
     }

@@ -10,6 +10,9 @@
   <title>Login</title>
 </head>
 <body>
+  @if(session('msg'))
+  <p class="msg" id="sucessMessage">{{session('msg')}}</p>
+@endif
   <div class="container">
     <div style="display: flex; justify-content:center; flex-wrap: wrap; margin: 2%">
       <img width=90 src="/img/logo-adpar.png">
