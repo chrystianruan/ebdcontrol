@@ -21,7 +21,7 @@ Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/', [AuthController::class, 'logar']);
 
 Route::get('/first-user', [AuthController::class, 'indexFirstUser']);
-Route::post('/first-user', [AuthController::class, 'storeFirstUser']);
+
 
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
