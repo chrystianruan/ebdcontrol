@@ -28,7 +28,12 @@
                     <div style="float:right; margin-right: 2%">
                         <label>Menor de idade?</label>
                         <input type="checkbox"  id="scales"  @if($pessoa -> responsavel != null) checked @endif>
-                        </div>
+                        <label>Situação</label>
+                        <select name="situacao" required>
+                            <option value="1">Ativo</option>
+                            <option value="2">Inativo</option>
+                        </select>
+                    </div>
                     <span class="title">Informações pessoais</span>
                     
                     
