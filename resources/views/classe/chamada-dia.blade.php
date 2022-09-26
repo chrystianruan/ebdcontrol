@@ -81,7 +81,7 @@
     </div>
     <div class="text" style="margin: 1%">
         <label>Observações</label>
-        <textarea rows="3" cols="40" name="observacoes" maxlength="500">{{old('observacoes')}}</textarea>
+        <textarea name="observacoes" maxlength="500">{{old('observacoes')}}</textarea>
     </div>
     <button type="submit" class="sumbit">
         <span class="btnText">Enviar</span>
