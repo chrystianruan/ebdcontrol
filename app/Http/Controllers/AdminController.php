@@ -367,9 +367,10 @@ class AdminController extends Controller
         $pessoa = Pessoa::findOrFail($id);
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $ufs = Uf::orderBy("nome")->get();
+        $functions = Funcao::all();
         $publicos = Publico::all();
         $formations = Formation::all();
-        return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations]);
+        return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'functions' => $functions, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations]);
 
     }
 
@@ -497,7 +498,7 @@ class AdminController extends Controller
         $dS = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
         $mesesS = [$jS, $fS, $mS, $aS, $maS, $junS, $julS, $agS, $sS, $oS, $nS, $dS];
         $saldosMeses = [($jE - $jS), ($fE - $fS), ($mE - $mS), ($aE - $aS), ($maE - $maS), ($junE - $junS), ($julE - $julS), 
-        ($agE - $agS), ($oE - $oS), ($nE - $nS), ($dE - $dS)];
+        ($agE - $agS), ($sE - $sS), ($oE - $oS), ($nE - $nS), ($dE - $dS)];
         $entradas = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
         $saidas = Financeiro_transacao::where('id_financeiro', '=', 2)->where('situacao', '=', 1)->get();
         $entradasMes = Financeiro_transacao::whereMonth('data_cad', '=', $dataMes)->whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
@@ -1255,7 +1256,7 @@ class AdminController extends Controller
 
     public function storeRelatorioToday() {
         $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())->get();
-        if($relatorioToday == 1) {
+        if($relatorioToday -> count() == 1) {
             return redirect('/admin/relatorios/todos')->with('msg2', 'O relatório de hoje já foi cadastrado.');
         }
         $chamadas = Chamada::whereDate('created_at', Carbon::today())->get();

@@ -131,6 +131,17 @@
                             </div>
                         </div>
 
+                        <div class="input-field">
+                            <label>Função <font style="color:red;font-weight: bold">*</font></label>
+                            <select name="id_funcao" required>
+                                <option disabled value="">Selecionar</option>
+                                @foreach($functions as $function)
+                                <option @if($pessoa->id_funcao == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+
 
 
                     
@@ -258,11 +269,11 @@
     crossorigin="anonymous"></script>
     <script src="/js/multi-select-dropdown.js"></script>
 <script>
-    $(document).ready(function() {
-  $("#field").keyup(function() {
-      $("#field").val(this.value.match(/[0-9]*/));
-  });
-});
+        $(document).ready(function() {
+    $("#field").keyup(function() {
+        $("#field").val(this.value.match(/[0-9]*/));
+    });
+    });
 
 
     
