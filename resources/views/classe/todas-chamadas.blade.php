@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/filtrosClasse.css">
 
- <div style="margin: 15px; color: white" >
+ <div style="margin: 15px; color: white; display: flex; flex-direction: column" >
 
   <form action="/classe/todas-chamadas" method="POST">
   @csrf

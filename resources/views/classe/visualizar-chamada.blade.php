@@ -89,7 +89,7 @@
         </div>
         <div class="text" style="margin: 1%">
             <label>Observações</label>
-            <textarea rows="3" cols="40" name="observacoes" maxlength="500" disabled>{{$chamada -> observacoes}}</textarea>
+            <textarea name="observacoes" maxlength="500" disabled>{{$chamada -> observacoes}}</textarea>
         </div>
       </div>
 
