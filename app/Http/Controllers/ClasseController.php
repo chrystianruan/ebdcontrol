@@ -259,7 +259,7 @@ class ClasseController extends Controller
       $sala = auth()->user()->id_nivel;
       $chamadas = Chamada::where('id_sala', '=', $sala)->whereDate('created_at', Carbon::today())->get();
       $pessoas = DB::table('pessoas')
-      ->select('nome', 'data_nasc', 'id_funcao')
+      ->select('id', 'nome', 'data_nasc', 'id_funcao')
       ->whereJsonContains('id_sala', ''.$sala)
       ->where('situacao', '=', 1)
       ->orderBy('nome')->get();
@@ -288,8 +288,8 @@ class ClasseController extends Controller
         'presentes' => ['required', 'integer', 'min:0', 'max:'.$pessoas->count()],
         'visitantes' => ['required', 'integer', 'min:0'],
         'assist_total' => ['required', 'integer', 'min:'.$request->presentes + $request->visitantes, 'max:'.$request->presentes + $request->visitantes],
-        'biblias' => ['required', 'integer', 'min:0'],
-        'revistas' => ['required', 'integer', 'min:0'],
+        'biblias' => ['required', 'integer', 'min:0', 'max:'.$request->presentes + $request->visitantes],
+        'revistas' => ['required', 'integer', 'min:0', 'max:'.$request->presentes + $request->visitantes],
         'observacoes' => ['max: 800']  
     ], [
 
@@ -319,10 +319,12 @@ class ClasseController extends Controller
         'biblias.required' => 'O n° de Bíblias é obrigatório',
         'biblias.integer' => 'O n° de Bíblias é inválido',
         'biblias.min' => 'O n° de Bíblias é inválido',
+        'biblias.max' => 'O n° de Bíblias é maior que o de pessoas',
 
         'revistas.required' => 'O n° de revistas é obrigatório',
         'revistas.integer' => 'O n° de revistas é inválido',
         'revistas.min' => 'O n° de revistas é inválido',
+        'revistas.max' => 'O n° de revistas é maior que o de pessoas',
 
         'observacoes.max' => 'O campo de observações aceita, no máximo, 700 caracteres.'
 

@@ -9,9 +9,8 @@
  <div style="margin: 15px; color: white; display: flex; flex-direction: column" >
 
   <form action="/classe/todas-chamadas" method="POST">
-  @csrf
+    @csrf
   <div class="fields">
-    
   <div class="itens">
   <legend class="title">Filtrar por: </legend>
   </div>
@@ -44,11 +43,12 @@
   </div>
   </div>
   </form>
-</div>
 
 
-    @if(isset($mes) || isset($ano))
+
+ 
   <div class="busca">
+    @if(isset($mes) || isset($ano))
     <p class="tit">Buscando por:</p> 
 
     @if(isset($mes))
@@ -63,49 +63,55 @@
     </li>
     @endif
 
-
-  </div>
-  @else 
-  <div class="busca">
+    @else 
     <p class="tit">Buscando por: <i class="result">Chamada de hoje</i></p> 
-  </div>
-  @endif
 
-    <div class="cards">
+    @endif
+  </div>
+ 
+
+</div>
+
+
+  
+@if($chamadas->count() > 0)
+  <div style="overflow-x:auto; margin: 1% 3%">
+  <table style="width: 100%;">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Matriculados</th>
+        <th>Presentes</th>
+        <th>Visitantes</th>
+        <th>Assist. Total</th>
+        <th>Bíblias</th>
+        <th>Revistas</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
       @foreach ($chamadas as $c)
-    <div class="blog_post">
-      <div class="container_copy">
-        <h3>@if(date('d/m/Y', strtotime($c -> created_at)) == date(('d/m/Y'))) <span style="color: green">Hoje</span> @else {{date('d/m/Y', strtotime($c -> created_at))}} @endif </h3>
-        <h1>{{$findSala -> nome}}</h1>
-        <p>
-          @if(date('d/m/Y', strtotime($c -> created_at)) != date(('d/m/Y')))
-          
-          No dia {{date('d/m/Y', strtotime($c -> created_at))}}, a classe
-          <span style="color: red; font-weight: bold">{{$findSala -> nome}}</span> continha  <span style="color: red; font-weight: bold">{{$c -> matriculados}}</span> 
-          matriculados, onde, 
-          @if($c -> presentes > 1) <span style="color: red; font-weight: bold">{{$c -> presentes}}</span>
-           se fizeram presentes. @elseif($c -> presentes == 1) <span style="color: red; font-weight: bold">1</span> se fez presente.
-          @elseif($c -> presentes < 1)<span style="color: red; font-weight: bold">nenhum</span> se fez presente @endif
-          @if($c -> visitantes > 0)Também foi recebido <span style="color: red; font-weight: bold">{{$c -> visitantes}}</span> visitante(s).@endif
-          @if($c -> biblias > 0 || $c -> revistas > 0) Relacionado ao material, foi verificado que existia(m) <span style="color: red; font-weight: bold">{{$c -> biblias}}</span> Bíblia(s) e <span style="color: red; font-weight: bold">{{$c -> revistas}}</span> revista(s). @endif
-          
-          @else 
+      <tr>
+        <td>@if(date('d/m/Y', strtotime($c -> created_at)) == date(('d/m/Y'))) <span style="color: green">Hoje</span> @else {{date('d/m/Y', strtotime($c -> created_at))}} @endif </td>
+        <td>{{ $c->matriculados }}</td>
+        <td>{{ $c->presentes }} ({{ 100 * $c->presentes / $c->matriculados }}%)</td>
+        <td>{{ $c->visitantes }} </td>
+        <td>{{ $c->assist_total }} </td>
+        <td>{{ $c->biblias }}</td>
+        <td>{{ $c->revistas }}</td>
+        <td><a href="/classe/visualizar-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a> </td>
+      </tr>
+      @endforeach
 
-          Hoje, a classe <span style="color: red; font-weight: bold">{{$findSala -> nome}}</span> conteve <span style="color: red; font-weight: bold">{{$c -> matriculados}} </span>
-          matriculados, onde, 
-          @if($c -> presentes > 1) <span style="color: red; font-weight: bold">{{$c -> presentes}}</span>
-             se fizeram presentes. @elseif($c -> presentes == 1) <span style="color: red; font-weight: bold">1</span> se fez presente.
-          @elseif($c -> presentes < 1) <span style="color: red; font-weight: bold">nenhum</span> se fez presente @endif
-          @if($c -> visitantes > 0)Também foi recebido <span style="color: red; font-weight: bold">{{$c -> visitantes}}</span> visitante(s).@endif
-          @if($c -> biblias > 0 || $c -> revistas > 0) Relacionado ao material, foi verificado que existia(m) <span style="color: red; font-weight: bold">{{$c -> biblias}}</span> Bíblia(s) e <span style="color: red; font-weight: bold">{{$c -> revistas}}</span> revista(s). @endif
-          
-          @endif
-        </p>
-        <a class="btn_primary" href='/classe/visualizar-chamada/{{$c -> id}}'>Ver detalhes</a>
-      </div>
-    </div>
-    @endforeach
-  </div>
+    </tbody>
+  </table>
+</div>
+
+@else
+<div class="ngm">
+  <p><i class='fa fa-exclamation-triangle'></i>Nenhuma chamada encontrada</p>
+</div>
+@endif
 
      
 @endsection

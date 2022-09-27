@@ -37,9 +37,6 @@ tbody tr {
   border-bottom: 1px solid #dddddd;
 }
 
-tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
-}
 
 .disabled td {
   background-color: rgba(235, 229, 229, 0.11);
@@ -183,13 +180,6 @@ form .title{
 
 }
 
-/*  
-i {
-  color: #7B4EA5;
-  font-weight: 650;
-  
-}
-*/
  
 .ponto {
   float: left;
@@ -216,38 +206,17 @@ table tbody tr:last-of-type {
   color: black;
   font-weight: bold;
   border: 1px solid #C3E6CB;
-  padding: 15px;
   border-radius: 10px;
-  margin-top: 20%;
-  max-width: 50%;
-  width: 100%;
-  margin-left:25%;
-  justify-content: center;
-  align-items: center;
+  margin: 5% auto;
+  max-width: 90%;
+
+}
+.ngm p {
+  margin: 1% auto;
   text-align: center;
-  padding: 10px;
+  color: black;
 }
 
-.cards {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    margin: 8%;
-
-}
-.blog_post {
-    background: #fff;
-    width: 500px;
-    border-radius: 10px;
-    box-shadow: 1px 1px 2rem rgba(0, 0, 0, 0.3);
-
-  }
-  
-  
-  .container_copy {
-    padding: 3rem 2rem 3rem 2rem;
-  }
-  
 
   h3 {
     margin: 0 0 0.5rem 0;

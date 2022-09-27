@@ -9,14 +9,11 @@
 
 <div class="tables">
     <table style="margin: 3% 0 0 3%;">
-        <caption class="cont"><h4>{{$findSala -> nome}}</h4></caption>
+        <caption class="cont"><h4>{{$findSala -> nome}} - {{ date('Y', strtotime($chamada->created_at)) }}</h4></caption>
        
         <thead>
             <tr>
             <th>Nome</th>
-            <th>Anivers.</th>
-            <th>Função</th>
-
             </tr>
         </thead>
        
@@ -24,9 +21,8 @@
            
             @foreach($chamada -> nomes as $cn)
             <tr>
-            <td>{{ $cn['nome']}}</td>
-            <td>{{ date('d/m', strtotime($cn['data_nasc'])) }}</td>
-            <td>@if($cn['id_funcao'] == 1) Aluno @elseif($cn['id_funcao'] == 2) Professor @elseif($cn['id_funcao'] == 3) Secretário/Classe @elseif($cn['id_funcao'] == 4) Secretário/Adm @elseif($cn['id_funcao'] == 5) Superintendente @else Erro @endif</td>
+            <td>{{ mb_strstr($cn['nome'], ' ', true ) }} {{strrchr($cn['nome'],' ') }}</td>
+         
             </tr>
             @endforeach
             
@@ -34,17 +30,17 @@
          
         </tbody>
       </table>
-      <table style="margin: 3% 2% 0 0; width: 10%">
-        <caption class="cont2"><h4>{{date('d/m/Y', strtotime($chamada->created_at))}}</h4></caption>
+      <table style="margin: 3% 2% 0 0; width: 5%;">
+        <caption class="cont2"><h4>{{ date('d/m', strtotime($chamada->created_at)) }}</h4></caption>
         <thead>
             <tr>
-                <th>Presente</th>
+                <th>Presença</th>
             </tr>
         </thead>
         <tbody>
             @foreach($chamada -> presencas as $cp) 
             <tr>
-                <td> @if($cp == 1) <i style="color: green" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
+                <td style="text-align: center"> @if($cp == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
             </tr>
             @endforeach
         </tbody>
