@@ -18,7 +18,7 @@ body {
     background-color: #3652f4; /* Red */
     color: white;
    
-    margin: 12px;
+    margin: 10px;
     border-radius: 5px;
     border-color: black;
 
@@ -26,7 +26,7 @@ body {
   
 .grid-container {
     max-width: 1200px;
-    margin: 3% 6%;
+    margin: 1% auto;
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -38,7 +38,7 @@ body {
   }
   
   .grid-container > div {
-    
+    margin: 3%;
     border-radius: 10px;
     color: white;
     background-color: #7b4ea51a;
