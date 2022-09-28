@@ -22,5 +22,9 @@
 @endif
 
 @if(auth()->user()->status) Seu usuário está desativado, portanto, não poderá acessar nenhuma página. :( @endif
+<div style="position: absolute;bottom: 0px;">
+<hr> 
+<h4>Última manutenção: 28/09/2022 às 00h12</h4>
+</div>
 </body>
 </html>
