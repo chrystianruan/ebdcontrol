@@ -26,6 +26,10 @@ body {
   border-radius: 10px 10px 0 0;
 
 }
+.presencas {
+  background-color: green;
+  color: white;
+}
 
 .extras {
   padding: 3px;

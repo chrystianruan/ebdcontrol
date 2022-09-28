@@ -37,7 +37,7 @@
         <td>{{ date('d/m', strtotime($p -> data_nasc)) }}</td>
         <td>@if($p -> id_funcao == 1) Aluno @elseif($p -> id_funcao == 2) Prof. @elseif($p -> id_funcao == 3) Sec. @elseif($p -> id_funcao == 4) Sec. @elseif($p -> id_funcao == 5) Superint. @else Erro @endif</td>
         <td>
-            <select name="presencas[]" id="presencas">
+            <select name="presencas[]" class="presencas">
                 <option selected value = "1" style="background-color: green">Sim</option>
                 <option value = "2" style="background-color: red">Não</option>
             </select>
@@ -57,7 +57,7 @@
 
     <div class="inputs-extras">
         <label>Presentes</label>
-        <input name="presentes" type="number" id="presentes" min="0" required value="{{old('presentes')}}">
+        <input name="presentes" type="number" id="presentes" min="0" required readonly value="{{ $pessoas -> count() }}">
     </div>
 
     <div class="inputs-extras">
@@ -67,7 +67,7 @@
 
     <div class="inputs-extras">
         <label>Assist. Total</label>
-        <input name="assist_total" type="number" min="0" id="assist_total" readonly required value="{{old('assist_total')}}">
+        <input name="assist_total" type="number" min="0" id="assist_total" readonly required value="{{ $pessoas -> count() }}">
     </div>
 
     <div class="inputs-extras">
@@ -100,25 +100,46 @@
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
   <script>
 
-    $("#presencas").change(function() {
-        if (this.value == 1) {
-            $('#presencas').css('background-color', 'green');
-            $('#presencas').css('color', 'white');
-        } else if(this.value == 2) {
-            $('#presencas').css('background-color', 'red');
-            $('#presencas').css('color', 'white');
-        } else {
-        }
-    });
+
+ 
+
+    let presencas = document.querySelectorAll(".presencas");
+    let presente = document.getElementById("presentes");
+    let visitantes = document.getElementById("visitantes");
+    let assist_total = document.getElementById("assist_total");
+
+    for (let presenca of presencas) {
+
+        presenca.addEventListener("change", function() {
+            if(presenca.value == 1) {
+                presenca.style.cssText = "background-color: green;" + "color: white;";
+                presente.value = ++presente.value;
+                assist_total.value = ++assist_total.value;
+  
+            } else {
+                presenca.style.cssText = "background-color: red;" + "color: white;";
+                presente.value = --presente.value;
+                assist_total.value = --assist_total.value;
+  
+ 
+            }
+           
+        });
+    }
+
+    visitantes.addEventListener("keyup", function() {
+           
+                soma = parseInt(visitantes.value) + parseInt(presente.value);
+                assist_total.value = soma;
+
+        });
 
 
-    $("#presentes, #visitantes").keyup(function() {
-        var presentes = parseInt($('#presentes').val());
-        var visitantes = parseInt($('#visitantes').val());
-        var soma = presentes + visitantes;
 
-        $('#assist_total').val(soma);
-    });
+
+ 
+
+   
 
   </script>
 @endsection
