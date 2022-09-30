@@ -1338,4 +1338,20 @@ class AdminController extends Controller
     public function sobre() {
         return view('/admin/sobre');
     }
+
+    public function generatePdfToRelatorios($id) {
+
+        $relatorio = Relatorio::findOrFail($id);
+      
+        return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact('relatorio'))
+        ->stream('nome-arquivo-pdf-gerado.pdf');
+    }
+
+    public function generatePdfToChamadas($id) {
+
+        $chamada = Chamada::findOrFail($id);
+
+        return \PDF::loadView('/admin/visualizar/pdf-chamada', compact('chamada'))
+        ->stream('nome-arquivo-pdf-gerado.pdf');
+    }
 }

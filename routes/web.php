@@ -109,13 +109,14 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::post('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::get('/admin/visualizar/chamada/{id}', [AdminController::class, 'showChamada']);
+    Route::get('/admin/visualizar/pdf-chamada/{id}', [AdminController::class, 'generatePdfToChamadas']);
 
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
     Route::get('/admin/relatorios/todos', [AdminController::class, 'searchRelatorios']);
     Route::post('/admin/relatorios/todos', [AdminController::class, 'searchRelatorios']);
     Route::get('/admin/visualizar/relatorio/{id}', [AdminController::class, 'showRelatorio']);
-
+    Route::get('/admin/visualizar/pdf-relatorio/{id}', [AdminController::class, 'generatePdfToRelatorios']);
 
 
 });
