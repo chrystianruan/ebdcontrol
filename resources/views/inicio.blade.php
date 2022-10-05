@@ -23,8 +23,23 @@
 
 @if(auth()->user()->status) Seu usuário está desativado, portanto, não poderá acessar nenhuma página. :( @endif
 <div style="position: absolute;bottom: 0px;">
-<hr> 
-<h4>Última manutenção: 28/09/2022 às 00h12</h4>
+<hr style="margin: 10px"> 
+<h4> - Histórico de manutenções: </h4>
+<ul>
+  <li> <span style="font-weight: bolder"> << Manutenção dia 05/10/2022 (00h31) >> </span> Finalização do "grosso" da geração de documentos do tipo Chamada e Relatório na área Admin, além de uma correção no código
+  que enviava as chamadas ao Relatório, com o objetivo de adquirir uma melhor perfomance.
+  </li>
+  <li> <span style="font-weight: bolder"> << Manutenção dia 28/09/2022 (00h12) >> </span> Inicialização da geração de documentos, onde fora utilizada a biblioteca domPDF, sendo logrado êxito no uso da mesma. Logo, o sistema passa a permitir que o usuário Admin possa baixar arquivos PDF
+  para Chamada e Relatório.
+  </li>
+</ul>
+
+<h4> - Próximo objetivos: </h4>
+<ul>
+  <li>Tentar colocar arquivo png (para logos) no PDF.</li>
+  <li>Permitir que o usuário Classe também possua a mesma capacidade de gerar arquivos PDF do tipo Chamada e Relatório.
+  </li>
+</ul>
 </div>
 </body>
 </html>

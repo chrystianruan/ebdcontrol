@@ -27,7 +27,7 @@
   <tbody>
     <tr> <!-- <tr class="disabled">  -->
      
-      <td style="font-weight: bold; color: yellow">@foreach($salas as $s) @if($s -> id == $sala['id_sala']) {{$s -> nome}} @endif  @endforeach
+      <td style="font-weight: bold; color: yellow">{{$sala['nome']}}
       <td style="text-align:center">{{$sala['matriculados']}}
       <td style="text-align:center">{{$sala['presentes']}}
       <td style="text-align:center">{{$sala['visitantes']}}

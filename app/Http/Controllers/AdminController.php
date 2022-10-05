@@ -1259,7 +1259,10 @@ class AdminController extends Controller
         if($relatorioToday -> count() == 1) {
             return redirect('/admin/relatorios/todos')->with('msg2', 'O relatório de hoje já foi cadastrado.');
         }
-        $chamadas = Chamada::whereDate('created_at', Carbon::today())->get();
+        $chamadas = Chamada::select('chamadas.id', 'chamadas.created_at', 'salas.nome', 'matriculados', 'presentes', 'assist_total', 'visitantes', 'biblias', 'revistas')
+        ->whereDate('chamadas.created_at', Carbon::today())
+        ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
+        ->get();
 
         $relatorio = new Relatorio;
         $relatorio -> salas = $chamadas;
@@ -1342,16 +1345,18 @@ class AdminController extends Controller
     public function generatePdfToRelatorios($id) {
 
         $relatorio = Relatorio::findOrFail($id);
+        $classes = Sala::select('id', 'nome')->get();
       
-        return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact('relatorio'))
+        return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
+        ->setPaper('a4', 'landscape')
         ->stream('nome-arquivo-pdf-gerado.pdf');
     }
 
     public function generatePdfToChamadas($id) {
 
-        $chamada = Chamada::findOrFail($id);
+        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
 
-        return \PDF::loadView('/admin/visualizar/pdf-chamada', compact('chamada'))
+        return \PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
         ->stream('nome-arquivo-pdf-gerado.pdf');
     }
 }
