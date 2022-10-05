@@ -418,7 +418,14 @@ class ClasseController extends Controller
         ->get(); 
     }
 
-    return view('/classe/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
-    'meses_abv' => $meses_abv, 'mes' => $mes]);
-}
+        return view('/classe/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
+        'meses_abv' => $meses_abv, 'mes' => $mes]);
+    }
+    public function generatePdfToChamadas($id) {
+
+        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
+
+        return \PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
+        ->stream('frequencia.pdf');
+    }
 }

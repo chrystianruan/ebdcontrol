@@ -92,14 +92,15 @@
     <tbody>
       @foreach ($chamadas as $c)
       <tr>
-        <td>@if(date('d/m/Y', strtotime($c -> created_at)) == date(('d/m/Y'))) <span style="color: green">Hoje</span> @else {{date('d/m/Y', strtotime($c -> created_at))}} @endif </td>
+        <td>@if(date('d/m/Y', strtotime($c -> created_at)) == date(('d/m/Y'))) <span style="font-weight: bolder; color: lawngreen">Hoje</span> @else {{date('d/m/Y', strtotime($c -> created_at))}} @endif </td>
         <td>{{ $c->matriculados }}</td>
-        <td>{{ $c->presentes }} ({{ 100 * $c->presentes / $c->matriculados }}%)</td>
+        <td>{{ $c->presentes }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->presentes / $c->matriculados, 1, ',', '.') }}%) </span></td>
         <td>{{ $c->visitantes }} </td>
-        <td>{{ $c->assist_total }} </td>
-        <td>{{ $c->biblias }}</td>
-        <td>{{ $c->revistas }}</td>
-        <td><a href="/classe/visualizar-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a> </td>
+        <td>{{ $c->assist_total }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->assist_total / $c->matriculados, 1, ',', '.') }}%) </span></td>
+        <td>{{ $c->biblias }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->biblias / $c->assist_total, 1, ',', '.') }}%) </span></td>
+        <td>{{ $c->revistas }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->revistas / $c->assist_total, 1, ',', '.') }}%)</span></td>
+        <td><a href="/classe/visualizar-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a>
+        <a href="/classe/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5;float: left; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;float: left;" class='bx bxs-file-pdf'></i> </a> </td>
       </tr>
       @endforeach
 

@@ -42,6 +42,7 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe/visualizar-chamada/{id}', [ClasseController::class, 'showChamadaClasse']);
     Route::get('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::post('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
+    Route::get('/classe/pdf-chamada/{id}', [ClasseController::class, 'generatePdfToChamadas']);
     
 });
 

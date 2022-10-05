@@ -1349,7 +1349,7 @@ class AdminController extends Controller
       
         return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
         ->setPaper('a4', 'landscape')
-        ->stream('nome-arquivo-pdf-gerado.pdf');
+        ->stream('relatorio.pdf');
     }
 
     public function generatePdfToChamadas($id) {
@@ -1357,6 +1357,6 @@ class AdminController extends Controller
         $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
 
         return \PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
-        ->stream('nome-arquivo-pdf-gerado.pdf');
+        ->stream('frequencia.pdf');
     }
 }
