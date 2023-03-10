@@ -37,6 +37,14 @@
       @endforeach
     </select>
 
+    <select name="niver">
+      <option selected disabled value="">Aniversário</option>
+      @foreach($meses_abv as $val => $name)
+      <option value="{{$val}}">{{$val}} - {{$name}}</option>
+      @endforeach
+
+    </select>
+
     <select name="id_funcao">
     <option selected disabled value="">Função</option>
     <option value="1">Aluno</option>
@@ -68,10 +76,10 @@
   </form>
   <div class="busca">
 
-@if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($sala1))
+@if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($sala1) || isset($niver))
   <p class="tit">Buscando por:</p> 
   @if(isset($nome))
-   <li class="ponto">Nome: <i class="result">{{$nome}}</i></li>
+   <li class="ponto">Nome: <i class="result">{{ $nome }}</i></li>
   @endif
 
   @if(isset($sexo) && empty($nome))
@@ -94,6 +102,10 @@
   <li class="ponto">Situação: <i class="result">@if($situacao == 1) Ativo @else Inativo @endif</i></li>
   @endif
 
+  @if(isset($niver) && empty($nome))
+  <li class="ponto">Aniversário: <i class="result">@foreach($meses_abv as $num => $month) @if($niver == $num) {{ $num }} - {{ $month }} @endif @endforeach</i></li>
+  @endif
+
   </div>
   @else
 
@@ -113,10 +125,10 @@
     <tr>
       <th>Nome
       <th>Idade
-      <th>Data Nascimento
+      <th>Data Nascimento 
       <th>Sexo
       <th>N° de telefone
-      <th>Sala
+      <th>Classe
       <th>Função
 
       <th style="text-align: center">Ações
@@ -127,9 +139,9 @@
     <tr @if($pessoa -> situacao == 2) class="disabled" @endif> 
       <td style="width: 350px">{{$pessoa -> nome}}
       <td  style="width: 100px">@if(floor((strtotime($dataAtual) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2) 
-        {{floor((strtotime($dataAtual) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano
+        {{floor((strtotime($dataAtual) - strtotime($pessoa->data_nasc))/(60 * 60 * 24) /365.25)}} ano
         @else
-        {{floor((strtotime($dataAtual) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} anos
+        {{floor((strtotime($dataAtual) - strtotime($pessoa->data_nasc))/(60 * 60 * 24) /365.25)}} anos
         @endif
       <td>{{date('d/m/Y', strtotime($pessoa -> data_nasc))}}
       <td>@if($pessoa -> sexo == 1)
@@ -143,7 +155,8 @@
           @if($pessoa -> telefone == null)
           -
           @else 
-          {{$pessoa -> telefone}}
+          <a class="link-wpp" href="https://web.whatsapp.com/send?phone=55{{ $pessoa->telefone }}" target="blank"> {{$pessoa -> telefone}} </a> 
+          
           @endif
        
       <td style="width: 180px">

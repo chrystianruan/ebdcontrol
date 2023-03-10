@@ -100,12 +100,12 @@
 
      
       <li>
-        <a href="/admin/calma">
+        <a href="/sobre">
           <i class='bx bx-info-circle' ></i>
           <span class="link_name">Sobre</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="/admin/calma">Sobre</a></li>
+          <li><a class="link_name" href="/sobre">Sobre</a></li>
         </ul>
       </li>
 

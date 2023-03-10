@@ -55,6 +55,10 @@ class AuthController extends Controller
         return view('/inicio');
     }
 
+    public function about() {
+        return view("/about");
+    }
+
     
     public function indexUsuarioMaster() {
         

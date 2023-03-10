@@ -26,7 +26,11 @@ Route::get('/first-user', [AuthController::class, 'indexFirstUser']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
-Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio')->middleware(['auth']);
+Route::middleware(['auth'])->group(function() {
+    Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
+    Route::get('/sobre', [AuthController::class, 'about'])->name('about');
+
+});
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);

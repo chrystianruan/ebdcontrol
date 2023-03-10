@@ -173,70 +173,44 @@ class ClasseController extends Controller
     $nivelUser = auth()->user()->id_nivel;
     $nome = request('nome');
     $sexo = request('sexo');
+    $niver = request('niver');
     $id_funcao = request('id_funcao');
     $situacao = request('situacao');
-
+    $interesse = request('interesse');
+    $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     //nome
-    if(isset($request->nome) && empty($request->sexo) && empty($request->id_funcao)  && empty($request->situacao)){
-        $pessoas = Pessoa::where([['nome', 'like', '%'.$request -> nome.'%']])
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //sexo
-    elseif(empty($request->nome) && isset($request->sexo) && empty($request->id_funcao)  && empty($request->situacao)) {
-        $pessoas = Pessoa::where('sexo', '=', $request -> sexo)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //id_funcao
-    elseif(empty($request->nome) && empty($request->sexo) && isset($request->id_funcao)  && empty($request->situacao)) {
-        $pessoas = Pessoa::where('id_funcao', '=', $request -> id_funcao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //situacao
-    elseif(empty($request->nome) && empty($request->sexo) && empty($request->id_funcao)  &&  isset($request->situacao)) {
-        $pessoas = Pessoa::where('situacao', '=', $request -> situacao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //sexo e id_funcao
-    elseif(empty($request->nome) && isset($request->sexo) && isset($request->id_funcao)  &&  empty($request->situacao)) {
-        $pessoas = Pessoa::where('sexo', '=', $request -> sexo)
-        ->where('id_funcao', '=', $request -> id_funcao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //sexo e situacao
-    elseif(empty($request->nome) && isset($request->sexo) && empty($request->id_funcao)  && isset($request->situacao)) {
-        $pessoas = Pessoa::where('sexo', '=', $request -> sexo)
-        ->where('situacao', '=', $request -> situacao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //id_funcao e situacao
-    elseif(empty($request->nome) && empty($request->sexo) && isset($request->id_funcao)  && isset($request->situacao)) {
-        $pessoas = Pessoa::where('id_funcao', '=', $request -> id_funcao)
-        ->where('situacao', '=', $request -> situacao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-    }
-    //sexo, id_funcao e situacao
-    elseif(empty($request->nome) && isset($request->sexo) && isset($request->id_funcao)  && isset($request->situacao)) {
-        $pessoas = Pessoa::where('sexo', '=', $request -> sexo)
-        ->where('id_funcao', '=', $request -> id_funcao)
-        ->where('situacao', '=', $request -> situacao)
-        ->whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-        ->get();
-        
-    } else {
-         $pessoas = Pessoa::whereJsonContains('id_sala', ''.$nivelUser)->orderBy('nome')
-         ->get();
+    $pessoas = Pessoa::whereJsonContains('id_sala', ''.$nivelUser);
 
+    if ($request->nome) {
+        $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
     }
+
+    if ($request->sexo) {
+        $pessoas = $pessoas->where('sexo', $request->sexo);
+    }
+
+    if($request->id_funcao) {
+        $pessoas = $pessoas->where('id_funcao', $request->id_funcao);
+    }
+
+    if ($request->situacao) {
+        $pessoas = $pessoas->where('situacao', $request->situacao);
+    }
+
+    if ($request->interesse) {
+        $pessoas = $pessoas->where('interesse', $request->interesse);
+    }
+
+    if ($request->niver) {
+        $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
+    }
+         
+    $pessoas = $pessoas->orderBy('nome')->get();
+
 
     return view('/classe/pessoas', ['pessoas' => $pessoas, 'nome' => $nome, 'sexo' => $sexo, 
-    'id_funcao' => $id_funcao, 'situacao' => $situacao]);
+    'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao,
+    'meses_abv' => $meses_abv, 'niver' => $niver]);
   }
 
   public function showPessoaClasse($id) {

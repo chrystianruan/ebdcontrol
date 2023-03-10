@@ -145,7 +145,7 @@ const myChart1 = new Chart(ctx1, {
     data: {
         labels: [@foreach($catsEnt as $catEnt) '{{$catEnt->nome}} (R$)', @endforeach],
         datasets: [{
-            label: 'Entradas ({{date('Y')}}) - Categorias x Valor(R$)',
+            label: 'Entradas - Categorias x Valor(R$)',
             data: [@foreach($catsEnt as $catEnt) {{$catEnt->somaE}}, @endforeach],
             fill: true,
             backgroundColor: 'green',
@@ -168,7 +168,7 @@ const myChart2 = new Chart(ctx2, {
     data: {
         labels: [@foreach($catsSaida as $catSaida) '{{$catSaida->nome}} (R$)', @endforeach],
         datasets: [{
-            label: 'Saídas ({{date('Y')}}) - Categorias x Valor(R$)',
+            label: 'Saídas - Categorias x Valor(R$)',
             data: [@foreach($catsSaida as $catSaida) {{$catSaida->somaS}}, @endforeach],
             backgroundColor: 'red',
             borderColor: 'red',

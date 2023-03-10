@@ -71,6 +71,17 @@ tbody tr:hover {
 
 }
 
+.link-wpp {
+  color: green;
+  font-weight: bold;
+}
+
+.link-wpp:hover{
+  background-color: #7B4EA5;
+  color: white;
+  padding: 5px;
+  border-radius: 5px;
+}
 
 button {
   cursor: pointer;

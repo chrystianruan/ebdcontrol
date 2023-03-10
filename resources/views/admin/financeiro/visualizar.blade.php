@@ -16,19 +16,23 @@
 	<p style="text-align: justify"> Descrição: <font  style=" color: @if($financeiro->id_financeiro == 1) green; @else red; @endif"> {{ $financeiro -> descricao }}</font></p>
     <p> Cadastrado em: <font  style=" color: @if($financeiro->id_financeiro == 1) green; @else red; @endif"> {{ date('d/m/Y H:i:s', strtotime($financeiro -> created_at)) }}</font></p>
     <p> Atualizado em: <font  style=" color: @if($financeiro->id_financeiro == 1) green; @else red; @endif"> {{ date('d/m/Y H:i:s', strtotime($financeiro -> updated_at)) }}</font> @if($financeiro -> created_at != $financeiro -> updated_at) <i style="font-size: 1.8em; color: yellow"class='bx bx-error'></i>  @endif</p>
-	
+    @if($financeiro -> created_at != $financeiro -> updated_at)
+    <hr>
+    <h5>Dados antes da edição</h5>
+    @endif
 	<div class="skills">
 		<h6>Informações do usuário que cadastrou</h6>
         @foreach($users as $user)
             @if($user -> id == $financeiro -> user_id)
                 <ul>
-                    <li>{{ $user -> name }}</li>
-                    <li>{{ $user -> username }}</li>
-                    <li>{{ $user -> email }}</li>
+                    <li>{{ $user->name }}</li>
+                    <li>{{ $user->username }}</li>
                 </ul>
             @endif
         @endforeach
 	</div>
+
+
 
 </div>
 

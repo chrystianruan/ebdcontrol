@@ -196,155 +196,51 @@ class AdminController extends Controller
         $pessoas = Pessoa::orderBy('nome')->get();
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $dataAtual = date('Y-m-d');
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'salas' => $salas, 'dataAtual' => $dataAtual]);
+        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
     }
 
     public function searchPessoa(Request $request) {
         $nome = request('nome');
         $sexo = request('sexo');
         $sala1 = request('sala');
+        $interesse = request('interesse');
         $id_funcao = request('id_funcao');
         $situacao = request('situacao');
+        $niver = request('niver');
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $dataAtual = date('Y-m-d');
+        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        //nome
-        if(isset($request->nome) && empty($request->sexo) && empty($request->sala) && empty($request->id_funcao)  && empty($request->situacao)){
-            $pessoas = Pessoa::where([['nome', 'like', '%'.$request -> nome.'%']])->orderBy('nome')
-            ->get();
+        $pessoas = Pessoa::select('pessoas.*');
+
+        if ($request->nome) {
+            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
         }
 
-        //sexo
-        elseif(empty($request->nome) && isset($request->sexo) && empty($request->sala) && empty($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)->orderBy('nome')
-            ->get();
+        if ($request->sexo) {
+            $pessoas = $pessoas->where('sexo', $request->sexo);
         }
 
-        //sala
-        elseif(empty($request->nome) && empty($request->sexo) && isset($request->sala) && empty($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->sala)->orderBy('nome')
-            ->get();
+        if ($request->sala) {
+            $pessoas = $pessoas->whereJsonContains('id_sala', $request->sala);
         }
 
-        //id_funcao
-        elseif(empty($request->nome) && empty($request->sexo) && empty($request->sala) && isset($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::where('id_funcao', '=', $request->id_funcao)->orderBy('nome')
-            ->get();
+        if($request->id_funcao) {
+            $pessoas = $pessoas->where('id_funcao', $request->id_funcao);
         }
 
-        //situacao
-        elseif(empty($request->nome) && empty($request->sexo) && empty($request->sala) && empty($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
+        if ($request->situacao) {
+            $pessoas = $pessoas->where('situacao', $request->situacao);
         }
 
-        //sexo e sala
-        elseif(empty($request->nome) && isset($request->sexo) && isset($request->sala) && empty($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->whereJsonContains('id_sala', $request->sala)->orderBy('nome')
-            ->get();
-
-
-        } 
-
-        //sexo e id_funcao
-        elseif(empty($request->nome) && isset($request->sexo) && empty($request->sala) && isset($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->where('id_funcao','=', $request->id_funcao)->orderBy('nome')
-            ->get();
-
-
+        if ($request->niver) {
+            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
         }
 
-        //sexo e situacao
-        elseif(empty($request->nome) && isset($request->sexo) && empty($request->sala) && empty($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->where('situacao','=', $request->situacao)->orderBy('nome')
-            ->get();
-
-
-        } 
-        
-        
-        //sala e id_funcao
-        elseif(empty($request->nome) && empty($request->sexo) && isset($request->sala) && isset($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->sala)
-            ->where('id_funcao','=', $request->id_funcao)->orderBy('nome')
-            ->get();
-
-
-        }
-        //sala e situacao
-        elseif(empty($request->nome) && empty($request->sexo) && isset($request->sala) && empty($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->sala)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-            
-
-        }
-        //id_funcao e situacao
-        elseif(empty($request->nome) && empty($request->sexo) && empty($request->sala) && isset($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('id_funcao', '=', $request->id_funcao)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-
-
-        }
-        //sexo, sala e id_funcao
-        elseif(empty($request->nome) && isset($request->sexo) && isset($request->sala) && isset($request->id_funcao) && empty($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->whereJsonContains('id_sala', $request->sala)
-            ->where('id_funcao','=', $request->id_funcao)->orderBy('nome')
-            ->get();
-
-
-        }
-        //sexo, sala e situacao
-        elseif(empty($request->nome) && isset($request->sexo) && isset($request->sala) && empty($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->whereJsonContains('id_sala', $request->sala)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-
-
-        }
-
-        //sexo, id_funcao e situacao
-        elseif(empty($request->nome) && isset($request->sexo) && empty($request->sala) && isset($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->where('id_funcao','=', $request->id_funcao)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-
-
-        }
-
-        //sala, id_funcao e situacao
-        elseif(empty($request->nome) && empty($request->sexo) && isset($request->sala) && isset($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->sala)
-            ->where('id_funcao','=', $request->id_funcao)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-
-
-        }
-        
-        //tudão
-        elseif(empty($request->nome) && isset($request->sexo) && isset($request->sala) && isset($request->id_funcao) && isset($request->situacao)){
-            $pessoas = Pessoa::where('sexo', '=', $request->sexo)
-            ->whereJsonContains('id_sala', $request->sala)
-            ->where('id_funcao', '=', $request->id_funcao)
-            ->where('situacao', '=', $request->situacao)->orderBy('nome')
-            ->get();
-
-        //nadão
-        } else {
-            $pessoas = Pessoa::orderBy('nome')
-            ->get();
-
-        }
-        
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'id_funcao' => $id_funcao, 'situacao' => $situacao, 'sala1' => $sala1, 'dataAtual' => $dataAtual]);
+        $pessoas = $pessoas->orderBy('nome')->get();
+      
+        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv, 'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'id_funcao' => $id_funcao, 'situacao' => $situacao, 'sala1' => $sala1, 'dataAtual' => $dataAtual]);
     }
 
 

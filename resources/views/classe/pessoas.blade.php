@@ -29,6 +29,20 @@
 
     </select>
 
+    <select name="niver">
+      <option selected disabled value="">Aniversário</option>
+      @foreach($meses_abv as $val => $name)
+      <option value="{{$val}}">{{$val}} - {{$name}}</option>
+      @endforeach
+
+    </select>
+
+    <select name="interesse">
+      <option selected disabled value="">Interesse Professor</option>
+      <option value="1">Sim</option>
+
+    </select>
+
     <select name="id_funcao">
     <option selected disabled value="">Função</option>
     <option value="1">Aluno</option>
@@ -60,7 +74,7 @@
   </form>
   <div class="busca">
 
-@if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao))
+@if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($interesse))
   <p class="tit">Buscando por: @if(isset($nome) && (isset($sexo) || isset($id_funcao) || isset($situacao)))<i class="result">Tudo</i> @endif</p> 
   @if(isset($nome) && empty($sexo) && empty($id_funcao) && empty($situacao))
    <li class="ponto">Nome: <i class="result">{{$nome}}</i></li>
@@ -70,12 +84,20 @@
   <li class="ponto">Sexo: <i class="result">@if($sexo == 1) Masculino @else Feminino @endif</i></li>
   @endif
 
+  @if(isset($niver) && empty($nome)) 
+    <li class="ponto">Aniversário: <i class="result">@foreach($meses_abv as $num => $mes) @if($niver == $num) {{$num}} - {{$mes}} @endif @endforeach</i></li>
+  @endif
+
   @if(isset($id_funcao) && empty($nome))
   <li class="ponto">Função: <i class="result">@if($id_funcao == 1) Aluno @elseif($id_funcao == 2) Professor @elseif($id_funcao == 3) Secretário/Classe @elseif($id_funcao == 4) Secretário/Adm @elseif($id_funcao == 5) Superintendente @else Erro @endif</i></li>
   @endif
 
   @if(isset($situacao) && empty($nome))
   <li class="ponto">Situação: <i class="result">@if($situacao == 1) Ativo @else Inativo @endif</i></li>
+  @endif
+
+  @if(isset($interesse) && empty($nome))
+  <li class="ponto">Interesse: <i class="result">Sim</i></li>
   @endif
 
   </div>
@@ -108,7 +130,7 @@
           @if($pessoa -> telefone == null)
           -
           @else 
-          {{$pessoa -> telefone}}
+          <a class="link-wpp" href="https://web.whatsapp.com/send?phone=55{{ $pessoa->telefone }}" target="blank"> {{$pessoa -> telefone}} </a> 
           @endif
       <td> <a href="/classe/visualizar-pessoa/{{$pessoa->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a> </td>
     </tr>
