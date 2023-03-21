@@ -68,7 +68,7 @@ class AuthController extends Controller
     }
 
     public function storeUsuarioMaster(Request $request) {
-        $lastNivel = Sala::latest()->first();
+        $lastNivel = Sala::orderBy('id', 'desc')->first();
         $this->validate($request, [
             'name' => ['required'],
             'username' => ['required', 'min:6', 'unique:users,username'],
