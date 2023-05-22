@@ -81,7 +81,7 @@ class AdminController extends Controller
         $publicos = Publico::all();
         $ufs = Uf::all();
         $formations = Formation::all();
-        $lastSala = Sala::latest()->first();
+        $lastSala = Sala::orderBy('id', 'desc')->first();
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
@@ -274,7 +274,7 @@ class AdminController extends Controller
         $ufs = Uf::all();
         $formations = Formation::all();
         $publicos = Publico::all();
-        $lastSala = Sala::latest()->first();
+        $lastSala = Sala::orderBy('id', 'desc')->first();
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],

@@ -147,7 +147,7 @@ class AuthController extends Controller
     }
 
     public function updateUserMaster(Request $request) {
-        $lastNivel = Sala::latest()->first();
+        $lastNivel = Sala::orderBy('id', 'desc')->first();
         $this->validate($request, [
             'id_nivel' => ['required', 'integer', 'min:1', 'max:'.$lastNivel -> id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
