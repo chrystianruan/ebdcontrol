@@ -13,24 +13,23 @@ use App\Models\Uf;
 use App\Models\Financeiro_cat;
 use App\Models\Financeiro_tipo;
 use App\Models\Financeiro_transacao;
-use App\Models\Financeiro;
 use App\Models\Aviso;
 use App\Models\Chamada;
 use App\Models\Relatorio;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 
 class AdminController extends Controller
 {
     //entrada cadastro master e classe
-  
+
     //fim
 
     public function index() {
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $formations = DB::select('SELECT id_formation, count(p.id) as qtd, f.nome  FROM pessoas as p LEFT JOIN formations as f ON  p.id_formation = f.id GROUP BY (id_formation)');
-        $dataMes = date('n');     
+        $dataMes = date('n');
         $dataAno = date('Y');
         $mesesNome = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         $meses = Pessoa::selectRaw('count(id) as qtd, MONTH(created_at) as mes')
@@ -38,6 +37,8 @@ class AdminController extends Controller
         ->whereYear('created_at', '=',$dataAno)
         ->groupBy('mes')
         ->get();
+        $quantidadePais = Pessoa::where('paternidade_maternidade', '=', 'Pai')->count();
+        $quantidadeMaes = Pessoa::where('paternidade_maternidade', '=', 'Mãe')->count();
         $interesseProf = Pessoa::where('interesse', '<>', 2)->where('id_funcao', '<>', 2)->count();
         $idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
         $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)->count();
@@ -63,7 +64,8 @@ class AdminController extends Controller
          'meses' => $meses, 'mesesNome' => $mesesNome, 'niverMes' => $niverMes,'dataAno' => $dataAno,
          'sexos' => $sexos,'funcoes' => $funcoes, 'interesseProf' => $interesseProf,
           'idadesPessoas' => $idadesPessoas, 'alunosInativos' => $alunosInativos,  'chamadaDia' => $chamadaDia,
-          'chamadasMes' => $chamadasMes, 'chamadasMesTotal' => $chamadasMesTotal, 'chamadasAno' => $chamadasAno]);
+          'chamadasMes' => $chamadasMes, 'chamadasMesTotal' => $chamadasMesTotal, 'chamadasAno' => $chamadasAno,
+          'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes]);
     }
 
     public function indexPessoa() {
@@ -85,6 +87,7 @@ class AdminController extends Controller
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
+            'filhos' => ['required', 'integer', 'min: 1', 'max: 2'],
             'data_nasc' => ['required'],
             'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
             'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone'],
@@ -106,6 +109,11 @@ class AdminController extends Controller
             'sexo.integer' =>  'Só é aceito o sexo masculino ou feminino',
             'sexo.min' =>  'Só é aceito o sexo masculino ou feminino',
             'sexo.max' =>  'Só é aceito o sexo masculino ou feminino',
+
+            'filhos.required' =>  'Campo de filhos é obrigatório.',
+            'filhos.integer' =>  'Só é aceito ter ou não filhos',
+            'filhos.min' =>  'Só é aceito ter ou não filhos',
+            'filhos.max' =>  'Só é aceito ter ou não filhos',
 
             'data_nasc.required' =>  'Data de nascimento é obrigatória.',
 
@@ -164,10 +172,18 @@ class AdminController extends Controller
             'id_public.max' =>  'Público escolhido não existe.',
 
         ]);
-        
+
         $pessoa = new Pessoa;
         $pessoa-> nome = $request->nome;
         $pessoa-> sexo = $request->sexo;
+        if ($request->filhos == 2 && $request->sexo == 1) {
+            $pessoa->paternidade_maternidade = "Pai";
+        }
+        elseif ($request->filhos == 2 && $request->sexo == 2) {
+            $pessoa->paternidade_maternidade = "Mãe";
+        } else {
+            $pessoa->paternidade_maternidade = null;
+        }
         $pessoa-> data_nasc = $request->data_nasc;
         $pessoa-> responsavel = $request->responsavel;
         $pessoa-> ocupacao = $request->ocupacao;
@@ -189,9 +205,9 @@ class AdminController extends Controller
         return redirect('/admin/cadastro/pessoa')->with('msg', 'Pessoa cadastrada com sucesso');
     }
 
-   
 
-    
+
+
     public function showFilterPessoa() {
         $pessoas = Pessoa::orderBy('nome')->get();
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
@@ -203,6 +219,7 @@ class AdminController extends Controller
     public function searchPessoa(Request $request) {
         $nome = request('nome');
         $sexo = request('sexo');
+        $paternidade_maternidade = request('paternidade_maternidade');
         $sala1 = request('sala');
         $interesse = request('interesse');
         $id_funcao = request('id_funcao');
@@ -222,12 +239,20 @@ class AdminController extends Controller
             $pessoas = $pessoas->where('sexo', $request->sexo);
         }
 
+        if ($request->paternidade_maternidade) {
+            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
+        }
+
         if ($request->sala) {
             $pessoas = $pessoas->whereJsonContains('id_sala', $request->sala);
         }
 
         if($request->id_funcao) {
             $pessoas = $pessoas->where('id_funcao', $request->id_funcao);
+        }
+
+        if($request->interesse) {
+            $pessoas = $pessoas->where('interesse', $request->interesse);
         }
 
         if ($request->situacao) {
@@ -239,8 +264,11 @@ class AdminController extends Controller
         }
 
         $pessoas = $pessoas->orderBy('nome')->get();
-      
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv, 'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'id_funcao' => $id_funcao, 'situacao' => $situacao, 'sala1' => $sala1, 'dataAtual' => $dataAtual]);
+
+        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
+            'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
+            'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao, 'sala1' => $sala1,
+            'dataAtual' => $dataAtual]);
     }
 
 
@@ -258,7 +286,7 @@ class AdminController extends Controller
 
 
     public function editPessoa($id) {
-        
+
         $dataAtual = date('Y-m-d');
         $pessoa = Pessoa::findOrFail($id);
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
@@ -304,7 +332,7 @@ class AdminController extends Controller
             'id_uf.integer' =>  'UF escolhida não existe.',
             'id_uf.min' =>  'UF escolhida não existe.',
             'id_uf.max' =>  'UF escolhida não existe.',
-    
+
             'telefone.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
             'telefone.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
             'telefone.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
@@ -319,7 +347,7 @@ class AdminController extends Controller
             'id_sala.*.integer' =>  'Classe digitada não existe',
             'id_sala.*.min' =>  'Classe digitada não existe',
             'id_sala.*.max' =>  'Classe digitada não existe',
-            'id_sala.*.distinct' =>  'Pessoa não pode pertencer à mesma classe 2 ou mais vezes', 
+            'id_sala.*.distinct' =>  'Pessoa não pode pertencer à mesma classe 2 ou mais vezes',
             'interesse.required' =>  'Interesse é obrigatório.',
             'interesse.integer' =>  'Interesse escolhido não existe.',
             'interesse.min' =>  'Interesse escolhido não existe.',
@@ -347,25 +375,53 @@ class AdminController extends Controller
             'id_public.max' =>  'Público escolhido não existe.',
         ]);
 
-        Pessoa::findOrFail($request -> id)->update($request->all());
+        $pessoa = Pessoa::findOrFail($request -> id);
+        $pessoa-> nome = $request->nome;
+        $pessoa-> sexo = $request->sexo;
+        if ($request->filhos == 2 && $request->sexo == 1) {
+            $pessoa->paternidade_maternidade = "Pai";
+        }
+        elseif ($request->filhos == 2 && $request->sexo == 2) {
+            $pessoa->paternidade_maternidade = "Mãe";
+        } else {
+            $pessoa->paternidade_maternidade = null;
+        }
+        $pessoa-> data_nasc = $request->data_nasc;
+        $pessoa-> responsavel = $request->responsavel;
+        $pessoa-> ocupacao = $request->ocupacao;
+        $pessoa-> cidade = $request->cidade;
+        $pessoa-> id_uf = $request->id_uf;
+        $pessoa-> telefone = $request->telefone;
+        $pessoa-> id_formation = $request->id_formation;
+        $pessoa-> cursos = $request->cursos;
+        $pessoa-> id_sala = $request->id_sala;
+        $pessoa-> id_funcao = $request->id_funcao;
+        $pessoa-> situacao = $request->situacao;
+        $pessoa-> interesse = $request->interesse;
+        $pessoa-> frequencia_ebd = $request->frequencia_ebd;
+        $pessoa-> curso_teo = $request->curso_teo;
+        $pessoa-> prof_ebd = $request->prof_ebd;
+        $pessoa-> prof_comum = $request->prof_comum;
+        $pessoa-> id_public = $request->id_public;
+        $pessoa -> save();
         return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi atualizada com sucesso');
     }
 
-   
 
-    
+
+
     public function destroyPessoa($id) {
         Pessoa::findOrFail($id)->delete();
         return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa deletado com sucesso');
-        
+
     }
 
- 
+
     public function indexFinanceiroGeral() {
         $ents = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->orderBy('data_cad')->get();
         $cats = Financeiro_cat::orderBy("nome")->get();
         $tipos = Financeiro_tipo::all();
-        $dataMes = date('n');     
+        $dataMes = date('n');
         $dataAno = date('Y');
         $jE = Financeiro_transacao::whereMonth('data_cad', '=',1)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
         $fE = Financeiro_transacao::whereMonth('data_cad', '=',2)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
@@ -393,7 +449,7 @@ class AdminController extends Controller
         $nS = Financeiro_transacao::whereMonth('data_cad', '=',11)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
         $dS = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
         $mesesS = [$jS, $fS, $mS, $aS, $maS, $junS, $julS, $agS, $sS, $oS, $nS, $dS];
-        $saldosMeses = [($jE - $jS), ($fE - $fS), ($mE - $mS), ($aE - $aS), ($maE - $maS), ($junE - $junS), ($julE - $julS), 
+        $saldosMeses = [($jE - $jS), ($fE - $fS), ($mE - $mS), ($aE - $aS), ($maE - $maS), ($junE - $junS), ($julE - $julS),
         ($agE - $agS), ($sE - $sS), ($oE - $oS), ($nE - $nS), ($dE - $dS)];
         $entradas = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
         $saidas = Financeiro_transacao::where('id_financeiro', '=', 2)->where('situacao', '=', 1)->get();
@@ -404,8 +460,7 @@ class AdminController extends Controller
         $catsEnt = DB::select('SELECT id_cat, nome, sum(valor) as somaE FROM financeiro_transacaos as ef LEFT JOIN financeiro_cats as cf ON  ef.id_cat = cf.id WHERE id_financeiro = 1 AND situacao = 1 GROUP BY (id_cat);');
         $catsSaida = DB::select('SELECT id_cat, nome, sum(valor) as somaS FROM financeiro_transacaos as sf LEFT JOIN financeiro_cats as cf ON  sf.id_cat = cf.id WHERE id_financeiro = 2 AND situacao = 1 GROUP BY (id_cat);');
         $dataAtual = date('d/m/Y');
-        return view('/admin/financeiro/geral', ['dataAtual' => $dataAtual, 'cats' => $cats, 'tipos' => $tipos, 
-         'entradas' => $entradas, 'saidas' => $saidas, 'entradasMes' => $entradasMes,'saidasMes' => $saidasMes,
+        return view('/admin/financeiro/geral', ['dataAtual' => $dataAtual, 'cats' => $cats, 'tipos' => $tipos,  'entradas' => $entradas, 'saidas' => $saidas, 'entradasMes' => $entradasMes,'saidasMes' => $saidasMes,
         'entradasAno' => $entradasAno, 'saidasAno' => $saidasAno, 'mesesE' => $mesesE, 'mesesS' => $mesesS,
         'catsEnt' => $catsEnt,'ents' => $ents, 'catsSaida' => $catsSaida, 'saldosMeses' => $saldosMeses]);
     }
@@ -426,357 +481,61 @@ class AdminController extends Controller
         $selectFinanceiros = [1 => 'Entrada', 'Saída'];
 
         if($request->resultado == 1) {
+            $financeiros = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1);
 
-            //entrada: categoria
-            if(isset($request->cat) && empty($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get();
-            } 
-
-            //entrada: tipo
-            elseif(empty($request->cat) && isset($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->cat)) {
+                $financeiros = $financeiros->where('id_cat', '=', $request->cat);
             }
 
-            //entrada: mes
-            elseif(empty($request->cat) && empty($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->tipo)) {
+                $financeiros = $financeiros->where('id_tipo', '=', $request->tipo);
             }
 
-            //entrada: ano
-            elseif(empty($request->cat) && empty($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-            
-            //entrada: categoria e tipo
-            elseif(isset($request->cat) && isset($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->mes)) {
+                $financeiros = $financeiros->whereMonth('data_cad', '=', $request->mes);
+
             }
 
-            //entrada: categoria e mes
-            elseif(isset($request->cat) && empty($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->ano)) {
+                $financeiros = $financeiros->whereYear('data_cad', '=', $request->ano);
+
             }
 
-            //entrada: categoria e ano
-            elseif(isset($request->cat) && empty($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //entrada: tipo e mes
-            elseif(empty($request->cat) && isset($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //entrada: tipo e ano
-            elseif(empty($request->cat) && isset($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //entrada: mes e ano
-            elseif(empty($request->cat) && empty($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //entrada: categoria, tipo e mes
-            elseif(isset($request->cat) && isset($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //entrada: categoria, tipo e ano
-            elseif(isset($request->cat) && isset($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            }
-
-            //entrada: categoria, mes e ano
-            elseif(isset($request->cat) && empty($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            } 
-
-            //entrada: tipo, mes e ano
-            elseif(empty($request->cat) && isset($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            } 
-
-            //entrada: tudão
-            elseif(isset($request->cat) && isset($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get();
-
-            //entrada: nadão
-            } else {
-                $financeiros = Financeiro_transacao::where('id_financeiro', '=', 1)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')->get();
-            }
-        } 
+            $financeiros = $financeiros->orderByDesc('data_cad')->get();
+        }
         elseif ($request->resultado == 2) {
 
-            //saida: categoria
-            if(isset($request->cat) && empty($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get();
-            } 
+            $financeiros = Financeiro_transacao::where('id_financeiro', '=', 2)->where('situacao', '=', 1);
 
-            //saida: tipo
-            elseif(empty($request->cat) && isset($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->cat)) {
+                $financeiros = $financeiros->where('id_cat', '=', $request->cat);
             }
 
-            //saida: mes
-            elseif(empty($request->cat) && empty($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->tipo)) {
+                $financeiros = $financeiros->where('id_tipo', '=', $request->tipo);
             }
 
-            //saida: ano
-            elseif(empty($request->cat) && empty($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-            
-            //saida: categoria e tipo
-            elseif(isset($request->cat) && isset($request->tipo) && empty($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->mes)) {
+                $financeiros = $financeiros->whereMonth('data_cad', '=', $request->mes);
+
             }
 
-            //saida: categoria e mes
-            elseif(isset($request->cat) && empty($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
+            if(isset($request->ano)) {
+                $financeiros = $financeiros->whereYear('data_cad', '=', $request->ano);
+
             }
 
-            //saida: categoria e ano
-            elseif(isset($request->cat) && empty($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //saida: tipo e mes
-            elseif(empty($request->cat) && isset($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //saida: tipo e ano
-            elseif(empty($request->cat) && isset($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //saida: mes e ano
-            elseif(empty($request->cat) && empty($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //saida: categoria, tipo e mes
-            elseif(isset($request->cat) && isset($request->tipo) && isset($request->mes) && empty($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            }
-
-            //saida: categoria, tipo e ano
-            elseif(isset($request->cat) && isset($request->tipo) && empty($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            }
-
-            //saida: categoria, mes e ano
-            elseif(isset($request->cat) && empty($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            } 
-
-            //saida: tipo, mes e ano
-            elseif(empty($request->cat) && isset($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')
-                ->get(); 
-            
-            } 
-
-            //saida: tudão
-            elseif(isset($request->cat) && isset($request->tipo) && isset($request->mes) && isset($request->ano)) {
-                $financeiros = Financeiro_transacao::where('id_cat', '=', $request->cat)
-                ->where('id_tipo', '=', $request->tipo)
-                ->whereMonth('data_cad', '=', $request->mes)
-                ->whereYear('data_cad', '=', $request->ano)
-                ->where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')->get();
-
-            //saida: nadão
-            } else {
-                $financeiros = Financeiro_transacao::where('id_financeiro', '=', 2)
-                ->where('situacao', '=', 1)
-                ->orderByDesc('data_cad')->get();
-            }
+            $financeiros = $financeiros->orderByDesc('data_cad')->get();
         } else {
             $financeiros = Financeiro_transacao::orderByDesc('data_cad')->get();
         }
 
-        return view('/admin/financeiro/filtro',['selectFinanceiros' => $selectFinanceiros, 'cats' => $cats, 
+        return view('/admin/financeiro/filtro',['selectFinanceiros' => $selectFinanceiros, 'cats' => $cats,
         'tipos' => $tipos, 'meses_abv' => $meses_abv, 'resultado' => $resultado, 'financeiros' => $financeiros,
         'categoria' => $categoria, 'tipo' => $tipo, 'mes' => $mes, 'ano' => $ano, 'users' => $users]);
     }
 
-    
+
 
     public function indexFinanceiroEntrada() {
         $cats = Financeiro_cat::orderBy("nome")->get();
@@ -796,7 +555,7 @@ class AdminController extends Controller
             'user_id' => ['integer', 'min:'.auth()->user()->id, 'max'.auth()->user()->id],
             'situacao' => ['integer', 'min:1', 'max:1'],
             'id_tipo' => ['required', 'integer', 'min: 1', 'max:'.$tipos->count()],
-            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()], 
+            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()],
 
         ], [
             'valor.required' => 'O valor é obrigatório',
@@ -856,7 +615,7 @@ class AdminController extends Controller
             'user_id' => ['integer', 'min:'.auth()->user()->id, 'max'.auth()->user()->id],
             'situacao' => ['integer', 'min:1', 'max:1'],
             'id_tipo' => ['required', 'integer', 'min: 1', 'max:'.$tipos->count()],
-            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()], 
+            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()],
 
         ], [
             'valor.required' => 'O valor é obrigatório',
@@ -921,7 +680,7 @@ class AdminController extends Controller
             'user_id' => ['integer', 'min:'.$financeiro->user_id, 'max'.$financeiro->user_id],
             'id_financeiro' => ['integer', 'min:'.$financeiro->id_financeiro, 'max:'.$financeiro->id_financeiro],
             'id_tipo' => ['required', 'integer', 'min: 1', 'max:'.$tipos->count()],
-            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()], 
+            'id_cat' => ['required', 'integer', 'min: 1', 'max:'.$cats->count()],
 
         ], [
             'valor.required' => 'O valor é obrigatório',
@@ -943,11 +702,20 @@ class AdminController extends Controller
             'id_cat.min' => 'A categoria escolhida não existe',
             'id_cat.max' => 'A categoria escolhida não existe',
         ]);
-
-        Financeiro_transacao::findOrFail($request -> id)->update($request->all());
+        $financeiro->valor_original = $financeiro->valor;
+        $financeiro->descricao_original = $financeiro->descricao;
+        $financeiro->data_cad_original = $financeiro->data_cad;
+        $financeiro->id_tipo_original = $financeiro->id_tipo;
+        $financeiro->id_cat_original = $financeiro->id_cat;
+        $financeiro->valor = $request->valor;
+        $financeiro->descricao = $request->descricao;
+        $financeiro->data_cad = $request->data_cad;
+        $financeiro->id_tipo = $request->id_tipo;
+        $financeiro->id_cat = $request->id_cat;
+        $financeiro-> save();
         return redirect('/admin/financeiro/filtro')->with('msg', 'Transação foi atualizada com sucesso');
 
-        
+
 
     }
 
@@ -1004,11 +772,11 @@ class AdminController extends Controller
         elseif(isset($request -> destinatario) && isset($request -> importancia)) {
             $avisos = Aviso::where('destinatario', '=', $request->destinatario)
             ->where('importancia', '=', $request->importancia)->orderBy('data_post',  'DESC')->get();
-            
+
         } else {
             $avisos = Aviso::orderBy('data_post',  'DESC')->get();
         }
-        
+
         return view('/admin/filtro/aviso', ['destinatarios' => $destinatarios, 'importancias' => $importancias,
         'avisos' => $avisos, 'destEnv' => $destEnv, 'importancia' => $importancia]);
 
@@ -1076,52 +844,25 @@ class AdminController extends Controller
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        //classe
-        if(isset($request -> classe) && empty($request -> mes) && empty($request -> ano)) {
-            $chamadas = Chamada::where('id_sala', '=', $request -> classe)
-            ->orderBy('created_at', 'DESC')
-            ->get();
-        } 
-        //mes
-        elseif(empty($request -> classe) && isset($request -> mes) && empty($request -> ano))  {
-            $chamadas = Chamada::whereMonth('created_at', '=', $request -> mes)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        if ($request->classe || $request->mes || $request->ano) {
+
+        $chamadas = Chamada::orderBy('created_at', 'DESC');
+
+        if(isset($request -> classe)) {
+            $chamadas = $chamadas->where('id_sala', '=', $request -> classe);
+
         }
-        //ano
-        elseif(empty($request -> classe) && empty($request -> mes) && isset($request -> ano))  {
-            $chamadas = Chamada::whereYear('created_at', '=', $request -> ano)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+        if(isset($request -> mes))  {
+            $chamadas = $chamadas->whereMonth('created_at', '=', $request -> mes);
+
         }
-        //classe e mes
-        elseif(isset($request -> classe) && isset($request -> mes) && empty($request -> ano))  {
-            $chamadas = Chamada::where('id_sala', '=', $request -> classe)
-            ->whereMonth('created_at', '=', $request -> mes)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+
+        if(isset($request -> ano))  {
+            $chamadas = $chamadas->whereYear('created_at', '=', $request -> ano);
+
         }
-        //classe e ano
-        elseif(isset($request -> classe) && empty($request -> mes) && isset($request -> ano))  {
-            $chamadas = Chamada::where('id_sala', '=', $request -> classe)
-            ->whereYear('created_at', '=', $request -> ano)
-            ->orderBy('created_at', 'DESC')
-            ->get();
-        }
-        //mes e ano
-        elseif(empty($request -> classe) && isset($request -> mes) && isset($request -> ano))  {
-            $chamadas = Chamada::whereMonth('created_at', '=', $request -> mes)
-            ->whereYear('created_at', '=', $request -> ano)
-            ->orderBy('created_at', 'DESC')
-            ->get();
-        }
-        //classe, mes e ano
-        elseif(isset($request -> classe) && isset($request -> mes) && isset($request -> ano))  {
-            $chamadas = Chamada::where('id_sala', '=', $request -> classe)
-            ->whereMonth('created_at', '=', $request -> mes)
-            ->whereYear('created_at', '=', $request -> ano)
-            ->orderBy('created_at', 'DESC')
-            ->get();
+
+        $chamadas = $chamadas->get();
 
         } else {
             $chamadas = Chamada::whereDate('created_at', Carbon::today())
@@ -1130,7 +871,7 @@ class AdminController extends Controller
 
         }
 
-        return view('/admin/chamadas', ['chamadas' => $chamadas, 'salas' => $salas, 'meses_abv' => $meses_abv, 
+        return view('/admin/chamadas', ['chamadas' => $chamadas, 'salas' => $salas, 'meses_abv' => $meses_abv,
         'classe' => $classe, 'mes' => $mes, 'ano' => $ano]);
 
     }
@@ -1141,7 +882,7 @@ class AdminController extends Controller
         return view('/admin/visualizar/chamada', ['chamada' => $chamada, 'salas' => $salas]);
     }
 
- 
+
     public function indexRelatorioToday() {
         $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())->get();
         $chamadas = Chamada::whereDate('created_at',  Carbon::today())->get();
@@ -1159,17 +900,22 @@ class AdminController extends Controller
         ->whereDate('chamadas.created_at', Carbon::today())
         ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
         ->get();
+        $salas = Sala::where('id', '>', 2)->get();
+        if ($chamadas->count() == $salas->count()) {
+            $relatorio = new Relatorio;
+            $relatorio -> salas = $chamadas;
+            $relatorio -> matriculados = $chamadas -> sum('matriculados');
+            $relatorio -> presentes = $chamadas -> sum('presentes');
+            $relatorio -> visitantes = $chamadas -> sum('visitantes');
+            $relatorio -> assist_total = $chamadas -> sum('assist_total');
+            $relatorio -> biblias = $chamadas -> sum('biblias');
+            $relatorio -> revistas = $chamadas -> sum('revistas');
+            $relatorio -> save();
+            return redirect('/admin/relatorios/todos')->with('msg', 'Relatório do dia cadastrado com sucesso!');
+        }
+        return  redirect()->back()->with('msg2', 'O relatório só pode ser cadastrado se todas as classes tiverem realizado a chamada');
 
-        $relatorio = new Relatorio;
-        $relatorio -> salas = $chamadas;
-        $relatorio -> matriculados = $chamadas -> sum('matriculados');
-        $relatorio -> presentes = $chamadas -> sum('presentes');
-        $relatorio -> visitantes = $chamadas -> sum('visitantes');
-        $relatorio -> assist_total = $chamadas -> sum('assist_total');
-        $relatorio -> biblias = $chamadas -> sum('biblias');
-        $relatorio -> revistas = $chamadas -> sum('revistas');
-        $relatorio -> save();
-        return redirect('/admin/relatorios/todos')->with('msg', 'Relatório do dia cadastrado com sucesso!');
+
 
     }
 
@@ -1195,7 +941,7 @@ class AdminController extends Controller
         } else {
             $relatorios = Relatorio::whereDate('created_at', '=', Carbon::today())->orderBy('created_at', 'DESC')->get();
         }
-       
+
         return view('/admin/relatorios/todos', ['relatorios' => $relatorios, 'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano]);
 
     }
@@ -1213,12 +959,12 @@ class AdminController extends Controller
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
         //mes
         if(isset($request -> mes) && empty($request -> classe)) {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)->get(); 
+            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)->get();
 
         }
         //classe
         elseif(empty($request -> mes) && isset($request -> classe)) {
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->classe)->get(); 
+            $pessoas = Pessoa::whereJsonContains('id_sala', $request->classe)->get();
 
         }
         //classe e mes
@@ -1227,13 +973,13 @@ class AdminController extends Controller
             ->whereJsonContains('id_sala', $request->classe)->get();
 
         } else {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', Carbon::now())->get(); 
+            $pessoas = Pessoa::whereMonth('data_nasc', '=', Carbon::now())->get();
         }
 
         return view('/admin/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
         'meses_abv' => $meses_abv, 'mes' => $mes, 'classe' => $classe]);
     }
-    
+
     public function sobre() {
         return view('/admin/sobre');
     }
@@ -1242,10 +988,24 @@ class AdminController extends Controller
 
         $relatorio = Relatorio::findOrFail($id);
         $classes = Sala::select('id', 'nome')->get();
-      
+
         return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
         ->setPaper('a4', 'landscape')
         ->stream('relatorio.pdf');
+    }
+
+    public function generatePdfToChamadasNotRealized(Request $request) {
+        $classe = $request->classe;
+        $classeSelected = Sala::select('nome')->findOrFail($classe);
+        $date = $request->date;
+        $pessoas = Pessoa::select("pessoas.nome as nome_pessoa", "funcaos.nome as nome_funcao")
+            ->whereJsonContains('id_sala', $classe)->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+            ->orderBy('pessoas.nome')
+            ->get();
+
+
+        return \PDF::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
+        ->stream('frequencia.pdf');
     }
 
     public function generatePdfToChamadas($id) {

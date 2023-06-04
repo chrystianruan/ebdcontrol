@@ -9,16 +9,16 @@
 <form action="/admin/financeiro/filtro" method="POST">
     @csrf
     <div class="fields">
-  
+
     <div class="itens">
     <legend class="title">Filtrar por:  </legend>
     </div>
     <font style=";margin-left: 15px;font-size: 12px; color: white">(Os filtros <mark>Categoria</mark>, <mark>Tipo</mark>, <mark>Mês</mark> e <mark>Ano</mark> dependem do <mark>Financeiro</mark> para funcionarem corretamente)</font>
       <div class="itens">
-       
-      
+
+
       <select name="resultado" required @if($resultado == 1) style="border: 2px solid; border-color: green" @elseif($resultado == 2) style="border-color: red" @else @endif>
-        
+
         <option selected disabled value="">Financeiro</option>
         @foreach ($selectFinanceiros as $valor => $nome)
         <option value="{{$valor}}" style="@if($valor == 1) color: green;  @else color: red; @endif">{{$nome}} </option>
@@ -32,8 +32,8 @@
         @endforeach
       </select>
 
-     
-  
+
+
       <select name="tipo">
         <option selected disabled value="">Tipo</option>
         @foreach ($tipos as $t)
@@ -46,9 +46,9 @@
           @foreach($meses_abv as $ind => $nome)
               <option value="{{$ind}}"> {{$ind}} - {{$nome}} </option>
            @endforeach
-  
+
       </select>
-  
+
       <select name="ano" >
         <option selected disabled value="">Ano</option>
               @for($i = 2022; $i <= date('Y'); $i++)
@@ -73,49 +73,49 @@
     @endif
     @if(isset($resultado) || isset($categoria) || isset($tipo) || isset($mes) || isset($ano))
     <div class="busca" @if($resultado == 1) style="background-color: green;" @elseif($resultado == 2) style="background-color: red" @endif>
-        <p class="tit">Buscando por:</p> 
+        <p class="tit">Buscando por:</p>
         @if(isset($resultado))
-         <li class="ponto">Financeiro: 
+         <li class="ponto">Financeiro:
             <i class="result">
             @foreach ($selectFinanceiros as $valor => $nome) @if($resultado == $valor) {{$nome}} @endif @endforeach
             </i>
          </li>
         @endif
-      
+
         @if(isset($resultado) && isset($categoria))
-        <li class="ponto">Categoria: 
+        <li class="ponto">Categoria:
           <i class="result">@foreach ($cats as $c) @if($categoria == $c->id) {{$c->nome}} @endif @endforeach</i>
         </li>
         @endif
-      
+
         @if(isset($resultado) && isset($tipo))
-        <li class="ponto">Tipo: 
+        <li class="ponto">Tipo:
           <i class="result"> @foreach ($tipos as $t) @if($tipo == $t->id) {{$t->nome}} @endif @endforeach</i>
         </li>
         @endif
-      
+
         @if(isset($resultado) && isset($mes))
-        <li class="ponto">Mês: 
+        <li class="ponto">Mês:
           <i class="result"> @foreach($meses_abv as $ind => $nome) @if($mes == $ind) {{$mes}} - {{$nome}} @endif @endforeach</i>
         </li>
         @endif
-      
+
         @if(isset($resultado) && isset($ano))
         <li class="ponto">Ano: <i class="result">{{$ano}}</i></li>
         @endif
-      
+
         </div>
         @else
         <div class="busca">
-            <p class="tit">Buscando por: <i class="result" style="color: rgb(9, 150, 115)">Tudo</i></p> 
+            <p class="tit">Buscando por: <i class="result" style="color: rgb(9, 150, 115)">Tudo</i></p>
         </div>
         @endif
-      
-      
+
+
       </div>
     </div>
-  
-  
+
+
     @if($financeiros -> count() > 0)
     <table style="margin:3%;">
     @if($financeiros -> count() > 0)
@@ -145,20 +145,20 @@
         <td>@foreach($tipos as $t) @if($t->id == $f->id_tipo) {{$t -> nome}} @endif @endforeach
         <td>@foreach($users as $u) @if($u->id == $f->user_id) {{$u -> username}} @endif @endforeach
         <td style="text-align: center">
-          <a href="/admin/financeiro/visualizar/{{$f->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>              
-          <a href="/admin/financeiro/editar/{{$f->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-edit icon'></i> </a> 
+          <a href="/admin/financeiro/visualizar/{{$f->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>
+          <a href="/admin/financeiro/editar/{{$f->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-edit icon'></i> </a>
         </td>
         <td style="text-align: center">@if($f -> created_at != $f -> updated_at) <i style="font-size: 1.8em; color: red"class='bx bx-error'></i> @endif
 
   </tr>
-        
+
     </tbody>
     @endforeach
   </table>
   @elseif($financeiros -> count() > 0 && empty($resultado))
   <p style="color: pink"> Selecione o tipo financeiro</p>
-  @else 
-  <p style="color: yellow">Nenhum resultado encontrado.</p>
+  @else
+  <p style="color: yellow; margin-top: 15%; text-align: center">Nenhum resultado encontrado.</p>
   @endif
 
   @endsection

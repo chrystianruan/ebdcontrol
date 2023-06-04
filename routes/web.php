@@ -47,7 +47,7 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::post('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::get('/classe/pdf-chamada/{id}', [ClasseController::class, 'generatePdfToChamadas']);
-    
+
 });
 
 Route::middleware(['auth', 'master', 'status'])->group(function () {
@@ -69,7 +69,7 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::put('/master/update/classe/{id}', [MasterController::class, 'updateSalaMaster']);
     Route::delete('/master/filtro/classe/{id}', [MasterController::class, 'destroySalaMaster']);
 
-    
+
 });
 
 Route::middleware(['auth', 'admin', 'status'])->group(function () {
@@ -78,7 +78,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::post('/admin/aniversariantes', [AdminController::class, 'searchAniversariantes']);
     Route::get('/admin/sobre', [AdminController::class, 'sobre']);
 
-    
+
     Route::get('/admin/cadastro/pessoa', [AdminController::class, 'indexPessoa']);
     Route::post('/admin/cadastro/pessoa', [AdminController::class, 'storePessoa']);
     Route::get('/admin/filtro/pessoa', [AdminController::class, 'showFilterPessoa']);
@@ -107,14 +107,15 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/edit/aviso/{id}', [AdminController::class, 'editAviso']);
     Route::put('/admin/update/aviso/{id}', [AdminController::class, 'updateAviso']);
     Route::delete('/admin/filtro/aviso/{id}', [AdminController::class, 'destroyAviso']);
-    
 
-    
+
+
 
     Route::get('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::post('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::get('/admin/visualizar/chamada/{id}', [AdminController::class, 'showChamada']);
     Route::get('/admin/visualizar/pdf-chamada/{id}', [AdminController::class, 'generatePdfToChamadas']);
+    Route::get('/admin/print-chamada', [AdminController::class, 'generatePdfToChamadasNotRealized']);
 
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);

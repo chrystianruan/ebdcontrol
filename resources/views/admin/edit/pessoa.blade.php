@@ -12,7 +12,7 @@
             @method('PUT')
         @csrf
             <div class="form first">
-            
+
             @if ($errors->any())
             <div class="alert">
                 <ul>
@@ -22,8 +22,8 @@
                 </ul>
             </div>
             @endif
-      
-           
+
+
                 <div class="details personal">
                     <div style="float:right; margin-right: 2%">
                         <label>Menor de idade?</label>
@@ -35,21 +35,21 @@
                         </select>
                     </div>
                     <span class="title">Informações pessoais</span>
-                    
-                    
+
+
                     <div class="fields">
                         <div class="input-field">
                             <label>Nome completo <font style="color:red;font-weight: bold">*</font></label>
                             <input type="text" name="nome" required placeholder="Digite o nome" value="{{$pessoa -> nome}}">
                         </div>
 
-    
+
 
                         <div class="input-field" id="nomeResp" style="display:@if($pessoa -> responsavel == null)none @endif">
-                        
+
                         <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" name="responsavel" id="responsavel" placeholder="Digite o nome do responsável" value="{{$pessoa -> responsavel}}">
-                      
+
                         </div>
 
                         <div class="input-field" style="width: 130px">
@@ -58,9 +58,20 @@
                                 <option selected disabled value="">Selecionar</option>
                                 <option @if($pessoa->sexo == 1) selected @endif value="1">Masculino</option>
                                 <option  @if($pessoa->sexo == 2) selected @endif value="2">Feminino</option>
-                                
+
                             </select>
                         </div>
+
+                        <div class="input-field" style="width: 130px">
+                            <label>Tem filhos?<span style="color:red;font-weight: bold">*</span></label>
+                            <select name="filhos" required>
+                                <option selected disabled value="">Selecionar</option>
+                                <option @if($pessoa->paternidade_maternidade == null) selected @endif value="1">Não</option>
+                                <option @if($pessoa->paternidade_maternidade == "Pai" || $pessoa->paternidade_maternidade == "Mãe") selected @endif value="2">Sim</option>
+
+                            </select>
+                        </div>
+
 
 
                         <div class="input-field"  style="width: 200px">
@@ -88,7 +99,7 @@
                                 @foreach($ufs as $uf)
                                 <option @if($uf->id == $pessoa -> id_uf) selected @endif value="{{$uf -> id}}">{{$uf -> nome}}</option>
                                 @endforeach
-                                
+
                             </select>
                         </div>
 
@@ -97,16 +108,16 @@
                             <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{$pessoa -> telefone}}">
                         </div>
 
-                        
+
                         <div class="input-field">
                             <label>Classe <font style="color:red;font-weight: bold">*</font></label>
                             <div class="multipleSelection">
-                                <div class="selectBox" 
+                                <div class="selectBox"
                                     onclick="showCheckboxes()">
                                     <select>
                                         <option>
                                                 @foreach($pessoa -> id_sala as $ids)
-                                                    @foreach($salas as $s) 
+                                                    @foreach($salas as $s)
                                                         @if($ids == $s -> id)
                                                             {{ $s -> nome }},
                                                         @endif
@@ -116,7 +127,7 @@
                                     </select>
                                     <div class="overSelect"></div>
                                 </div>
-                      
+
                                 <div id="checkBoxes">
                                     @foreach($salas as $sala)
 
@@ -124,7 +135,7 @@
                                         <input type="checkbox" @foreach($pessoa -> id_sala as $ids) @if($ids == $sala -> id ) checked @endif @endforeach   name="id_sala[]" value="{{$sala -> id}}" id="first" />
                                         {{$sala -> nome}} - {{$sala -> tipo}}
                                     </label>
-                                    
+
                                     @endforeach
 
                                 </div>
@@ -144,9 +155,9 @@
 
 
 
-                    
 
-                        
+
+
                     </div>
                 </div>
 
@@ -171,10 +182,10 @@
                         </div>
 
 
-          
-                       
 
-            
+
+
+
 
                         <div class="input-field" >
                             <label>Interesse em ser professor? <font style="color:red; font-weight: bold">*</font></label>
@@ -188,7 +199,7 @@
 
 
 
-                        
+
                         </div>
                         </div>
 
@@ -205,7 +216,7 @@
                                 <option  @if($pessoa->frequencia_ebd == 2) selected @endif value=2>Não</option>
                                 <option  @if($pessoa->frequencia_ebd == 3) selected @endif value=3>Mais ou menos</option>
                                 </select>
-                                
+
                     </div>
 
                         <div class="input-field" style="width: 170px">
@@ -215,7 +226,7 @@
                                 <option  @if($pessoa->curso_teo == 1) selected @endif value=1>Sim</option>
                                 <option  @if($pessoa->curso_teo == 2) selected @endif value=2>Não</option>
                                 </select>
-                                
+
                         </div>
 
 
@@ -224,9 +235,9 @@
                             <select class="inputprof" name="prof_ebd">
                             <option selected disabled value="">Selecionar</option>
                                 <option  @if($pessoa->prof_ebd == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->prof_ebd == 2) selected @endif value=2>Não</option>  
+                                <option  @if($pessoa->prof_ebd == 2) selected @endif value=2>Não</option>
                                 </select>
-                        
+
                         </div>
 
                         <div class="input-field" style="width: 160px">
@@ -234,12 +245,12 @@
                             <select class="inputprof" name="prof_comum">
                             <option selected disabled value="">Selecionar</option>
                                 <option  @if($pessoa->prof_comum == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->prof_comum == 2) selected @endif value=2>Não</option>  
+                                <option  @if($pessoa->prof_comum == 2) selected @endif value=2>Não</option>
                                 </select>
-                        
+
                         </div>
 
-                  
+
                         <div class="input-field" style="width: 200px">
                             <label>Para qual público prefere dar aula? <font style="color:red;font-weight: bold">*</font></label>
                             <select class="inputprof" name="id_public">
@@ -248,17 +259,17 @@
                                 <option @if($pessoa -> id_public == $publico -> id) selected @endif value="{{$publico -> id}}">{{$publico -> nome}}</option>
                                 @endforeach
                                 </select>
-                       
+
                         </div>
                     </div>
                   </div>
-                
+
                         <button type="submit" class="sumbit">
                             <span class="btnText">Enviar</span>
                             <i class="uil uil-navigator"></i>
                         </button>
-                </div> 
-            
+                </div>
+
 
 
         </form>
@@ -276,7 +287,7 @@
     });
 
 
-    
+
 </script>
 <form>
 @endsection

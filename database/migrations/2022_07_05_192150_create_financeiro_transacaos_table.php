@@ -32,6 +32,18 @@ return new class extends Migration
 
             $table->unsignedBigInteger('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
+
+
+
+            $table->text('descricao_original')->nullable();
+            $table->decimal('valor_original', 10, 2)->nullable();
+            $table->date('data_cad_original')->nullable();
+            $table->integer('id_cat_original')->nullable();
+
+
+
+            $table->integer('id_tipo_original')->nullable();;
+
         });
     }
 

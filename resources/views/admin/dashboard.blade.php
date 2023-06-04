@@ -12,32 +12,32 @@
     <hr>
     @if($chamadaDia->count() > 0)
         <h3>Matriculados: </h3>
-            <p><span style="font-weight: bold; color: 
-            @if( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 80) chartreuse 
-            @elseif( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 50 
+            <p><span style="font-weight: bold; color:
+            @if( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 80) chartreuse
+            @elseif( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 50
             && ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') < 80) yellow
             @else red
-            @endif 
+            @endif
             ">{{number_format((($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
         <h3>Visitantes: </h3>
-        <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadaDia -> sum('visitantes') > 0)+@endif{{$chamadaDia -> sum('visitantes')}}</span> visitante(s)</p>
+        <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadaDia -> sum('visitantes') > 0)+@endif {{ $chamadaDia -> sum('visitantes') }}</span> visitante(s)</p>
         <h3>Bíblias e revistas</h3>
-        
-        <li>Bíblias: <span style="font-weight: bold; color: 
-            @if( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 80) chartreuse 
-                @elseif( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 50 
+
+        <li>Bíblias: <span style="font-weight: bold; color:
+            @if( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 80) chartreuse
+                @elseif( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 50
                 && ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') < 80) yellow
                 @else red
-                @endif 
+                @endif
                 ">{{number_format((($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-        <li>Revistas: <span style="font-weight: bold; color: 
-            @if( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') > 80) chartreuse 
-                @elseif( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') >= 50 
+        <li>Revistas: <span style="font-weight: bold; color:
+            @if( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') > 80) chartreuse
+                @elseif( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') >= 50
                 && ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') < 80) yellow
                 @else red
-                @endif 
+                @endif
                 ">{{number_format((($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-    @else 
+    @else
     <li>Nenhum Relatório</li>
     @endif
 </div>
@@ -48,32 +48,32 @@
     <hr>
     @if($chamadasMes->count() > 0)
     <h3>Matriculados: </h3>
-            <p><span style="font-weight: bold; color: 
-            @if( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 80) chartreuse 
-            @elseif( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 50 
+            <p><span style="font-weight: bold; color:
+            @if( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 80) chartreuse
+            @elseif( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 50
             && ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') < 80) yellow
             @else red
-            @endif 
+            @endif
             ">{{number_format((($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
         <h3>Visitantes: </h3>
         <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadasMes -> sum('visitantes') > 0)+@endif{{$chamadasMes -> sum('visitantes')}}</span> visitante(s)</p>
         <h3>Bíblias e revistas</h3>
-        
-        <li>Bíblias: <span style="font-weight: bold; color: 
-            @if( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 80) chartreuse 
-                @elseif( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 50 
+
+        <li>Bíblias: <span style="font-weight: bold; color:
+            @if( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 80) chartreuse
+                @elseif( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 50
                 && ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') < 80) yellow
                 @else red
-                @endif 
+                @endif
                 ">{{number_format((($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-        <li>Revistas: <span style="font-weight: bold; color: 
-            @if( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') > 80) chartreuse 
-                @elseif( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') >= 50 
+        <li>Revistas: <span style="font-weight: bold; color:
+            @if( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') > 80) chartreuse
+                @elseif( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') >= 50
                 && ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') < 80) yellow
                 @else red
-                @endif 
+                @endif
                 ">{{number_format((($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-    @else 
+    @else
     <li>Nenhum Relatório</li>
     @endif
 
@@ -84,32 +84,32 @@
     <hr>
     @if($chamadasAno->count() > 0)
     <h3>Matriculados: </h3>
-    <p><span style="font-weight: bold; color: 
-    @if( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 80) chartreuse 
-    @elseif( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 50 
+    <p><span style="font-weight: bold; color:
+    @if( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 80) chartreuse
+    @elseif( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 50
     && ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') < 80) yellow
     @else red
-    @endif 
+    @endif
     ">{{number_format((($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
 <h3>Visitantes: </h3>
 <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadasAno -> sum('visitantes') > 0)+@endif{{$chamadasAno -> sum('visitantes')}}</span> visitante(s)</p>
 <h3>Bíblias e revistas</h3>
 
-<li>Bíblias: <span style="font-weight: bold; color: 
-    @if( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 80) chartreuse 
-        @elseif( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 50 
+<li>Bíblias: <span style="font-weight: bold; color:
+    @if( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 80) chartreuse
+        @elseif( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 50
         && ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') < 80) yellow
         @else red
-        @endif 
+        @endif
         ">{{number_format((($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-<li>Revistas: <span style="font-weight: bold; color: 
-    @if( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') > 80) chartreuse 
-        @elseif( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') >= 50 
+<li>Revistas: <span style="font-weight: bold; color:
+    @if( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') > 80) chartreuse
+        @elseif( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') >= 50
         && ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') < 80) yellow
         @else red
-        @endif 
+        @endif
         ">{{number_format((($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
-    @else 
+    @else
     <li>Nenhum Relatório</li>
     @endif
 </div>
@@ -125,14 +125,35 @@
 
 </div>
 
+    <div class="info" >
+        <form action="print-chamada">
+            @method("POST")
+        <h2>Chamadas Físicas</h2> <hr  style="margin-bottom: 2%">
+        <h3>Classe</h3>
+       <select class="select-classe" name="classe" required>
+            <option selected disabled value="">Selecionar</option>
+           @foreach($salas as $sala)
+               <option value="{{ $sala->id }}"> {{ $sala->nome }}</option>
+           @endforeach
+       </select>
+
+        <h3>Data</h3>
+
+        <input type="date" class="input-date" name="date" required>
+        <h3></h3>
+        <button class="btn-print">Gerar chamada física</button>
+        </form>
+
+    </div>
+
 
 <div class="graficoY" >
-<canvas id="myChart"></canvas>
+<canvas id="myChart" width="1200" height="1200"></canvas>
 </div>
 
 
 <div class="graficosY" >
-    <canvas id="myChartX" ></canvas>
+    <canvas id="myChartX"  width="1200" height="1200" ></canvas>
 </div>
 
 
@@ -149,6 +170,10 @@
 <div class="graficoY" >
 <canvas id="myChart3" ></canvas>
 </div>
+
+<div class="graficoY" >
+    <canvas id="myChart4" ></canvas>
+</div>
 </div>
 
 
@@ -161,14 +186,14 @@ const myChart = new Chart(ctx, {
         labels: [@foreach($meses as $mes) @foreach($mesesNome as $ind => $nome) @if($mes->mes == $ind) '{{$nome}}',  @endif @endforeach @endforeach],
         datasets: [{
             label: 'Quantidade de cadastrados - {{$dataAno}}',
-           
+
             data: [@foreach($meses as $mes) @foreach($mesesNome as $ind => $nome) @if($mes->mes == $ind) {{$mes -> qtd}},  @endif @endforeach @endforeach],
             backgroundColor: [
                 'rgb(0,255,255)'
             ],
             borderColor: [
                 'rgb(0,255,255)'
-            
+
             ],
             borderWidth: 1,
             tension: 0.1
@@ -180,7 +205,7 @@ const myChart = new Chart(ctx, {
                 beginAtZero: true
             }
         },
-        
+
     }
 });
 
@@ -197,7 +222,7 @@ const myChart1 = new Chart(ctx1, {
                 'rgba(54, 162, 235, 0.7)',
                 'rgba(255, 99, 132, 0.7)',
                 'rgba(255, 99, 132, 0.7)'
-                
+
             ],
             borderColor: [
                 'rgba(54, 162, 235, 1)',
@@ -230,7 +255,7 @@ const myChart2 = new Chart(ctx2, {
                 'rgba(54, 162, 235, 0.7)',
                 'rgba(255, 206, 86, 0.7)',
                 'rgba(75, 192, 192, 0.7)'
-     
+
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -269,14 +294,14 @@ const myChart3 = new Chart(ctx3, {
                 'rgb(0,255,0)',
                 'rgb(192,192,192)',
                 'rgb(255,0,255)',
-                'rgb(255,255,0)',	
+                'rgb(255,255,0)',
                 'rgb(128,0,128)',
                 'rgb(128,0,0)',
                 'rgb(0,128,128)',
-                'rgb(255,255,0)',	
+                'rgb(255,255,0)',
                 'rgb(128,0,128)',
                 'rgb(128,0,0)'
-	
+
             ],
             borderColor: [
                 'rgba(255, 99, 132, 1)',
@@ -287,12 +312,71 @@ const myChart3 = new Chart(ctx3, {
                 'rgba(0,250,154)',
                 'rgb(0,255,0)',
                 'rgb(192,192,192)',
-                'rgb(255,0,255)',	
+                'rgb(255,0,255)',
                 'rgb(255,255,0)',
                 'rgb(128,0,128)',
                 'rgb(128,0,0)',
                 'rgb(0,128,128)',
-                'rgb(255,255,0)',	
+                'rgb(255,255,0)',
+                'rgb(128,0,128)',
+                'rgb(128,0,0)'
+
+
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+const ctx4 = document.getElementById('myChart4');
+const myChart4= new Chart(ctx4, {
+    type: 'pie',
+    data: {
+        labels: ["Pais", "Mães"],
+        datasets: [{
+            label: 'Escolaridade',
+            data: [{{$quantidadePais}}, {{$quantidadeMaes}} ],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.7)',
+                'rgba(255, 99, 132, 0.7)',
+                'rgba(255, 206, 86, 0.7)',
+                'rgba(75, 192, 192, 0.7)',
+                'rgba(0,255,255)',
+                'rgba(0,250,154)',
+                'rgb(0,255,0)',
+                'rgb(192,192,192)',
+                'rgb(255,0,255)',
+                'rgb(255,255,0)',
+                'rgb(128,0,128)',
+                'rgb(128,0,0)',
+                'rgb(0,128,128)',
+                'rgb(255,255,0)',
+                'rgb(128,0,128)',
+                'rgb(128,0,0)'
+
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(0,255,255)',
+                'rgba(0,250,154)',
+                'rgb(0,255,0)',
+                'rgb(192,192,192)',
+                'rgb(255,0,255)',
+                'rgb(255,255,0)',
+                'rgb(128,0,128)',
+                'rgb(128,0,0)',
+                'rgb(0,128,128)',
+                'rgb(255,255,0)',
                 'rgb(128,0,128)',
                 'rgb(128,0,0)'
 
@@ -336,10 +420,10 @@ const ctxX = document.getElementById('myChartX').getContext('2d');
                 borderColor:'rgba(255, 400, 300, 0.9)',
                 tension: 0.2
             }],
-            
+
             labels: [@foreach($chamadasMesTotal as $cMT) '{{($cMT -> data)}}', @endforeach]
         },
-        
+
         options: {
             scales: {
                 y: {

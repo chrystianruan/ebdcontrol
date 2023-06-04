@@ -8,25 +8,25 @@
 <div class="divPositions">
 
 <div class="positions">
-    
+
 
     <div class="nivers" style="background-color: transparent; border: none; box-shadow: none">
-    <h1 style="font-size: 35px;color: #ccc; text-shadow: #fff 0 1px; border: 0.2px solid #ccc; box-shadow: 1px 0.5px #ccc; padding: 10px; border-radius: 10px ">Saldo Atual: 
-    <font style="background-color:blue; color: white; border-radius: 10px; padding: 1px"> R$ {{number_format($entradas->sum('valor') - $saidas->sum('valor'), 2, ",", "." )}} </font></h1>
+    <h1 style="font-size: 35px;color: #ccc; text-shadow: #fff 0 1px; border: 0.2px solid #ccc; box-shadow: 1px 0.5px #ccc; padding: 10px; border-radius: 10px ">Saldo Atual:
+    <span style="background-color:blue; color: white; border-radius: 10px; padding: 1px"> R$ {{number_format(($entradas->sum('valor') - $saidas->sum('valor')), 2, ",", "." )}} </span></h1>
     </div>
 
     <div class="nivers" >
     <h2 style="color: #ccc; text-shadow: #fff 0 1px; text-align:center">Ano ({{date('Y')}}) </h2> <hr style="margin-bottom: 5px;">
-    <h3> <font style="color: green"> (+) Entradas</font> :  @if($entradasAno->count() > 0) <font style="background-color: green; border-radius: 5px; padding: 0.5px"> R$ {{number_format($entradasAno -> sum('valor') , 2, ",", "." )}}</font>  @else Nenhuma entrada  @endif</h3>
-    <h3> <font style="color: red">(-) Saídas </font>:  @if($saidasAno->count() > 0) <font style="background-color: red; border-radius: 5px; padding: 0.5px"> R$ {{number_format($saidasAno -> sum('valor') , 2, ",", "." )}}</font>  @else Nenhuma Saída  @endif</h3>
+    <h3> <font style="color: green"> (+) Entradas</font> :  @if($entradasAno->count() > 0) <font style="background-color: green; border-radius: 5px; padding: 0.5px"> R$ {{ number_format($entradasAno -> sum('valor') , 2, ",", "." ) }}</font>  @else Nenhuma entrada  @endif</h3>
+    <h3> <font style="color: red">(-) Saídas </font>:  @if($saidasAno->count() > 0) <font style="background-color: red; border-radius: 5px; padding: 0.5px"> R$ {{ number_format($saidasAno -> sum('valor') , 2, ",", "." ) }}</font>  @else Nenhuma Saída  @endif</h3>
     <hr style="margin: 5%">
-    <h3> <font style="color: yellow">(=) Saldo </font>: <font style="background-color: yellow; color: @if($entradasAno->sum('valor') - $saidasAno->sum('valor') > 0) green; @elseif($entradasAno->sum('valor') - $saidasAno->sum('valor') < 0) red; @else black; @endif border-radius: 5px; padding: 0.5px"> R$ {{number_format($entradasAno->sum('valor') - $saidasAno->sum('valor'), 2, ",", "." )}}</font></h3>
+    <h3> <font style="color: yellow">(=) Saldo </font>: <font style="background-color: yellow; color: @if($entradasAno->sum('valor') - $saidasAno->sum('valor') > 0) green; @elseif($entradasAno->sum('valor') - $saidasAno->sum('valor') < 0) red; @else black; @endif border-radius: 5px; padding: 0.5px"> R$ {{number_format( ($entradasAno->sum('valor') - $saidasAno->sum('valor')) , 2, ",", "." )}}</font></h3>
     </div>
 
-    
+
 
     <div class="nivers" >
-    <h2 style="color: #ccc; text-shadow: #fff 0 1px; text-align:center">Mês ({{date('m/Y')}}) </h2> <hr style="margin-bottom: 5px">
+    <h2 style="color: #ccc; text-shadow: #fff 0 1px; text-align:center">Mês ({{date('m/Y')}})  </h2> <hr style="margin-bottom: 5px">
     <h3> <font style="color: green"> (+) Entradas</font> :  @if($entradasMes->count() > 0) <font style="background-color: green; border-radius: 5px; padding: 0.5px"> R$ {{number_format($entradasMes -> sum('valor') , 2, ",", "." )}}</font>  @else Nenhuma entrada  @endif</h3>
     <h3> <font style="color: red">(-) Saídas </font>:  @if($saidasMes->count() > 0) <font style="background-color: red; border-radius: 5px; padding: 0.5px"> R$ {{number_format($saidasMes -> sum('valor') , 2, ",", "." )}}</font>  @else Nenhuma Saída  @endif</h3>
     <hr style="margin: 5%">
@@ -58,22 +58,22 @@
 </div>
 
 
-    
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
 <script>
 const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {
-    
+
     data: {
-       
-        labels: ['Janeiro/{{date('y')}}', 
-        'Fevereiro/{{date('y')}}' , 
-        'Março/{{date('y')}}', 
-        'Abril/{{date('y')}}', 
-        'Maio/{{date('y')}}', 
-        'Junho/{{date('y')}}', 
+
+        labels: ['Janeiro/{{date('y')}}',
+        'Fevereiro/{{date('y')}}' ,
+        'Março/{{date('y')}}',
+        'Abril/{{date('y')}}',
+        'Maio/{{date('y')}}',
+        'Junho/{{date('y')}}',
         'Julho/{{date('y')}}',
         'Agosto/{{date('y')}}',
         'Setembro/{{date('y')}}',
@@ -89,7 +89,7 @@ const myChart = new Chart(ctx, {
             ],
             borderColor: [
                 'green'
-            
+
             ],
             borderWidth: 1,
             tension: 0.3
@@ -102,7 +102,7 @@ const myChart = new Chart(ctx, {
             ],
             borderColor: [
                 'red'
-            
+
             ],
             borderWidth: 1,
             tension: 0.3
@@ -118,7 +118,7 @@ const myChart = new Chart(ctx, {
             ],
             borderColor: [
                 'yellow'
-            
+
             ],
             borderWidth: 1,
             tension: 0.3
@@ -126,8 +126,8 @@ const myChart = new Chart(ctx, {
 
 
         }]
-    
-    
+
+
 
     },
     options: {

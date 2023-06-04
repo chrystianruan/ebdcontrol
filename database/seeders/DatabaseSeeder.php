@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -239,9 +240,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\Uf::factory()->create([
             'nome' => 'TO'
         ]);
-     
+
         //cats
-   
+
         \App\Models\Financeiro_cat::factory()->create([
             'nome' => 'Doação'
         ]);
@@ -297,13 +298,13 @@ class DatabaseSeeder extends Seeder
         \App\Models\Financeiro::factory()->create([
             'nome' => 'Saída'
         ]);
-        
-        
-        
+
+
+
         \App\Models\User::factory()->create([
             'name' => 'Chrystian Ruan',
-            'username' => 'chrys.admin',
-            'password' => bcrypt('ebd@chrystian2003'), // password
+            'username' => 'chrys.master',
+            'password' => bcrypt('ebd@2003'), // password
             'remember_token' => Str::random(10),
             'id_nivel' => 1,
             'status' => 0,

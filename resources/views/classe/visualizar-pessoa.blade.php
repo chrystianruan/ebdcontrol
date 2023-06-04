@@ -10,30 +10,30 @@
 	@if($pessoa->responsavel != null)
 	<span class="pro2"> Menor de idade</span>
 	@endif
-	<img class="round" 
-	src="@if($pessoa -> id_funcao == 1) /img/student.png 
-	@elseif($pessoa -> id_funcao == 2) /img/teacher.png 
-	@elseif($pessoa -> id_funcao == 3) /img/consultant.png 
-	@elseif($pessoa -> id_funcao == 4) /img/secretary.png 
-	@else /img/manager.png 
-	
-	
+	<img class="round"
+	src="@if($pessoa -> id_funcao == 1) /img/student.png
+	@elseif($pessoa -> id_funcao == 2) /img/teacher.png
+	@elseif($pessoa -> id_funcao == 3) /img/consultant.png
+	@elseif($pessoa -> id_funcao == 4) /img/secretary.png
+	@else /img/manager.png
+
+
 	@endif" alt="user" />
 	<h3>{{$pessoa -> nome}}	</h3>
 	<h4>{{$findSala -> nome}}</h4>
 	<h6 style="color: yellow">@if($pessoa->id_funcao == 1) Aluno @elseif($pessoa->id_funcao == 2) Professor @elseif($pessoa->id_funcao == 3) Secretário/Classe @elseif($pessoa->id_funcao == 4) Secretário/Adm @elseif($pessoa->id_funcao == 5) Superintendente @else Erro @endif</h6>
 	<p> Idade: <span style="color: yellow">
-		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2) 
+		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano
         @else
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} anos
         @endif
-	
+
 		({{date('d/m/Y', strtotime($pessoa -> data_nasc))}})</span>
 	</p>
 	<p>Endereço:  <span style="color: yellow">{{$pessoa -> cidade}} /@foreach($ufs as $uf) @if($uf -> id == $pessoa -> id_uf) {{$uf -> nome}} @endif @endforeach </span> </p>
-	<p>N° de telefone: @if($pessoa -> telefone == null) <span style="color: #aaa">Sem dados</span> @else {{$pessoa -> telefone}} @endif</p>
-	
+	<p>N° de telefone: @if($pessoa -> telefone == null) <span style="color: #aaa">Sem dados</span> @else <a style="color: yellow" href="https://api.whatsapp.com/send?phone=55{{$pessoa -> telefone}}">{{$pessoa -> telefone}}</a>  @endif</p>
+
 	<div class="skills">
 		<h6>Infos Gerais</h6>
 		<ul>

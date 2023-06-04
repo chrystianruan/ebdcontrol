@@ -11,14 +11,14 @@
 
 <form action="/classe/pessoas" method="POST">
   @csrf
- 
+
   <div class="fields">
   <div class="itens">
   <legend class="title">Filtrar por: </legend>
   </div>
   <font style=";margin-left: 15px;font-size: 12px; color: white">(O filtro <mark>Nome</mark> é exclusivo. Portanto, para funcionar corretamente, não poderá ser usado com outros filtros)</font>
-    
-    
+
+
     <div class="itens">
     <input type="text" name="nome" placeholder="Digite o nome da pessoa">
 
@@ -59,7 +59,7 @@
     <option value="2">Inativo</option>
 
     </select>
-    
+
 
     <div class="btnFilter">
     <button type="submit" class="filter">Filtrar</button>
@@ -75,7 +75,7 @@
   <div class="busca">
 
 @if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($interesse))
-  <p class="tit">Buscando por: @if(isset($nome) && (isset($sexo) || isset($id_funcao) || isset($situacao)))<i class="result">Tudo</i> @endif</p> 
+  <p class="tit">Buscando por: @if(isset($nome) && (isset($sexo) || isset($id_funcao) || isset($situacao)))<i class="result">Tudo</i> @endif</p>
   @if(isset($nome) && empty($sexo) && empty($id_funcao) && empty($situacao))
    <li class="ponto">Nome: <i class="result">{{$nome}}</i></li>
   @endif
@@ -84,7 +84,7 @@
   <li class="ponto">Sexo: <i class="result">@if($sexo == 1) Masculino @else Feminino @endif</i></li>
   @endif
 
-  @if(isset($niver) && empty($nome)) 
+  @if(isset($niver) && empty($nome))
     <li class="ponto">Aniversário: <i class="result">@foreach($meses_abv as $num => $mes) @if($niver == $num) {{$num}} - {{$mes}} @endif @endforeach</i></li>
   @endif
 
@@ -103,14 +103,14 @@
   </div>
   @else
 
-  <p class="tit">Buscando por: <i class="result">Tudo</i></p> 
+  <p class="tit">Buscando por: <i class="result">Tudo</i></p>
 
   @endif
 
 
 </div>
 
-  </div> 
+  </div>
 
   @if($pessoas->count() > 0)
   <table style="margin:3%">
@@ -123,20 +123,20 @@
   </thead>
   @foreach($pessoas as $pessoa)
   <tbody>
-    
-    <tr @if($pessoa -> situacao == 2) class="disabled" @endif> 
+
+    <tr @if($pessoa -> situacao == 2) class="disabled" @endif>
       <td style="width: 350px">{{$pessoa -> nome}}
       <td  style="@if($pessoa -> telefone == null)color: gray;@endif text-align: center" >
           @if($pessoa -> telefone == null)
           -
-          @else 
-          <a class="link-wpp" href="https://web.whatsapp.com/send?phone=55{{ $pessoa->telefone }}" target="blank"> {{$pessoa -> telefone}} </a> 
+          @else
+          <a class="link-wpp" href="https://api.whatsapp.com/send?phone=55{{ $pessoa->telefone }}" target="blank"> {{$pessoa -> telefone}} </a>
           @endif
       <td> <a href="/classe/visualizar-pessoa/{{$pessoa->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a> </td>
     </tr>
-    
+
   </tbody>
-  @endforeach  
+  @endforeach
 </table>
 @else
 <div class="ngm">

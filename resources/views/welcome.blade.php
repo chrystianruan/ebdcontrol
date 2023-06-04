@@ -37,14 +37,14 @@
               </div>
           @endif
           <div class="row">
-           
+
             <i class="bx bx-user-circle"></i>
             <input type="text" placeholder="Nome de usuário" name="username" required value="{{old('username')}}">
           </div>
           <div class="row">
-            <i id="olho" class="bx bx-lock-alt" style="cursor: pointer"></i>
-            <input type="password" id="senha" placeholder="Senha" name="password" required>
-            
+            <i id="btn-lock" class="bx bx-lock-alt" style="cursor: pointer"></i>
+            <input type="password" id="password" placeholder="Senha" name="password" required>
+
           </div>
           <div class="pass"><a href="/forgot-password">Esqueceu a senha?</a></div>
           <div class="row button">
@@ -53,34 +53,27 @@
         </form>
       </div>
     </div>
-  
-  
+
+
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
-var senha = $('#senha');
-var olho= $("#olho");
-    olho.mousedown(function() {
-      senha.attr("type", "text");
-    });
+    let password = document.getElementById("password");
+    let btnLock = document.getElementById("btn-lock");
 
-    olho.mousedown(function() {
-      olho.attr("class", "bx bx-lock-open");
-    });
+    function showOrHidePassword() {
+        if (password.type === "password") {
+            password.type = "text";
+            btnLock.className = "bx bx-lock-open-alt";
+        } else {
+            password.type = "password";
+            btnLock.className = "bx bx-lock-alt"
+        }
 
-    olho.mouseup(function() {
-      senha.attr("type", "password");
-    });
+    }
 
-    olho.mouseup(function() {
-      olho.attr("class", "bx bx-lock-alt");
-    });
+    btnLock.addEventListener("click", showOrHidePassword);
 
-    // para evitar o problema de arrastar a imagem e a senha continuar exposta, 
-    //citada pelo nosso amigo nos comentários
-    $( "#olho" ).mouseout(function() { 
-      $("#senha").attr("type", "password");
-    });
 
 </script>
 
@@ -88,4 +81,3 @@ var olho= $("#olho");
 
 
 
- 

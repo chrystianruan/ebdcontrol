@@ -11,7 +11,7 @@
         <form action="/admin/cadastro/pessoa" method="POST">
         @csrf
             <div class="form first">
-            
+
             @if ($errors->any())
             <div class="alert">
                 <ul>
@@ -24,28 +24,28 @@
             <div class="caution">
                 <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/admin/filtro/pessoa">pessoas</a>.</p>
                 </div>
-           
+
                 <div class="details personal">
                     <div style="float:right; margin-right: 2%">
                         <label>Menor de idade?</label>
                         <input type="checkbox"  id="scales" name="scales" @if(isset($check)) checked @endif>
                         </div>
                     <span class="title">Informações pessoais</span>
-                    
-                    
+
+
                     <div class="fields">
                         <div class="input-field">
                             <label>Nome completo <font style="color:red;font-weight: bold">*</font></label>
                             <input type="text" name="nome" required placeholder="Digite o nome" value="{{old('nome')}}">
                         </div>
 
-    
+
 
                         <div class="input-field" id="nomeResp" style="display:none">
-                        
+
                         <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" name="responsavel" id="responsavel" placeholder="Digite o nome do responsável" value="{{old('responsavel')}}">
-                      
+
                         </div>
 
                         <div class="input-field" style="width: 130px">
@@ -54,7 +54,17 @@
                                 <option selected disabled value="">Selecionar</option>
                                 <option @if(old('sexo') == 1) selected @endif value="1">Masculino</option>
                                 <option  @if(old('sexo') == 2) selected @endif value="2">Feminino</option>
-                                
+
+                            </select>
+                        </div>
+
+                        <div class="input-field" style="width: 130px">
+                            <label>Tem filhos?<span style="color:red;font-weight: bold">*</span></label>
+                            <select name="filhos" required>
+                                <option selected disabled value="">Selecionar</option>
+                                <option  @if(old('filhos') == 1) selected @endif value="1">Não</option>
+                                <option @if(old('filhos') == 2) selected @endif value="2">Sim</option>
+
                             </select>
                         </div>
 
@@ -84,7 +94,7 @@
                                 @foreach($ufs as $uf)
                                 <option @if($uf->id == old('id_uf')) selected @endif value="{{$uf -> id}}">{{$uf -> nome}}</option>
                                 @endforeach
-                                
+
                             </select>
                         </div>
 
@@ -98,9 +108,9 @@
                         </div>
 
 
-                    
 
-                        
+
+
                     </div>
                 </div>
 
@@ -136,10 +146,10 @@
                                 @endif
                                 @endforeach
                                 </select>
-                       
+
                         </div>
 
-            
+
 
                         <div class="input-field" style="width: 180px">
                             <label>Interesse em ser professor? <font style="color:red; font-weight: bold">*</font></label>
@@ -155,7 +165,7 @@
                             <input type="hidden" value="">
                         </div>
 
-                        
+
                         </div>
                         </div>
 
@@ -172,7 +182,7 @@
                                 <option value=2>Não</option>
                                 <option value=3>Mais ou menos</option>
                                 </select>
-                                
+
                     </div>
 
                         <div class="input-field" style="width: 170px">
@@ -182,7 +192,7 @@
                                 <option value=1>Sim</option>
                                 <option value=2>Não</option>
                                 </select>
-                                
+
                         </div>
 
 
@@ -191,9 +201,9 @@
                             <select class="inputprof" name="prof_ebd">
                             <option selected disabled value="">Selecionar</option>
                                 <option value=1>Sim</option>
-                                <option value=2>Não</option>  
+                                <option value=2>Não</option>
                                 </select>
-                        
+
                         </div>
 
                         <div class="input-field" style="width: 160px">
@@ -201,12 +211,12 @@
                             <select class="inputprof" name="prof_comum">
                             <option selected disabled value="">Selecionar</option>
                                 <option value=1>Sim</option>
-                                <option value=2>Não</option>  
+                                <option value=2>Não</option>
                                 </select>
-                        
+
                         </div>
 
-                  
+
                         <div class="input-field" style="width: 200px">
                             <label>Para qual público prefere dar aula? <font style="color:red;font-weight: bold">*</font></label>
                             <select class="inputprof" name="id_public">
@@ -215,17 +225,17 @@
                                 <option value="{{$publico -> id}}">{{$publico -> nome}}</option>
                                 @endforeach
                                 </select>
-                       
+
                         </div>
                     </div>
                   </div>
-                
+
                         <button type="submit" class="sumbit">
                             <span class="btnText">Enviar</span>
                             <i class="uil uil-navigator"></i>
                         </button>
-                </div> 
-            
+                </div>
+
 
 
         </form>
@@ -237,7 +247,7 @@
       $("#field").val(this.value.match(/[0-9]*/));
   });
 });
-    
+
 </script>
 <form>
 @endsection

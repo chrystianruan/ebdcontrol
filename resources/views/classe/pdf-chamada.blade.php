@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    
+
     <title>Chamada - PDF</title>
 </head>
 <style>
 
     .container div {
-        margin: 10px auto;
+        margin-bottom: 3%;
         position: relative;
     }
     .center {
+        text-align: center;
+        font-size: 12px;
+
+    }
+    .center-item {
+        margin-left: 7.5%;
+        float: left;
+    }
+
+    .center-text {
+        margin: 2% auto;
         text-align: center;
         font-size: 12px;
 
@@ -25,6 +36,7 @@
 
 
     .infos {
+        margin: 15% 0;
        border: 1px solid black;
        padding: 5px 12px;
        font-size: 11px;
@@ -40,13 +52,13 @@
     }
 
     .span-emphasis {
-        font-weight: bolder; 
+        font-weight: bolder;
         font-style: italic;
     }
 
     .tables {
-       
-    
+
+
     }
     .big-table {
         font-size: 10px;
@@ -71,9 +83,9 @@
     th {
         border-bottom: 1px solid black;
         padding: 5px;
-        background-color: #ccc: 
+        background-color: #ccc:
     }
-    
+
 
     td {
         border-bottom: 1px solid black;
@@ -92,28 +104,28 @@
     }
 
     #presentes {
-        color: @if(100 * $chamada->presentes / $chamada->matriculados <= 50) red 
+        color: @if(100 * $chamada->presentes / $chamada->matriculados <= 50) red
         @elseif(100 * $chamada->presentes / $chamada->matriculados > 50 && 100 * $chamada->presentes / $chamada->matriculados <= 75) orange
         @elseif(100 * $chamada->presentes / $chamada->matriculados > 75 && 100 * $chamada->presentes / $chamada->matriculados <= 100) green
         @else blue @endif
     }
 
     #assist_total {
-        color: @if(100 * $chamada->assist_total / $chamada->matriculados <= 50) red 
+        color: @if(100 * $chamada->assist_total / $chamada->matriculados <= 50) red
         @elseif(100 * $chamada->assist_total / $chamada->matriculados > 50 && 100 * $chamada->assist_total / $chamada->matriculados <= 75) orange
         @elseif(100 * $chamada->assist_total / $chamada->matriculados > 75 && 100 * $chamada->assist_total / $chamada->matriculados <= 100) green
         @else blue @endif
     }
 
     #biblias {
-        color: @if(100 * $chamada->biblias / $chamada->assist_total <= 50) red 
+        color: @if(100 * $chamada->biblias / $chamada->assist_total <= 50) red
         @elseif(100 * $chamada->biblias / $chamada->assist_total > 50 && 100 * $chamada->biblias / $chamada->assist_total <= 75) orange
         @elseif(100 * $chamada->biblias / $chamada->assist_total > 75 && 100 * $chamada->biblias / $chamada->assist_total <= 100) green
         @else blue @endif
     }
 
     #revistas {
-        color: @if(100 * $chamada->revistas / $chamada->assist_total <= 50) red 
+        color: @if(100 * $chamada->revistas / $chamada->assist_total <= 50) red
         @elseif(100 * $chamada->revistas / $chamada->assist_total > 50 && 100 * $chamada->revistas / $chamada->assist_total <= 75) orange
         @elseif(100 * $chamada->revistas / $chamada->assist_total > 75 && 100 * $chamada->revistas / $chamada->assist_total <= 100) green
         @else blue @endif
@@ -122,12 +134,12 @@
     .result {
         padding: 1px 3px;
         border-radius: 3px;
-        border: 1px solid black; 
+        border: 1px solid black;
         background-color: none;
-        font-weight: bolder 
+        font-weight: bolder
     }
 
-    .caption { 
+    .caption {
         font-weight: bolder;
         border: 1px solid;
         border-radius: 15px;
@@ -141,19 +153,20 @@
         border-collapse: collapse;
 
     }
-        
+
 </style>
 <body>
     <div class="container">
         <div class="center">
-    
-            <h3>Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
+            <img src="img/logo-adpar.jpg" class="center-item" width="70">
+            <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
+            <img class="center-item" src="img/logo_ebd.jpg" width="70">
 
-        
         </div>
+
         <div class="infos">
             <p>Frequência da classe: <span style="font-weight: bolder">{{ $chamada->nome }}</span>
-            
+
             </p>
             <p style="float: right; margin-top: -25px">Data: <span style="font-weight: bolder">{{date('d/m/Y', strtotime($chamada->created_at))}}</span></p>
             <table class="normal-table">
@@ -179,17 +192,17 @@
                     </tr>
                 </tbody>
             </table>
-            {{--  <div class="center">
+            <div class="center-text">
                  <span class="caption" style="background-color: red;color:red  ">F</span> = Ruim/Péssimo |
                  <span class="caption" style="background-color: orange; color:orange ">F</span> = Médio |
                  <span class="caption" style="background-color: green;color:green ">F</span> = Bom |
                  <span class="caption" style="background-color: blue;color:blue ">F</span> = Muito Bom/Excelente
                  </div>
-                --}}
+
 
         </div>
 
-      
+
 
         <div class="tables">
             <table class="big-table">
@@ -200,7 +213,7 @@
                 </thead>
 
                 <tbody>
-                   
+
                     @foreach($chamada->nomes as $pessoa)
                     <tr>
                         <td> {{ $pessoa['nome'] }}</td>
@@ -223,19 +236,19 @@
                         <td style="text-align: center">@if($presenca == 1) <span style="color: green; font-weight: bolder">Sim</span> @else <span style="color: red; font-weight: bolder">Não</span> @endif</td>
                     </tr>
                     @endforeach
-             
+
 
                 </tbody>
             </table>
 
-         
+
         </div>
-   
-    
+
+
     </div>
 
 
-     
+
         <p class="small">Documento gerado automaticamente em <span class="span-emphasis">{{date('d/m/Y')}}</span> às <span class="span-emphasis">{{date('H:i:s')}}</span>, pelo sistema de administração <span class="span-emphasis">EBDControl</span></p>
 
 </body>

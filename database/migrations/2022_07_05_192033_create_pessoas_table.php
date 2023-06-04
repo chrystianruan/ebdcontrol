@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nome');
             $table->boolean('sexo');
+            $table->string('paternidade_maternidade')->nullable();
             $table->date('data_nasc');
             $table->string('responsavel')->nullable();
             $table->string('ocupacao')->nullable();

@@ -20,7 +20,7 @@ class AuthController extends Controller
             'password.required' =>  'Senha é obrigatória.',
             'password.min' => 'A senha precisa ter no mínimo 8 dígitos.'
         ]);
-        
+
         if(Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect('/inicio');
         } else {
@@ -59,9 +59,9 @@ class AuthController extends Controller
         return view("/about");
     }
 
-    
+
     public function indexUsuarioMaster() {
-        
+
         $dataAtual = date('d/m/Y');
         $niveis = Sala::orderBy('nome')->get();
         return view('/master/cadastro/usuario', ['niveis' => $niveis, 'dataAtual' => $dataAtual]);
@@ -110,13 +110,13 @@ class AuthController extends Controller
         //nome
         if(isset($request->nome) && empty($request->nivel) && empty($request -> status)) {
             $users = User::where([['name', 'like', '%'.$request -> nome.'%']])->get();
-       
-        } 
+
+        }
          //nivel
         elseif(empty($request->nome) && isset($request->nivel) && empty($request -> status)) {
             $users = User::where('id_nivel', '=', $request->nivel)->get();
-        
-        } 
+
+        }
         //status
         elseif(empty($request->nome) && empty($request->nivel) && isset($request -> status)) {
             $users = User::where('status', $request->status)->get();
@@ -141,7 +141,7 @@ class AuthController extends Controller
     public function editUserMaster($id) {
         $user = User::findOrFail($id);
         $niveis = Sala::orderBy('nome')->get();
-        
+
 
         return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
     }
@@ -163,12 +163,8 @@ class AuthController extends Controller
 
         ]);
 
-        if(isset($request -> nome) || isset($request->password) || isset($request->username)) {
-            return redirect('/master/filtro/usuario')->with('msg2', 'Seu usuário não tem permissão para editar isso');
-        } else {
             User::findOrFail($request->id)->update($request->all());
             return redirect('/master/filtro/usuario')->with('msg', 'Usuário atualizado com sucesso.');
-        }
 
 
     }
@@ -200,11 +196,11 @@ class AuthController extends Controller
 
     public function logout(Request $request) {
         Auth::logout();
- 
+
         $request->session()->invalidate();
-    
+
         $request->session()->regenerateToken();
-    
+
         return redirect('/');
 
     }
