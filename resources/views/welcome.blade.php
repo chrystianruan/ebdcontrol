@@ -46,6 +46,7 @@
             <input type="password" id="password" placeholder="Senha" name="password" required>
 
           </div>
+            <div class="pass" style="font-size:13px"><p>Clique no <span class="bx bx-lock-alt"></span> para ver a senha</p></div>
           <div class="pass"><a href="/forgot-password">Esqueceu a senha?</a></div>
           <div class="row button">
             <input type="submit" value="Login">
