@@ -8,7 +8,7 @@
 
 
 
-@if($chamadas->count() != $salas->count() && $relatorioToday -> count() < 1)
+@if($chamadas->count() != $salas->count() && $relatorioToday -> count() < 1 && date('w') == 0)
 <div class="orientation">
   <div class="aaa">
       <p><i style="color: white; margin: 5px"class="fa fa-exclamation-circle"></i>{{$salas->count() - $chamadas->count()}} @if($salas->count() - $chamadas->count() > 1) classes ainda não fizeram a chamada @else classe ainda não fez a chamada @endif</p>

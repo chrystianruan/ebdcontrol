@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/chamada.css">
 
-@if($chamadas -> count() == 0)
+@if($chamadas -> count() == 0 && date('w') == 0)
     @if ($errors->any())
     <div class="alert">
         <ul>
@@ -16,7 +16,7 @@
         </ul>
     </div>
     @endif
-<form action="/classe/chamada-dia" method="POST"> 
+<form action="/classe/chamada-dia" method="POST">
     @csrf
 <div style=" overflow-x: auto">
 <table style="margin: 3% 3% 0 3%;">
@@ -29,7 +29,7 @@
         <th>Presente</th>
         </tr>
     </thead>
-   
+
     <tbody>
         @foreach($pessoas as $p)
         <tr>
@@ -88,20 +88,20 @@
         <i class="uil uil-navigator"></i>
     </button>
   </div>
- 
- 
+
+
 </div>
 
 </form>
 @else
-    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe @foreach($salas as $s) @foreach($chamadas as $c) @if($c -> id_sala == $s -> id) {{ $s -> nome }} @endif @endforeach @endforeach já foi cadastrada </p></div>
+    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe @foreach($salas as $s) @foreach($chamadas as $c) @if($c -> id_sala == $s -> id) {{ $s -> nome }} @endif @endforeach @endforeach já foi cadastrada ou hoje não é domingo. </p></div>
 @endif
-  
+
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
   <script>
 
 
- 
+
 
     let presencas = document.querySelectorAll(".presencas");
     let presente = document.getElementById("presentes");
@@ -115,20 +115,20 @@
                 presenca.style.cssText = "background-color: green;" + "color: white;";
                 presente.value = ++presente.value;
                 assist_total.value = ++assist_total.value;
-  
+
             } else {
                 presenca.style.cssText = "background-color: red;" + "color: white;";
                 presente.value = --presente.value;
                 assist_total.value = --assist_total.value;
-  
- 
+
+
             }
-           
+
         });
     }
 
     visitantes.addEventListener("keyup", function() {
-           
+
                 soma = parseInt(visitantes.value) + parseInt(presente.value);
                 assist_total.value = soma;
 
@@ -137,9 +137,9 @@
 
 
 
- 
 
-   
+
+
 
   </script>
 @endsection

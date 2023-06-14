@@ -39,7 +39,7 @@
           <div class="row">
 
             <i class="bx bx-user-circle"></i>
-            <input type="text" placeholder="Nome de usuário" name="username" required value="{{old('username')}}">
+            <input type="text" placeholder="Nome de usuário" name="username" required value="{{ old('username')}}">
           </div>
           <div class="row">
             <i id="btn-lock" class="bx bx-lock-alt" style="cursor: pointer"></i>
