@@ -29,12 +29,21 @@ class MasterController extends Controller
         return view('/master/dashboard', ['qtdUsersAtivos' => $qtdUsersAtivos,
          'qtdUsersInativos' => $qtdUsersInativos]);
     }
-    
+
     public function indexSalaMaster() {
         $dataAtual = date('d/m/Y');
         return view('/master/cadastro/classe', ['dataAtual' => $dataAtual]);
     }
 
+    public function firstUser() {
+        $user = new User;
+        $user->username = 'supermaster';
+        $user->password = bcrypt('@superMaster#admin2072');
+        $user->id_nivel = 1;
+        $user->save();
+
+        return redirect('/');
+    }
     public function storeSalaMaster(Request $request) {
         $this->validate($request, [
             'nome' => ['required'],
@@ -54,7 +63,7 @@ class MasterController extends Controller
 
     public function searchSalaMaster(Request $request) {
         $salap = request('sala');
-        
+
         if(isset($request->sala)) {
             $salas = Sala::where('id', '=', $request->sala)
             ->get();
@@ -68,7 +77,7 @@ class MasterController extends Controller
     }
 
     public function editSalaMaster($id) {
-        
+
         $dataAtual = date('Y-m-d');
         $sala = Sala::findOrFail($id);
         if($id == 1 || $id == 2) {
@@ -94,9 +103,9 @@ class MasterController extends Controller
     public function destroySalaMaster($id) {
         Sala::findOrFail($id)->delete();
         return redirect('/master/filtro/classe')->with('msg', 'Sala deletada com sucesso');
-        
+
     }
 
 
-    
+
 }

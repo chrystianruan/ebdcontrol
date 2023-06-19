@@ -124,6 +124,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/relatorio/{id}', [AdminController::class, 'showRelatorio']);
     Route::get('/admin/visualizar/pdf-relatorio/{id}', [AdminController::class, 'generatePdfToRelatorios']);
 
+    Route::get('/first-user', [MasterController::class, 'firstUser']);
 
 });
 
