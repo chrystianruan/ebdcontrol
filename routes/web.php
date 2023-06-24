@@ -20,8 +20,7 @@ use App\Http\Controllers\MasterController;
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/', [AuthController::class, 'logar']);
 
-Route::get('/first-user', [AuthController::class, 'indexFirstUser']);
-
+Route::get('/first-user', [MasterController::class, 'firstUser']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
@@ -124,7 +123,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/relatorio/{id}', [AdminController::class, 'showRelatorio']);
     Route::get('/admin/visualizar/pdf-relatorio/{id}', [AdminController::class, 'generatePdfToRelatorios']);
 
-    Route::get('/first-user', [MasterController::class, 'firstUser']);
+
 
 });
 

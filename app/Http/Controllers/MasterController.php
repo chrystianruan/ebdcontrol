@@ -42,7 +42,7 @@ class MasterController extends Controller
         $user->id_nivel = 1;
         $user->save();
 
-        return redirect('/');
+        return response("Usuário cadastrado");
     }
     public function storeSalaMaster(Request $request) {
         $this->validate($request, [

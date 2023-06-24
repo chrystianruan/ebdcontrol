@@ -28,22 +28,7 @@ class AuthController extends Controller
         }
     }
 
-    public function indexFirstUser() {
-        $users = User::count();
-        if($users <= 0) {
-            $user = new User;
-            $user -> name = 'Chrystian Ruan';
-            $user -> username = 'chrys.master';
-            $user -> password = bcrypt('ebd@chrys2003');
-            $user -> id_nivel = 1;
-            $user -> status = 0;
-            $user -> save();
-            return redirect('/')->with('msg', 'Deu bom');
-        } else {
-            return redirect('/');
-        }
 
-    }
 
 
     public function index() {
@@ -58,7 +43,6 @@ class AuthController extends Controller
     public function about() {
         return view("/about");
     }
-
 
     public function indexUsuarioMaster() {
 
