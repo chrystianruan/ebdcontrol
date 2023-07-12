@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 
-class Classe
+class SuperMaster
 {
     /**
      * Handle an incoming request.
@@ -16,12 +16,10 @@ class Classe
      */
     public function handle(Request $request, Closure $next)
     {
-
         $user = auth()->user();
-            if(auth()->check() AND ($user->id_nivel === 1 OR $user->id_nivel === 2)) {
-                return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
-            }
+        if (auth()->check() AND !$user->super_master) {
+            return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
+        }
         return $next($request);
-
     }
 }

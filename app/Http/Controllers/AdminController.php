@@ -27,50 +27,85 @@ class AdminController extends Controller
     //fim
 
     public function index() {
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
-        $formations = DB::select('SELECT id_formation, count(p.id) as qtd, f.nome  FROM pessoas as p LEFT JOIN formations as f ON  p.id_formation = f.id GROUP BY (id_formation)');
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
+        $formations = Pessoa::selectRaw('id_formation, count(pessoas.id) as qtd, formations.nome')
+            ->join('formations','formations.id', '=', 'pessoas.id_formation')
+            ->get();
         $dataMes = date('n');
         $dataAno = date('Y');
         $mesesNome = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         $meses = Pessoa::selectRaw('count(id) as qtd, MONTH(created_at) as mes')
         ->whereRaw('MONTH(created_at) > 0 AND MONTH(created_at) <= 12')
         ->whereYear('created_at', '=',$dataAno)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
         ->groupBy('mes')
         ->get();
-        $quantidadePais = Pessoa::where('paternidade_maternidade', '=', 'Pai')->count();
-        $quantidadeMaes = Pessoa::where('paternidade_maternidade', '=', 'Mãe')->count();
-        $interesseProf = Pessoa::where('interesse', '<>', 2)->where('id_funcao', '<>', 2)->count();
-        $idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
-        $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)->count();
-        $mativo = Pessoa::where('sexo', '=', 1)->where('situacao', '=', 1)->count();
-        $minativo = Pessoa::where('sexo', '=', 1)->where('situacao', '=', 2)->count();
-        $fativo = Pessoa::where('sexo', '=', 2)->where('situacao', '=', 1)->count();
-        $finativo = Pessoa::where('sexo', '=', 2)->where('situacao', '=', 2)->count();
-        $alunosInativos = Pessoa::where('situacao', '=', 2)->count();
+        $quantidadePais = Pessoa::where('paternidade_maternidade', '=', 'Pai')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $quantidadeMaes = Pessoa::where('paternidade_maternidade', '=', 'Mãe')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $interesseProf = Pessoa::where('interesse', '<>', 2)
+            ->where('id_funcao', '<>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        //$idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
+        $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $mativo = Pessoa::where('sexo', '=', 1)->where('situacao', '=', 1)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $minativo = Pessoa::where('sexo', '=', 1)->where('situacao', '=', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $fativo = Pessoa::where('sexo', '=', 2)->where('situacao', '=', 1)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $finativo = Pessoa::where('sexo', '=', 2)->where('situacao', '=', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $alunosInativos = Pessoa::where('situacao', '=', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
         $sexos = [$mativo, $minativo, $fativo, $finativo];
-        $funcoes = DB::table('pessoas')
-        ->select(DB::raw('count(pessoas.id) as qtd, id_funcao, funcaos.nome'))
-        ->leftJoin('funcaos', 'pessoas.id_funcao', '=', 'funcaos.id')
+        $funcoes = Pessoa::select(DB::raw('count(pessoas.id) as qtd, id_funcao, funcaos.nome'))
+        ->join('funcaos', 'pessoas.id_funcao', '=', 'funcaos.id')
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
         ->groupBy('id_funcao')
         ->get();
         $chamadasMesTotal = Chamada::select(DB::raw('date_format(created_at, "%d/%m/%Y") as data, sum(matriculados) as mat, sum(presentes) as pre, sum(visitantes) as vis'))
         ->whereMonth('created_at', '=', Carbon::now())
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
         ->groupBy(DB::raw('date_format(created_at, "%d/%m/%Y")'))->get();
-        $chamadaDia = Chamada::whereDate('created_at','=', Carbon::today())->get();
-        $chamadasMes = Chamada::whereMonth('created_at', '=', Carbon::now())->get();
-        $chamadasAno = Chamada::whereYear('created_at', '=', Carbon::now())->get();
-        $pessoas = Pessoa::orderBy('nome')->get();
+        $chamadaDia = Chamada::whereDate('created_at','=', Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $chamadasMes = Chamada::whereMonth('created_at', '=', Carbon::now())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $chamadasAno = Chamada::whereYear('created_at', '=', Carbon::now())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $pessoas = Pessoa::orderBy('nome')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         return view('/admin/dashboard', ['salas' => $salas, 'formations' => $formations, 'pessoas' => $pessoas,
          'meses' => $meses, 'mesesNome' => $mesesNome, 'niverMes' => $niverMes,'dataAno' => $dataAno,
          'sexos' => $sexos,'funcoes' => $funcoes, 'interesseProf' => $interesseProf,
-          'idadesPessoas' => $idadesPessoas, 'alunosInativos' => $alunosInativos,  'chamadaDia' => $chamadaDia,
+          'alunosInativos' => $alunosInativos,  'chamadaDia' => $chamadaDia,
           'chamadasMes' => $chamadasMes, 'chamadasMesTotal' => $chamadasMesTotal, 'chamadasAno' => $chamadasAno,
           'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes]);
     }
 
     public function indexPessoa() {
         $check = request('scales');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)->orderBy('nome')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         $ufs = Uf::orderBy("nome")->get();
         $publicos = Publico::all();
         $formations = Formation::all();
@@ -83,7 +118,9 @@ class AdminController extends Controller
         $publicos = Publico::all();
         $ufs = Uf::all();
         $formations = Formation::all();
-        $lastSala = Sala::orderBy('id', 'desc')->first();
+        $lastSala = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('id', 'desc')
+            ->first();
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
@@ -184,24 +221,25 @@ class AdminController extends Controller
         } else {
             $pessoa->paternidade_maternidade = null;
         }
-        $pessoa-> data_nasc = $request->data_nasc;
-        $pessoa-> responsavel = $request->responsavel;
-        $pessoa-> ocupacao = $request->ocupacao;
-        $pessoa-> cidade = $request->cidade;
-        $pessoa-> id_uf = $request->id_uf;
-        $pessoa-> telefone = $request->telefone;
-        $pessoa-> id_formation = $request->id_formation;
-        $pessoa-> cursos = $request->cursos;
-        $pessoa-> id_sala = ["$request->id_sala"];
-        $pessoa-> id_funcao = 1;
-        $pessoa-> situacao = 1;
-        $pessoa-> interesse = $request->interesse;
-        $pessoa-> frequencia_ebd = $request->frequencia_ebd;
-        $pessoa-> curso_teo = $request->curso_teo;
-        $pessoa-> prof_ebd = $request->prof_ebd;
-        $pessoa-> prof_comum = $request->prof_comum;
-        $pessoa-> id_public = $request->id_public;
-        $pessoa -> save();
+        $pessoa->responsavel = $request->responsavel;
+        $pessoa->ocupacao = $request->ocupacao;
+        $pessoa->cidade = $request->cidade;
+        $pessoa->data_nasc = $request->data_nasc;
+        $pessoa->id_uf = $request->id_uf;
+        $pessoa->telefone = $request->telefone;
+        $pessoa->id_formation = $request->id_formation;
+        $pessoa->cursos = $request->cursos;
+        $pessoa->id_sala = ["$request->id_sala"];
+        $pessoa->id_funcao = 1;
+        $pessoa->congregacao_id = auth()->user()->congregacao_id;
+        $pessoa->situacao = 1;
+        $pessoa->interesse = $request->interesse;
+        $pessoa->frequencia_ebd = $request->frequencia_ebd;
+        $pessoa->curso_teo = $request->curso_teo;
+        $pessoa->prof_ebd = $request->prof_ebd;
+        $pessoa->prof_comum = $request->prof_comum;
+        $pessoa->id_public = $request->id_public;
+        $pessoa->save();
         return redirect('/admin/cadastro/pessoa')->with('msg', 'Pessoa cadastrada com sucesso');
     }
 
@@ -209,8 +247,13 @@ class AdminController extends Controller
 
 
     public function showFilterPessoa() {
-        $pessoas = Pessoa::orderBy('nome')->get();
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $pessoas = Pessoa::orderBy('nome')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')
+            ->get();
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
         return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
@@ -225,7 +268,9 @@ class AdminController extends Controller
         $id_funcao = request('id_funcao');
         $situacao = request('situacao');
         $niver = request('niver');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
@@ -263,7 +308,9 @@ class AdminController extends Controller
             $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
         }
 
-        $pessoas = $pessoas->orderBy('nome')->get();
+        $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')
+            ->get();
 
         return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
             'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
@@ -276,7 +323,9 @@ class AdminController extends Controller
     public function saberMais($id) {
         $dataAtual = date('Y-m-d');
         $pessoa = Pessoa::findOrFail($id);
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
         $ufs = Uf::orderBy("nome")->get();
         $publicos = Publico::all();
         $formations = Formation::all();
@@ -289,7 +338,9 @@ class AdminController extends Controller
 
         $dataAtual = date('Y-m-d');
         $pessoa = Pessoa::findOrFail($id);
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
         $ufs = Uf::orderBy("nome")->get();
         $functions = Funcao::all();
         $publicos = Publico::all();
@@ -302,7 +353,9 @@ class AdminController extends Controller
         $ufs = Uf::all();
         $formations = Formation::all();
         $publicos = Publico::all();
-        $lastSala = Sala::orderBy('id', 'desc')->first();
+        $lastSala = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('id', 'desc')
+                ->first();
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
@@ -403,6 +456,7 @@ class AdminController extends Controller
         $pessoa-> prof_ebd = $request->prof_ebd;
         $pessoa-> prof_comum = $request->prof_comum;
         $pessoa-> id_public = $request->id_public;
+        $pessoa-> congregacao_id = auth()->user()->congregacao_id;
         $pessoa -> save();
         return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi atualizada com sucesso');
     }
@@ -418,48 +472,60 @@ class AdminController extends Controller
 
 
     public function indexFinanceiroGeral() {
-        $ents = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->orderBy('data_cad')->get();
+        $ents = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->orderBy('data_cad')->get();
         $cats = Financeiro_cat::orderBy("nome")->get();
         $tipos = Financeiro_tipo::all();
         $dataMes = date('n');
         $dataAno = date('Y');
-        $jE = Financeiro_transacao::whereMonth('data_cad', '=',1)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $fE = Financeiro_transacao::whereMonth('data_cad', '=',2)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $mE = Financeiro_transacao::whereMonth('data_cad', '=',3)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $aE = Financeiro_transacao::whereMonth('data_cad', '=',4)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $maE = Financeiro_transacao::whereMonth('data_cad', '=',5)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $junE = Financeiro_transacao::whereMonth('data_cad', '=',6)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $julE = Financeiro_transacao::whereMonth('data_cad', '=',7)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $agE = Financeiro_transacao::whereMonth('data_cad', '=',8)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $sE = Financeiro_transacao::whereMonth('data_cad', '=',9)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $oE = Financeiro_transacao::whereMonth('data_cad', '=',10)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $nE = Financeiro_transacao::whereMonth('data_cad', '=',11)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
-        $dE = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->sum('valor');
+        $jE = Financeiro_transacao::whereMonth('data_cad', '=',1)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $fE = Financeiro_transacao::whereMonth('data_cad', '=',2)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $mE = Financeiro_transacao::whereMonth('data_cad', '=',3)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $aE = Financeiro_transacao::whereMonth('data_cad', '=',4)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $maE = Financeiro_transacao::whereMonth('data_cad', '=',5)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $junE = Financeiro_transacao::whereMonth('data_cad', '=',6)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $julE = Financeiro_transacao::whereMonth('data_cad', '=',7)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $agE = Financeiro_transacao::whereMonth('data_cad', '=',8)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $sE = Financeiro_transacao::whereMonth('data_cad', '=',9)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $oE = Financeiro_transacao::whereMonth('data_cad', '=',10)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $nE = Financeiro_transacao::whereMonth('data_cad', '=',11)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $dE = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
         $mesesE = [$jE, $fE, $mE, $aE, $maE, $junE, $julE, $agE, $sE, $oE, $nE, $dE];
-        $jS = Financeiro_transacao::whereMonth('data_cad', '=',1)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $fS = Financeiro_transacao::whereMonth('data_cad', '=',2)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $mS = Financeiro_transacao::whereMonth('data_cad', '=',3)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $aS = Financeiro_transacao::whereMonth('data_cad', '=',4)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $maS = Financeiro_transacao::whereMonth('data_cad', '=',5)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $junS = Financeiro_transacao::whereMonth('data_cad', '=',6)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $julS = Financeiro_transacao::whereMonth('data_cad', '=',7)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $agS = Financeiro_transacao::whereMonth('data_cad', '=',8)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $sS = Financeiro_transacao::whereMonth('data_cad', '=',9)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $oS = Financeiro_transacao::whereMonth('data_cad', '=',10)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $nS = Financeiro_transacao::whereMonth('data_cad', '=',11)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
-        $dS = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->sum('valor');
+        $jS = Financeiro_transacao::whereMonth('data_cad', '=',1)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $fS = Financeiro_transacao::whereMonth('data_cad', '=',2)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $mS = Financeiro_transacao::whereMonth('data_cad', '=',3)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $aS = Financeiro_transacao::whereMonth('data_cad', '=',4)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $maS = Financeiro_transacao::whereMonth('data_cad', '=',5)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $junS = Financeiro_transacao::whereMonth('data_cad', '=',6)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $julS = Financeiro_transacao::whereMonth('data_cad', '=',7)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $agS = Financeiro_transacao::whereMonth('data_cad', '=',8)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $sS = Financeiro_transacao::whereMonth('data_cad', '=',9)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $oS = Financeiro_transacao::whereMonth('data_cad', '=',10)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $nS = Financeiro_transacao::whereMonth('data_cad', '=',11)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
+        $dS = Financeiro_transacao::whereMonth('data_cad', '=',12)->whereYear('data_cad', '=',$dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->sum('valor');
         $mesesS = [$jS, $fS, $mS, $aS, $maS, $junS, $julS, $agS, $sS, $oS, $nS, $dS];
         $saldosMeses = [($jE - $jS), ($fE - $fS), ($mE - $mS), ($aE - $aS), ($maE - $maS), ($junE - $junS), ($julE - $julS),
         ($agE - $agS), ($sE - $sS), ($oE - $oS), ($nE - $nS), ($dE - $dS)];
-        $entradas = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
-        $saidas = Financeiro_transacao::where('id_financeiro', '=', 2)->where('situacao', '=', 1)->get();
-        $entradasMes = Financeiro_transacao::whereMonth('data_cad', '=', $dataMes)->whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
-        $saidasMes = Financeiro_transacao::whereMonth('data_cad', '=', $dataMes)->whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->get();
-        $entradasAno = Financeiro_transacao::whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->get();
-        $saidasAno = Financeiro_transacao::whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->get();
-        $catsEnt = DB::select('SELECT id_cat, nome, sum(valor) as somaE FROM financeiro_transacaos as ef LEFT JOIN financeiro_cats as cf ON  ef.id_cat = cf.id WHERE id_financeiro = 1 AND situacao = 1 GROUP BY (id_cat);');
-        $catsSaida = DB::select('SELECT id_cat, nome, sum(valor) as somaS FROM financeiro_transacaos as sf LEFT JOIN financeiro_cats as cf ON  sf.id_cat = cf.id WHERE id_financeiro = 2 AND situacao = 1 GROUP BY (id_cat);');
+        $entradas = Financeiro_transacao::where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $saidas = Financeiro_transacao::where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $entradasMes = Financeiro_transacao::whereMonth('data_cad', '=', $dataMes)->whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $saidasMes = Financeiro_transacao::whereMonth('data_cad', '=', $dataMes)->whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $entradasAno = Financeiro_transacao::whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 1)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $saidasAno = Financeiro_transacao::whereYear('data_cad', '=', $dataAno)->where('id_financeiro', '=', 2)->where('situacao', '=', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
+        $catsEnt = Financeiro_transacao::selectRaw('id_cat, nome, sum(valor) as somaE')
+                                    ->join("financeiro_cats", "financeiro_transacaos.id_cat",'=', 'financeiro_cats.id')
+                                    ->where('id_financeiro', '=', 1)
+                                    ->where('situacao','=', 1)
+                                    ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                                    ->get();
+        $catsSaida = Financeiro_transacao::selectRaw('id_cat, nome, sum(valor) as somaE')
+            ->join("financeiro_cats", "financeiro_transacaos.id_cat",'=', 'financeiro_cats.id')
+            ->where('id_financeiro', '=', 2)
+            ->where('situacao','=', 1)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+
         $dataAtual = date('d/m/Y');
+
         return view('/admin/financeiro/geral', ['dataAtual' => $dataAtual, 'cats' => $cats, 'tipos' => $tipos,  'entradas' => $entradas, 'saidas' => $saidas, 'entradasMes' => $entradasMes,'saidasMes' => $saidasMes,
         'entradasAno' => $entradasAno, 'saidasAno' => $saidasAno, 'mesesE' => $mesesE, 'mesesS' => $mesesS,
         'catsEnt' => $catsEnt,'ents' => $ents, 'catsSaida' => $catsSaida, 'saldosMeses' => $saldosMeses]);
@@ -474,7 +540,7 @@ class AdminController extends Controller
         $mes = request('mes');
         $ano = request('ano');
         $users = User::all();
-        $ents = Financeiro_transacao::orderBy('data_cad')->get();
+       //$ents = Financeiro_transacao::orderBy('data_cad')->get();
         $cats = Financeiro_cat::orderBy("nome")->get();
         $tipos = Financeiro_tipo::all();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -501,7 +567,9 @@ class AdminController extends Controller
 
             }
 
-            $financeiros = $financeiros->orderByDesc('data_cad')->get();
+            $financeiros = $financeiros->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderByDesc('data_cad')
+                ->get();
         }
         elseif ($request->resultado == 2) {
 
@@ -525,9 +593,13 @@ class AdminController extends Controller
 
             }
 
-            $financeiros = $financeiros->orderByDesc('data_cad')->get();
+            $financeiros = $financeiros->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderByDesc('data_cad')
+                ->get();
         } else {
-            $financeiros = Financeiro_transacao::orderByDesc('data_cad')->get();
+            $financeiros = Financeiro_transacao::where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderByDesc('data_cad')
+                ->get();
         }
 
         return view('/admin/financeiro/filtro',['selectFinanceiros' => $selectFinanceiros, 'cats' => $cats,
@@ -591,6 +663,7 @@ class AdminController extends Controller
         $entrada -> id_financeiro = 1;
         $entrada -> situacao = 1;
         $entrada -> user_id = auth()->user()->id;
+        $entrada -> congregacao_id = auth()->user()->congregacao_id;
         $entrada -> save();
         return redirect('/admin/financeiro/entrada')->with('msg', 'Entrada cadastrada com sucesso');
     }
@@ -641,7 +714,6 @@ class AdminController extends Controller
             'id_cat.max' => 'A categoria escolhida não existe',
         ]);
 
-        $dataAtual = date('d/m/Y');
         $saida = new Financeiro_transacao;
         $saida -> valor = $request->valor;
         $saida -> descricao = $request->descricao;
@@ -651,6 +723,7 @@ class AdminController extends Controller
         $saida -> id_financeiro = 2;
         $saida -> situacao = 1;
         $saida -> user_id = auth()->user()->id;
+        $saida -> congregacao_id = auth()->user()->congregacao_id;
         $saida -> save();
         return redirect('/admin/financeiro/saida')->with('msg', 'Saída cadastrada com sucesso');
     }
@@ -712,6 +785,7 @@ class AdminController extends Controller
         $financeiro->data_cad = $request->data_cad;
         $financeiro->id_tipo = $request->id_tipo;
         $financeiro->id_cat = $request->id_cat;
+        $financeiro -> congregacao_id = auth()->user()->congregacao_id;
         $financeiro-> save();
         return redirect('/admin/financeiro/filtro')->with('msg', 'Transação foi atualizada com sucesso');
 
@@ -752,6 +826,7 @@ class AdminController extends Controller
         $aviso -> data_post = $request->data_post;
         $aviso -> destinatario = $request->destinatario;
         $aviso -> importancia = $request->importancia;
+        $aviso -> congregacao_id = auth()->user()->congregacao_id;
         $aviso -> save();
 
         return redirect('/admin/cadastro/aviso')->with('msg', 'O aviso foi enviado com sucesso!');
@@ -841,12 +916,14 @@ class AdminController extends Controller
         $classe = request('classe');
         $mes = request('mes');
         $ano = request('ano');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)
+            ->orderBy('nome')
+            ->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
         if ($request->classe || $request->mes || $request->ano) {
 
-        $chamadas = Chamada::orderBy('created_at', 'DESC');
+        $chamadas = Chamada::where('congregacao_id', '=', auth()->user()->congregacao_id);
 
         if(isset($request -> classe)) {
             $chamadas = $chamadas->where('id_sala', '=', $request -> classe);
@@ -862,10 +939,11 @@ class AdminController extends Controller
 
         }
 
-        $chamadas = $chamadas->get();
+        $chamadas = $chamadas->orderBy('created_at', 'DESC')->get();
 
         } else {
             $chamadas = Chamada::whereDate('created_at', Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('created_at', 'DESC')
             ->get();
 
@@ -878,26 +956,37 @@ class AdminController extends Controller
 
     public function showChamada($id) {
         $chamada = Chamada::findOrFail($id);
-        $salas = Sala::where('id', '>', 2)->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         return view('/admin/visualizar/chamada', ['chamada' => $chamada, 'salas' => $salas]);
     }
 
 
     public function indexRelatorioToday() {
-        $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())->get();
-        $chamadas = Chamada::whereDate('created_at',  Carbon::today())->get();
-        $salas = Sala::where('id', '>', 2)->get();
+        $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $chamadas = Chamada::whereDate('created_at',  Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         return view ('/admin/relatorios/cadastro', ['chamadas' => $chamadas, 'salas' => $salas, 'relatorioToday' => $relatorioToday]);
 
     }
 
     public function storeRelatorioToday() {
-        $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())->get();
+        $relatorioToday = Relatorio::whereDate('created_at', Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         if($relatorioToday -> count() == 1) {
             return redirect('/admin/relatorios/todos')->with('msg2', 'O relatório de hoje já foi cadastrado.');
         }
         $chamadas = Chamada::select('chamadas.id', 'chamadas.created_at', 'salas.nome', 'matriculados', 'presentes', 'assist_total', 'visitantes', 'biblias', 'revistas')
         ->whereDate('chamadas.created_at', Carbon::today())
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
         ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
         ->get();
         $salas = Sala::where('id', '>', 2)->get();
@@ -910,6 +999,7 @@ class AdminController extends Controller
             $relatorio -> assist_total = $chamadas -> sum('assist_total');
             $relatorio -> biblias = $chamadas -> sum('biblias');
             $relatorio -> revistas = $chamadas -> sum('revistas');
+            $relatorio -> congregacao_id = auth()->user()->congregacao_id;
             $relatorio -> save();
             return redirect('/admin/relatorios/todos')->with('msg', 'Relatório do dia cadastrado com sucesso!');
         }
@@ -927,19 +1017,30 @@ class AdminController extends Controller
 
         //mes
         if(isset($request -> mes) && empty($request -> ano)) {
-            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)->orderBy('created_at', 'DESC')->get();
+            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
         }
         //ano
         elseif(empty($request -> mes) && isset($request -> ano)) {
-            $relatorios = Relatorio::whereYear('created_at', '=', $request -> ano) ->orderBy('created_at', 'DESC')->get();
+            $relatorios = Relatorio::whereYear('created_at', '=', $request -> ano)
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
         }
         //mes e ano
         elseif(isset($request -> mes) && isset($request -> ano)) {
             $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
-            ->whereYear('created_at', '=', $request -> ano) ->orderBy('created_at', 'DESC')->get();
+            ->whereYear('created_at', '=', $request -> ano)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('created_at', 'DESC')
+            ->get();
         //nada
         } else {
-            $relatorios = Relatorio::whereDate('created_at', '=', Carbon::today())->orderBy('created_at', 'DESC')->get();
+            $relatorios = Relatorio::whereDate('created_at', '=', Carbon::today())
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('created_at', 'DESC')->get();
         }
 
         return view('/admin/relatorios/todos', ['relatorios' => $relatorios, 'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano]);
@@ -948,32 +1049,44 @@ class AdminController extends Controller
 
     public function showRelatorio($id) {
         $relatorio = Relatorio::findOrFail($id);
-        $salas = Sala::where('id', '>', 2)->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         return view('/admin/visualizar/relatorio', ['relatorio' => $relatorio, 'salas' => $salas]);
     }
 
     public function searchAniversariantes(Request $request) {
         $mes = request('mes');
         $classe = request('classe');
-        $salas = Sala::where('id', '>', 2)->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
         //mes
         if(isset($request -> mes) && empty($request -> classe)) {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)->get();
+            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->get();
 
         }
         //classe
         elseif(empty($request -> mes) && isset($request -> classe)) {
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->classe)->get();
+            $pessoas = Pessoa::whereJsonContains('id_sala', $request->classe)
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->get();
 
         }
         //classe e mes
         elseif(isset($request -> mes) && isset($request -> classe)) {
             $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)
-            ->whereJsonContains('id_sala', $request->classe)->get();
+            ->whereJsonContains('id_sala', $request->classe)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
 
         } else {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', Carbon::now())->get();
+            $pessoas = Pessoa::whereMonth('data_nasc', '=', Carbon::now())
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->get();
         }
 
         return view('/admin/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
@@ -987,7 +1100,9 @@ class AdminController extends Controller
     public function generatePdfToRelatorios($id) {
 
         $relatorio = Relatorio::findOrFail($id);
-        $classes = Sala::select('id', 'nome')->get();
+        $classes = Sala::select('id', 'nome')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
 
         return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
         ->setPaper('a4', 'landscape')
@@ -999,20 +1114,24 @@ class AdminController extends Controller
         $classeSelected = Sala::select('nome')->findOrFail($classe);
         $date = $request->date;
         $pessoas = Pessoa::select("pessoas.nome as nome_pessoa", "funcaos.nome as nome_funcao")
-            ->whereJsonContains('id_sala', $classe)->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+            ->whereJsonContains('id_sala', $classe)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
             ->orderBy('pessoas.nome')
             ->get();
 
 
         return \PDF::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
-        ->stream('frequencia.pdf');
+        ->stream('frequencia-realizar.pdf');
     }
 
     public function generatePdfToChamadas($id) {
 
-        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
+        $chamada = Chamada::select('chamadas.*', 'salas.nome')
+            ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
+            ->findOrFail($id);
 
         return \PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
-        ->stream('frequencia.pdf');
+        ->stream('frequencia-finalizada.pdf');
     }
 }

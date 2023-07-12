@@ -27,10 +27,10 @@
 
 
             <label for="nivel"><i class="fa fa-level-down"></i>Nível <font style="color:red;font-weight: bold">*</font></label>
-            
+
             <select name="id_nivel" required>
                 <option selected disabled value="">Selecionar</option>
-            @foreach ($niveis as $n)     
+            @foreach ($niveis as $n)
                 <option @if(old('id_nivel') == $n ->id) selected @endif @if($n ->id == 1) style="color:blue" @elseif($n ->id == 2) style="color:red" @endif value="{{$n -> id}}"> {{$n -> nome}}</option>
             @endforeach
           </select>
@@ -42,13 +42,14 @@
           <label for="senha"><i class="fa fa-lock"></i>Senha <font style="color:red;font-weight: bold">*</font></label>
           <input type="password" id="senha" name="password"  placeholder="Padrão: ebd@CPF">
         </fieldset>
-           
-      
+
+
         <input type="submit" value="Cadastrar" class="btn">
+          </div>
       </form>
     </div>
   </div>
-  
+
 </div>
 <script
 src="https://code.jquery.com/jquery-3.6.0.js"

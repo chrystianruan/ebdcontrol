@@ -15,15 +15,16 @@
 @if((auth()->user()->id_nivel != 1) && (auth()->user()->id_nivel != 2) && auth()->user()->status == false)<a href="/classe/">Acessar a área de Secretário/Classe ou professor</a>@endif
 @if(auth()->user()->id_nivel == 2 && auth()->user()->status == false)<a href="/admin/">Acessar a área Admin</a>@endif
 @if(auth()->user()->id_nivel == 1 && auth()->user()->status == false)<a href="/master/">Acessar a área Master</a>@endif
+@if(auth()->user()->super_master)<p><a href="/super-master/">Acessar a área SuperMaster</a></p>@endif
 @if (session('danger'))
             <div class="alert">
-                <font>{{session('danger')}}</font>
+                <span>{{session('danger')}}</span>
             </div>
 @endif
 
 @if(auth()->user()->status) Seu usuário está desativado, portanto, não poderá acessar nenhuma página. :( @endif
 <div style="position: absolute;bottom: 0px; font-size: 10px">
-<hr style="margin: 10px"> 
+<hr style="margin: 10px">
 <h4> - Histórico de manutenções: </h4>
 <ul>
   <li> <span style="font-weight: bolder"> << Manutenção dia 05/10/2022 (17h07) >> </span> Inicialização e finalização do "grosso" da geração de documentos do tipo Chamada na área Classe. Também foi realizada

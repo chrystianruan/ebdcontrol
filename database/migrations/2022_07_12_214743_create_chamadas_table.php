@@ -19,13 +19,13 @@ return new class extends Migration
             $table->unsignedBigInteger('id_sala')->unsigned();
             $table->foreign('id_sala')->references('id')->on('salas')->onDelete('cascade');
             $table->json('nomes');
-            $table->json('presencas');
             $table->integer('matriculados');
             $table->integer('presentes');
             $table->integer('visitantes');
             $table->integer('assist_total');
             $table->integer('biblias');
             $table->integer('revistas');
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
             $table->text('observacoes')->nullable();
 
         });

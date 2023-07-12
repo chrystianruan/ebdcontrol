@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('matriculados');
             $table->integer('presentes');
             $table->integer('visitantes');
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
             $table->integer('assist_total');
             $table->integer('biblias');
             $table->integer('revistas');

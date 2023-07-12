@@ -21,6 +21,8 @@ return new class extends Migration
             $table->foreign('id_nivel')->references('id')->on('salas')->onDelete('cascade');
             $table->boolean('status');
             $table->string('password');
+            $table->boolean('super_master');
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\SuperMasterController;
 
 
 /*
@@ -27,7 +28,7 @@ Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
-    Route::get('/sobre', [AuthController::class, 'about'])->name('about');
+    Route::get('/sobre', function () { return view('/about'); });
 
 });
 
@@ -125,6 +126,23 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 
 
+
+});
+
+Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
+    Route::get('/super-master/', [SuperMasterController::class, 'index']);
+    Route::post('/super-master/cadastro/usuario', [AuthController::class, 'storeUsuarioSuperMaster']);
+    Route::get('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
+    Route::post('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
+    Route::get('/super-master/edit/user/{id}', [SuperMasterController::class, 'editUserSuperMaster']);
+    Route::put('/super-master/update/user/{id}', [SuperMasterController::class, 'updateUserSuperMaster']);
+    Route::get('/super-master/edit/password-user/{id}', [SuperMasterController::class, 'editPasswordUserSuperMaster']);
+    Route::put('/super-master/update/password-user/{id}', [SuperMasterController::class, 'updatePasswordUserSuperMaster']);
+    Route::post('/super-master/new/congregacao', [SuperMasterController::class, 'newCongregacao']);
+    Route::get('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
+    Route::post('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
+    Route::get('/super-master/edit/congregacao/{id}', [SuperMasterController::class, 'editCongregacao']);
+    Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
 });
 
 

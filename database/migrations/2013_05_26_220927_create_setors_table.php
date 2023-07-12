@@ -13,14 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('avisos', function (Blueprint $table) {
+        Schema::create('setors', function (Blueprint $table) {
             $table->id();
-            $table->string('titulo');
-            $table->text('descricao');
-            $table->date('data_post');
-            $table->integer('destinatario');
-            $table->integer('importancia');
-            $table->foreignId('congregacao_id')->constrained('congregacaos');
+            $table->string("nome");
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('avisos');
+        Schema::dropIfExists('setors');
     }
 };

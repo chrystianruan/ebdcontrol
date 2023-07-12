@@ -18,6 +18,7 @@
     @endif
 <form action="/classe/chamada-dia" method="POST">
     @csrf
+    <input type="hidden" id="pessoas" name="pessoas_presencas" value="{{ $pessoas }}">
 <div style=" overflow-x: auto">
 <table style="margin: 3% 3% 0 3%;">
     <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->id_nivel) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
@@ -37,7 +38,7 @@
         <td>{{ date('d/m', strtotime($p -> data_nasc)) }}</td>
         <td>@if($p -> id_funcao == 1) Aluno @elseif($p -> id_funcao == 2) Prof. @elseif($p -> id_funcao == 3) Sec. @elseif($p -> id_funcao == 4) Sec. @elseif($p -> id_funcao == 5) Superint. @else Erro @endif</td>
         <td>
-            <select name="presencas[]" class="presencas">
+            <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
                 <option selected value = "1" style="background-color: green">Sim</option>
                 <option value = "2" style="background-color: red">Não</option>
             </select>
@@ -101,46 +102,8 @@
     <div class="notRegister"> Hoje não é domingo </div>
 @endif
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-  <script>
-
-
-
-
-    let presencas = document.querySelectorAll(".presencas");
-    let presente = document.getElementById("presentes");
-    let visitantes = document.getElementById("visitantes");
-    let assist_total = document.getElementById("assist_total");
-
-    for (let presenca of presencas) {
-
-        presenca.addEventListener("change", function() {
-            if(presenca.value == 1) {
-                presenca.style.cssText = "background-color: green;" + "color: white;";
-                presente.value = ++presente.value;
-                assist_total.value = ++assist_total.value;
-
-            } else {
-                presenca.style.cssText = "background-color: red;" + "color: white;";
-                presente.value = --presente.value;
-                assist_total.value = --assist_total.value;
-
-
-            }
-
-        });
-    }
-
-    visitantes.addEventListener("keyup", function() {
-
-                soma = parseInt(visitantes.value) + parseInt(presente.value);
-                assist_total.value = soma;
-
-        });
-
-
-
-
-
+ <script src="/js/chamada.js"></script>
+<script>
 
 
 

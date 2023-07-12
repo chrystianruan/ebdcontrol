@@ -38,6 +38,7 @@ return new class extends Migration
             $table->boolean('prof_ebd')->nullable();
             $table->boolean('prof_comum')->nullable();
             $table->boolean('situacao');
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
             $table->unsignedBigInteger('id_public')->unsigned()->nullable();
             $table->foreign('id_public')->references('id')->on('publicos');
 

@@ -14,15 +14,16 @@
         <thead>
             <tr>
             <th>Nome</th>
+            <th>Presença</th>
             </tr>
         </thead>
 
         <tbody>
 
-            @foreach($chamada -> nomes as $cn)
+            @foreach(json_decode($chamada->nomes, true) as $cn)
             <tr>
             <td>{{ explode(' ', $cn['nome'])[0] }} {{explode(' ', $cn['nome'])[ count(explode(' ', $cn['nome'])) - 1] }}</td>
-
+            <td> @if($cn['presenca'] == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
             </tr>
             @endforeach
 
@@ -30,24 +31,6 @@
 
         </tbody>
       </table>
-      <table style="margin: 3% 2% 0 0; width: 5%;">
-        <caption class="cont2"><h4>{{ date('d/m', strtotime($chamada->created_at)) }}</h4></caption>
-        <thead>
-            <tr>
-                <th>Presença</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($chamada -> presencas as $cp)
-            <tr>
-                <td style="text-align: center"> @if($cp == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
-            </tr>
-            @endforeach
-        </tbody>
-
-      </table>
-
-
     </div>
 
     <div class="tudo">

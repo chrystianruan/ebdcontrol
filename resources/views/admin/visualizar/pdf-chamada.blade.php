@@ -56,23 +56,7 @@
         font-style: italic;
     }
 
-    .tables {
 
-
-    }
-    .big-table {
-        font-size: 10px;
-        position: relative;
-        width: 85%;
-        float: left;
-    }
-
-    .small-table {
-        font-size: 10px;
-        position: relative;
-        width: 15%;
-        float: right;
-    }
     table {
         border-right:1px solid black;
         border-left:1px solid black;
@@ -90,6 +74,7 @@
     td {
         border-bottom: 1px solid black;
         padding: 5px;
+        text-align: center;
     }
 
     .resume {
@@ -205,43 +190,29 @@
 
 
     <div class="tables">
-        <table class="big-table">
+        <table class="normal-table">
             <thead>
             <tr>
                 <th>Nome</th>
-            </tr>
-            </thead>
-
-            <tbody>
-
-            @foreach($chamada->nomes as $pessoa)
-                <tr>
-                    <td> {{ $pessoa['nome'] }}</td>
-                </tr>
-            @endforeach
-
-            </tbody>
-        </table>
-
-        <table class="small-table">
-            <thead>
-            <tr>
+                <th>Data nascimento</th>
+                <th>Função</th>
                 <th>Presença</th>
             </tr>
             </thead>
 
             <tbody>
-            @foreach($chamada->presencas as $presenca)
+
+            @foreach(json_decode($chamada->nomes, true) as $cn)
                 <tr>
-                    <td style="text-align: center">@if($presenca == 1) <span style="color: green; font-weight: bolder">Sim</span> @else <span style="color: red; font-weight: bolder">Não</span> @endif</td>
+                    <td>{{ $cn['nome'] }}</td>
+                    <td>{{ date('d/m', strtotime($cn['data_nasc'])) }}</td>
+                    <td>@if($cn['id_funcao'] == 1) Aluno @elseif($cn['id_funcao'] == 2) Professor @elseif($cn['id_funcao'] == 3) Secretário/Classe @elseif($cn['id_funcao'] == 4) Secretário/Adm @elseif($cn['id_funcao'] == 5) Superintendente @else Erro @endif</td>
+                    <td> @if($cn['presenca'] == 1) <span style="color: rgb(12, 223, 12)" class="bx bx-check">Sim</span> @else <span style="color: red" class="bx bx-x">Não</i> @endif</td>
                 </tr>
             @endforeach
 
-
             </tbody>
         </table>
-
-
     </div>
 
 

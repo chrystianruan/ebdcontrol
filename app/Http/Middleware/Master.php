@@ -18,7 +18,7 @@ class Master
     {
         $user = auth()->user();
             if(auth()->check() AND $user->id_nivel !== 1) {
-                return redirect()->route('inicio')->with('danger', 'Seu usuário não é Master!');
+                return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
             }
         return $next($request);
     }

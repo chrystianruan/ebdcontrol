@@ -24,7 +24,7 @@
                 </ul>
             </div>
             @endif
-  
+
             <label>
               <input type="checkbox"  id="scales" @if(old('scales')) checked @endif name="scales"> Menor de idade
             </label>
@@ -32,10 +32,10 @@
             <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}">
 
             <div class="input-field" id="nomeResp" style="display:none">
-                        
+
               <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
               <input type="text" name="responsavel" id="responsavel" value="{{old('responsavel')}}" placeholder="Digite o nome do responsável do aluno">
-            
+
             </div>
 
             <label for="sexo"><i class="fa fa-genderless"></i>Sexo <font style="color:red;font-weight: bold">*</font></label>
@@ -43,9 +43,16 @@
               <option selected disabled value="">Selecionar</option>
               <option @if(old('sexo') == 1) selected @endif value="1">Masculino</option>
               <option @if(old('sexo') == 2) selected @endif value="2">Feminino</option>
-              
+
           </select>
 
+          <label>Tem filhos?<span style="color:red;font-weight: bold">*</span></label>
+          <select name="filhos" required>
+              <option selected disabled value="">Selecionar</option>
+              <option  @if(old('filhos') == 1) selected @endif value="1">Não</option>
+              <option @if(old('filhos') == 2) selected @endif value="2">Sim</option>
+
+          </select>
           <label for="data_nasc"><i class="fa fa-calendar"></i>Data de nascimento <font style="color:red;font-weight: bold">*</font></label>
           <input type="date" id="data_nasc" required name="data_nasc" value="{{old('data_nasc')}}">
 
@@ -65,12 +72,12 @@
                   @foreach($ufs as $uf)
                   <option @if(old('id_uf') == $uf -> id) selected @endif value="{{$uf -> id}}">{{$uf -> nome}}</option>
                   @endforeach
-                  
+
               </select>
               </div>
             </div>
-            <label for="fname"><i class="fa fa-phone"></i>N° de Telefone (com DDD) <span style="color: blue">(acesso ao sistema)</span> </label>
-            <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{old('telefone')}}"> 
+            <label for="fname"><i class="fa fa-phone"></i>N° de Telefone (com DDD) <span style="color: blue"></span> </label>
+            <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{old('telefone')}}">
           </>
 
           <div class="col-50">
@@ -82,9 +89,9 @@
               @foreach($formations as $formation)
               <option @if(old('id_formation') == $formation -> id) selected @endif value="{{$formation -> id}}">{{$formation -> nome}}</option>
               @endforeach
-  
+
           </select>
-            <label for="cursos">Curso(s) (técnico ou superior) <font style="color:red;font-weight: bold">*</font></label>
+            <label for="cursos">Curso(s) (técnico ou superior)</label>
             <input type="text" id="cursos" name="cursos" placeholder="Curso - Ano de conclusão">
 
             <label for="interesse">Interesse em ser professor da EBD? <font style="color:red;font-weight: bold">*</font></label>
@@ -95,14 +102,14 @@
               <option @if(old('interesse') == 3) selected @endif value="3"> Talvez</option>
             </select>
           </div>
-          
+
 
 
         <div class="col-50" id="registerp" style="display:none">
           <h3>Informações necessárias para interessado(a) em ser <span style="color: blue">possível</span> professor</h3>
 
           <label for="cname">Formação</label>
-         
+
 
           <label>Sempre frequentou a EBD? <font style="color:red;font-weight: bold">*</font></label>
           <select class="inputprof" name="frequencia_ebd">
@@ -123,14 +130,14 @@
           <select class="inputprof" name="prof_ebd">
             <option selected disabled value="">Selecionar</option>
                 <option value=1>Sim</option>
-                <option value=2>Não</option>  
+                <option value=2>Não</option>
                 </select>
 
           <label>É/foi professor comum? <font style="color:red;font-weight: bold">*</font></label>
           <select class="inputprof" name="prof_comum">
               <option selected disabled value="">Selecionar</option>
               <option value=1>Sim</option>
-              <option value=2>Não</option>  
+              <option value=2>Não</option>
           </select>
 
           <label>Para qual público prefere dar aula? <font style="color:red;font-weight: bold">*</font></label>
@@ -141,14 +148,14 @@
               @endforeach
           </select>
         </div>
-        
+
       </div>
-      
+
         <input type="submit" value="Cadastrar" class="btn">
       </form>
     </div>
   </div>
-  
+
 </div>
 <script
 src="https://code.jquery.com/jquery-3.6.0.js"
@@ -181,6 +188,6 @@ crossorigin="anonymous"></script>
       $("#field").val(this.value.match(/[0-9]*/));
   });
 });
- 
+
 </script>
 @endsection

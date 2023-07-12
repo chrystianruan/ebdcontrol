@@ -37,9 +37,9 @@
 
     .infos {
         margin: 15% 0;
-       border: 1px solid black;
-       padding: 5px 12px;
-       font-size: 11px;
+        border: 1px solid black;
+        padding: 5px 12px;
+        font-size: 11px;
     }
 
     .small {
@@ -56,23 +56,7 @@
         font-style: italic;
     }
 
-    .tables {
 
-
-    }
-    .big-table {
-        font-size: 10px;
-        position: relative;
-        width: 85%;
-        float: left;
-    }
-
-    .small-table {
-        font-size: 10px;
-        position: relative;
-        width: 15%;
-        float: right;
-    }
     table {
         border-right:1px solid black;
         border-left:1px solid black;
@@ -90,6 +74,7 @@
     td {
         border-bottom: 1px solid black;
         padding: 5px;
+        text-align: center;
     }
 
     .resume {
@@ -156,92 +141,47 @@
 
 </style>
 <body>
-    <div class="container">
-        <div class="center">
-            <img src="img/logo-adpar.jpg" class="center-item" width="70">
-            <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
-            <img class="center-item" src="img/logo_ebd.jpg" width="70">
+<div class="container">
+    <div class="center">
+        <img src="img/logo-adpar.jpg" class="center-item" width="70">
+        <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
+        <img class="center-item" src="img/logo_ebd.jpg" width="70">
 
-        </div>
+    </div>
 
-        <div class="infos">
-            <p>Frequência da classe: <span style="font-weight: bolder">{{ $chamada->nome }}</span>
+    <div class="infos">
+        <p>Frequência da classe: <span style="font-weight: bolder">{{ $chamada->nome }}</span>
 
-            </p>
-            <p style="float: right; margin-top: -25px">Data: <span style="font-weight: bolder">{{date('d/m/Y', strtotime($chamada->created_at))}}</span></p>
-            <table class="normal-table">
-                <thead>
-                    <tr>
-                        <th>Matriculados</th>
-                        <th>Presentes</th>
-                        <th>Visitantes</th>
-                        <th>Assistência total</th>
-                        <th>Bíblias</th>
-                        <th>Revistas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="text-align: center"><span class="result">{{ $chamada->matriculados }}</span> </td>
-                        <td style="text-align: center"><span class="result">{{ $chamada->presentes }}</span> <span class="color" id="presentes">({{  number_format(100 * $chamada->presentes / $chamada->matriculados, 1, ',', '.') }}%)</span> </td>
-                        <td style="text-align: center"><span class="result">{{ $chamada->visitantes }}</span></td>
-                        <td style="text-align: center"><span class="result">{{ $chamada->assist_total }}</span> <span class="color" id="assist_total">({{  number_format(100 * $chamada->assist_total / $chamada->matriculados, 1, ',', '.') }}%)</span></td>
-                        <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{  number_format(100 * $chamada->biblias / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
-                        <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format(100 * $chamada->revistas / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
+        </p>
+        <p style="float: right; margin-top: -25px">Data: <span style="font-weight: bolder">{{date('d/m/Y', strtotime($chamada->created_at))}}</span></p>
+        <table class="normal-table">
+            <thead>
+            <tr>
+                <th>Matriculados</th>
+                <th>Presentes</th>
+                <th>Visitantes</th>
+                <th>Assistência total</th>
+                <th>Bíblias</th>
+                <th>Revistas</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td style="text-align: center"><span class="result">{{ $chamada->matriculados }}</span> </td>
+                <td style="text-align: center"><span class="result">{{ $chamada->presentes }}</span> <span class="color" id="presentes">({{  number_format(100 * $chamada->presentes / $chamada->matriculados, 1, ',', '.') }}%)</span> </td>
+                <td style="text-align: center"><span class="result">{{ $chamada->visitantes }}</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->assist_total }}</span> <span class="color" id="assist_total">({{  number_format(100 * $chamada->assist_total / $chamada->matriculados, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{  number_format(100 * $chamada->biblias / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format(100 * $chamada->revistas / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
 
-                    </tr>
-                </tbody>
-            </table>
-            <div class="center-text">
-                 <span class="caption" style="background-color: red;color:red  ">F</span> = Ruim/Péssimo |
-                 <span class="caption" style="background-color: orange; color:orange ">F</span> = Médio |
-                 <span class="caption" style="background-color: green;color:green ">F</span> = Bom |
-                 <span class="caption" style="background-color: blue;color:blue ">F</span> = Muito Bom/Excelente
-                 </div>
-
-
-        </div>
-
-
-
-        <div class="tables">
-            <table class="big-table">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-
-                    @foreach($chamada->nomes as $pessoa)
-                    <tr>
-                        <td> {{ $pessoa['nome'] }}</td>
-                    </tr>
-                    @endforeach
-
-                </tbody>
-            </table>
-
-            <table class="small-table">
-                <thead>
-                    <tr>
-                        <th>Presença</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @foreach($chamada->presencas as $presenca)
-                    <tr>
-                        <td style="text-align: center">@if($presenca == 1) <span style="color: green; font-weight: bolder">Sim</span> @else <span style="color: red; font-weight: bolder">Não</span> @endif</td>
-                    </tr>
-                    @endforeach
-
-
-                </tbody>
-            </table>
-
-
+            </tr>
+            </tbody>
+        </table>
+        <div class="center-text">
+            <span class="caption" style="background-color: red;color:red  ">F</span> = Ruim/Péssimo |
+            <span class="caption" style="background-color: orange; color:orange ">F</span> = Médio |
+            <span class="caption" style="background-color: green;color:green ">F</span> = Bom |
+            <span class="caption" style="background-color: blue;color:blue ">F</span> = Muito Bom/Excelente
         </div>
 
 
@@ -249,7 +189,38 @@
 
 
 
-        <p class="small">Documento gerado automaticamente em <span class="span-emphasis">{{date('d/m/Y')}}</span> às <span class="span-emphasis">{{date('H:i:s')}}</span>, pelo sistema de administração <span class="span-emphasis">EBDControl</span></p>
+    <div class="tables">
+        <table class="normal-table">
+            <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data nascimento</th>
+                <th>Função</th>
+                <th>Presença</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            @foreach(json_decode($chamada->nomes, true) as $cn)
+                <tr>
+                    <td>{{ $cn['nome'] }}</td>
+                    <td>{{ date('d/m', strtotime($cn['data_nasc'])) }}</td>
+                    <td>@if($cn['id_funcao'] == 1) Aluno @elseif($cn['id_funcao'] == 2) Professor @elseif($cn['id_funcao'] == 3) Secretário/Classe @elseif($cn['id_funcao'] == 4) Secretário/Adm @elseif($cn['id_funcao'] == 5) Superintendente @else Erro @endif</td>
+                    <td>@if($cn['presenca'] == 1) <span style="color: rgb(12, 223, 12)" class="bx bx-check">Sim</span> @else <span style="color: red" class="bx bx-x">Não</i> @endif</td>
+                </tr>
+            @endforeach
+
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+
+
+<p class="small">Documento gerado automaticamente em <span class="span-emphasis">{{date('d/m/Y')}}</span> às <span class="span-emphasis">{{date('H:i:s')}}</span>, pelo sistema de administração <span class="span-emphasis">EBDControl</span></p>
 
 </body>
 </html>

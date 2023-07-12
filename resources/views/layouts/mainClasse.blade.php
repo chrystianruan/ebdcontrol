@@ -18,7 +18,7 @@
     <a href="/classe/pessoas"><i class="fa fa-users"></i>Pessoas</a>
     <a href="/classe/chamada-dia"><i class="fa fa-plus-circle"></i>Chamada do dia</a>
     <a href="/classe/todas-chamadas"><i class="fa fa-list"></i>Todas Chamadas</a>
-    <a href="#about"><i class="fa fa-info-circle"></i>Sobre</a>
+    <a href="/sobre"><i class="fa fa-info-circle"></i>Sobre</a>
     <a href="javascript:void(0);" class="icon" onclick="myFunction()">
       <i class="fa fa-bars"></i>
     </a>
@@ -61,4 +61,4 @@
   setTimeout(hideMsg2, 3000);
     </script>
 </body>
-</html> 
+</html>

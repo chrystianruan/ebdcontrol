@@ -15,7 +15,7 @@ body{
 .container{
   max-width: 440px;
   padding: 0 20px;
-  margin: 90px auto;
+  margin: 70px auto;
 }
 .wrapper{
   width: 100%;
@@ -115,7 +115,7 @@ form .signup-link a:hover{
     border-radius: 5px;
     border-color: black;
   }
-  
+
   /* The close button */
   .closebtn {
     margin-left: 15px;
@@ -127,7 +127,7 @@ form .signup-link a:hover{
     cursor: pointer;
     transition: 0.3s;
   }
-  
+
   /* When moving the mouse over the close button */
   .closebtn:hover {
     color: black;

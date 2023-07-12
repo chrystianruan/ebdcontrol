@@ -18,6 +18,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('nome');
             $table->string('tipo');
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
         });
     }
 

@@ -24,25 +24,46 @@ class ClasseController extends Controller
     $idadesPessoas = DB::table('pessoas')
     ->select(DB::raw('count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades'))
     ->whereJsonContains('id_sala', ''.$nivel)
+    ->where('congregacao_id', '=', auth()->user()->congregacao_id)
     ->groupBy(DB::raw('floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25);'))
     ->get();
     $formacoes = Pessoa::select(DB::raw('pessoas.id_formation, count(pessoas.id) as qtdPessoas, formations.nome'))
-    ->leftJoin('formations', 'pessoas.id_formation', '=', 'formations.id')
     ->whereJsonContains('id_sala', ''.$nivel)
+    ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+    ->join('formations', 'pessoas.id_formation', '=', 'formations.id')
     ->groupBy('id_formation')
     ->get();
-    $funcoes = DB::table('pessoas')
-    ->select(DB::raw('id_funcao, count(pessoas.id) as qtd, funcaos.nome'))
-    ->leftJoin('funcaos', 'pessoas.id_funcao', '=', 'funcaos.id')
+    $funcoes = Pessoa::select(DB::raw('id_funcao, count(pessoas.id) as qtd, funcaos.nome'))
     ->whereJsonContains('id_sala', ''.$nivel)
+    ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+    ->join('funcaos', 'pessoas.id_funcao', '=', 'funcaos.id')
     ->groupBy('id_funcao')
     ->get();
-    $interesseProf = Pessoa::whereJsonContains('id_sala', ''.$nivel)->where('interesse', '<>', 2)->where('id_funcao', '<>', 2)->count();
-    $chamadaDia = Chamada::where('id_sala', '=', $nivel)->whereDate('created_at', Carbon::today())->get();
-    $chamadasMes = Chamada::where('id_sala', '=', $nivel)->whereMonth('created_at', Carbon::now())->get();
-    $chamadasAno = Chamada::where('id_sala', '=', $nivel)->whereYear('created_at', Carbon::now())->get();
-    $niverMes = Pessoa::whereJsonContains('id_sala', ''.$nivel)->whereMonth('data_nasc', '=', $dataMes)->count();
-    $alunosInativos = Pessoa::whereJsonContains('id_sala', ''.$nivel)->where('situacao', '=', 2)->count();
+    $interesseProf = Pessoa::whereJsonContains('id_sala', ''.$nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->where('interesse', '<>', 2)
+        ->where('id_funcao', '<>', 2)
+        ->count();
+    $chamadaDia = Chamada::where('id_sala', '=', $nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->whereDate('created_at', Carbon::today())
+        ->get();
+    $chamadasMes = Chamada::where('id_sala', '=', $nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->whereMonth('created_at', Carbon::now())
+        ->get();
+    $chamadasAno = Chamada::where('id_sala', '=', $nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->whereYear('created_at', Carbon::now())
+        ->get();
+    $niverMes = Pessoa::whereJsonContains('id_sala', ''.$nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->whereMonth('data_nasc', '=', $dataMes)
+        ->count();
+    $alunosInativos = Pessoa::whereJsonContains('id_sala', ''.$nivel)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->where('situacao', '=', 2)
+        ->count();
 
     return view('/classe/dashboard', ['niverMes' => $niverMes, 'alunosInativos' => $alunosInativos,
      'chamadaDia' => $chamadaDia, 'interesseProf' => $interesseProf, 'idadesPessoas' => $idadesPessoas, 'formacoes' => $formacoes,
@@ -51,7 +72,9 @@ class ClasseController extends Controller
 
    public function indexCadastroClasse() {
         $check = request('scales');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
         $ufs = Uf::orderBy("nome")->get();
         $publicos = Publico::all();
         $formations = Formation::all();
@@ -67,6 +90,7 @@ class ClasseController extends Controller
         $this->validate($request, [
             'nome' => ['required'],
             'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
+            'filhos' => ['required', 'integer', 'min: 1', 'max: 2'],
             'data_nasc' => ['required'],
             'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
             'telefone' => ['max: 11'],
@@ -88,6 +112,11 @@ class ClasseController extends Controller
             'sexo.integer' =>  'Só é aceito o sexo masculino ou feminino',
             'sexo.min' =>  'Só é aceito o sexo masculino ou feminino',
             'sexo.max' =>  'Só é aceito o sexo masculino ou feminino',
+
+            'filhos.required' =>  'Campo de filhos é obrigatório.',
+            'filhos.integer' =>  'Só é aceito ter ou não filhos',
+            'filhos.min' =>  'Só é aceito ter ou não filhos',
+            'filhos.max' =>  'Só é aceito ter ou não filhos',
 
             'data_nasc.required' =>  'Data de nascimento é obrigatória.',
 
@@ -143,10 +172,18 @@ class ClasseController extends Controller
             'id_public.max' =>  'Público escolhido não existe.',
 
         ]);
-        
+
         $pessoa = new Pessoa;
         $pessoa-> nome = $request->nome;
         $pessoa-> sexo = $request->sexo;
+        if ($request->filhos == 2 && $request->sexo == 1) {
+            $pessoa->paternidade_maternidade = "Pai";
+        }
+        elseif ($request->filhos == 2 && $request->sexo == 2) {
+            $pessoa->paternidade_maternidade = "Mãe";
+        } else {
+            $pessoa->paternidade_maternidade = null;
+        }
         $pessoa-> data_nasc = $request->data_nasc;
         $pessoa-> responsavel = $request->responsavel;
         $pessoa-> ocupacao = $request->ocupacao;
@@ -164,6 +201,7 @@ class ClasseController extends Controller
         $pessoa-> prof_ebd = $request->prof_ebd;
         $pessoa-> prof_comum = $request->prof_comum;
         $pessoa-> id_public = $request->id_public;
+        $pessoa-> congregacao_id = auth()->user()->congregacao_id;
         $pessoa -> save();
         return redirect('/classe/cadastro-pessoa')->with('msg', 'Aluno cadastrado com sucesso');
 
@@ -204,11 +242,13 @@ class ClasseController extends Controller
     if ($request->niver) {
         $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
     }
-         
-    $pessoas = $pessoas->orderBy('nome')->get();
+
+    $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->orderBy('nome')
+        ->get();
 
 
-    return view('/classe/pessoas', ['pessoas' => $pessoas, 'nome' => $nome, 'sexo' => $sexo, 
+    return view('/classe/pessoas', ['pessoas' => $pessoas, 'nome' => $nome, 'sexo' => $sexo,
     'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao,
     'meses_abv' => $meses_abv, 'niver' => $niver]);
   }
@@ -216,7 +256,7 @@ class ClasseController extends Controller
   public function showPessoaClasse($id) {
     $nivelUser = auth()->user()->id_nivel;
     $pessoa = Pessoa::findOrFail($id);
-    
+
     if(in_array("$nivelUser", $pessoa->id_sala)) {
         $findSala = Sala::findOrFail($nivelUser);
         $ufs = Uf::orderBy("nome")->get();
@@ -231,29 +271,39 @@ class ClasseController extends Controller
 
   public function indexChamadaClasse() {
       $sala = auth()->user()->id_nivel;
-      $chamadas = Chamada::where('id_sala', '=', $sala)->whereDate('created_at', Carbon::today())->get();
-      $pessoas = DB::table('pessoas')
-      ->select('id', 'nome', 'data_nasc', 'id_funcao')
-      ->whereJsonContains('id_sala', ''.$sala)
-      ->where('situacao', '=', 1)
-      ->orderBy('nome')->get();
-      $salas = Sala::where('id', '>', 2)->get();
+      $chamadas = Chamada::where('id_sala', '=', $sala)
+          ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+          ->whereDate('created_at', Carbon::today())
+          ->get();
+      $pessoas = Pessoa::select('id', 'nome', 'data_nasc', 'id_funcao', DB::raw("'1' as presenca"))
+          ->whereJsonContains('id_sala', ''.$sala)
+          ->where('situacao', '=', 1)
+          ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+          ->orderBy('nome')
+          ->get();
+      $salas = Sala::where('id', '>', 2)
+          ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+          ->get();
       return view('/classe/chamada-dia', ['chamadas' => $chamadas, 'salas' => $salas, 'pessoas' => $pessoas]);
    }
 
    public function storeChamadaClasse(Request $request) {
 
       $sala = auth()->user()->id_nivel;
-      $chamadas = Chamada::where('id_sala', '=', $sala)->whereDate('created_at', Carbon::today())->get();
-             
+      $chamadas = Chamada::where('id_sala', '=', $sala)
+          ->whereDate('created_at', Carbon::today())
+          ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+          ->get();
+
       if($chamadas->count() == 1) {
         return redirect('/classe/chamada-dia')->with('msg', 'A chamada não pode ser realizada.');
     }
     $pessoas = DB::table('pessoas')
-    ->select('nome', 'data_nasc', 'id_funcao')
-    ->whereJsonContains('id_sala', ''.$sala)
-    ->where('situacao', '=', 1)
-    ->orderBy('nome')->get();
+        ->select('nome', 'data_nasc', 'id_funcao')
+        ->whereJsonContains('id_sala', ''.$sala)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->where('situacao', '=', 1)
+        ->orderBy('nome')->get();
 
 
     $this->validate($request, [
@@ -264,7 +314,7 @@ class ClasseController extends Controller
         'assist_total' => ['required', 'integer', 'min:'.$request->presentes + $request->visitantes, 'max:'.$request->presentes + $request->visitantes],
         'biblias' => ['required', 'integer', 'min:0', 'max:'.$request->presentes + $request->visitantes],
         'revistas' => ['required', 'integer', 'min:0', 'max:'.$request->presentes + $request->visitantes],
-        'observacoes' => ['max: 800']  
+        'observacoes' => ['max: 800']
     ], [
 
         'id_sala.integer' => 'Classe escolhida inexistente',
@@ -303,12 +353,11 @@ class ClasseController extends Controller
         'observacoes.max' => 'O campo de observações aceita, no máximo, 700 caracteres.'
 
     ]);
-    
+
 
       $chamada = new Chamada;
       $chamada -> id_sala = $sala;
-      $chamada -> nomes = $pessoas;
-      $chamada -> presencas = $request -> presencas;
+      $chamada -> nomes = $request->pessoas_presencas;
       $chamada -> matriculados = $request -> matriculados;
       $chamada -> presentes = $request -> presentes;
       $chamada -> visitantes = $request -> visitantes;
@@ -316,6 +365,7 @@ class ClasseController extends Controller
       $chamada -> biblias = $request -> biblias;
       $chamada -> revistas = $request -> revistas;
       $chamada -> observacoes = $request -> observacoes;
+      $chamada-> congregacao_id = auth()->user()->congregacao_id;
       $chamada -> save();
 
       return redirect('/classe/todas-chamadas')->with('msg', 'Chamada realizada com sucesso!');
@@ -333,6 +383,7 @@ class ClasseController extends Controller
      if(isset($request -> mes) && empty($request -> ano))  {
          $chamadas = Chamada::where('id_sala', '=', $sala)
          ->whereMonth('created_at', '=', $request -> mes)
+         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
          ->orderBy('created_at', 'DESC')
          ->get();
      }
@@ -340,6 +391,7 @@ class ClasseController extends Controller
      elseif(empty($request -> mes) && isset($request -> ano))  {
          $chamadas = Chamada::where('id_sala', '=', $sala)
          ->whereYear('created_at', '=', $request -> ano)
+         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
          ->orderBy('created_at', 'DESC')
          ->get();
      }
@@ -348,12 +400,14 @@ class ClasseController extends Controller
          $chamadas = Chamada::where('id_sala', '=', $sala)
          ->whereMonth('created_at', '=', $request -> mes)
          ->whereYear('created_at', '=', $request -> ano)
+         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
          ->orderBy('created_at', 'DESC')
          ->get();
 
      } else {
          $chamadas = Chamada::where('id_sala', '=', $sala)
          ->whereDate('created_at', Carbon::today())
+         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
          ->orderBy('created_at', 'DESC')
          ->get();
 
@@ -372,24 +426,28 @@ class ClasseController extends Controller
         return redirect('/classe')->with('msg2', 'Seu usuário não permissão para ver esta chamada');
         }
       return view('/classe/visualizar-chamada', ['chamada' => $chamada, 'findSala' => $findSala]);
-      
+
    }
 
    public function searchAniversariantes(Request $request) {
     $nivel = auth()->user()->id_nivel;
     $mes = request('mes');
-    $salas = Sala::where('id', '>', 2)->get();
+    $salas = Sala::where('id', '>', 2)
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->get();
     $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
     //mes
     if(isset($request -> mes)) {
         $pessoas = Pessoa::whereJsonContains('id_sala', ''.$nivel)
         ->whereMonth('data_nasc', '=', $request->mes)
-        ->get(); 
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->get();
 
     } else {
         $pessoas = Pessoa::whereJsonContains('id_sala', ''.$nivel)
         ->whereMonth('data_nasc', '=', Carbon::now())
-        ->get(); 
+        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->get();
     }
 
         return view('/classe/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,

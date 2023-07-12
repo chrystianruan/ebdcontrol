@@ -1,0 +1,220 @@
+.div-btn-modal {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 15px;
+
+}
+
+
+.btn-modal {
+    padding: 10px;
+    border: 0.5px solid #ccc;
+    background-color: #7CFC00;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 0 5px;
+    font-weight: bolder;
+}
+
+.btn-modal:hover {
+    background-color: #4CBB17;
+}
+#modal-user {
+    display: none;
+}
+#modal-congregacao {
+    display: none;
+}
+.dialog[aria-hidden="true"] {
+    border-radius: 10px;
+}
+.dialog-overlay {
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.66);
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+.dialog-content {
+    background-color: rgb(255, 255, 255);
+    z-index: 3;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.dialog-content {
+    padding: 1em;
+    max-height: 80%;
+    max-width: 90%;
+    width: 800px;
+    border-radius: 2px;
+    overflow-y: scroll;
+}
+@media screen and (min-width: 700px) {
+    .dialog-content {
+        padding: 2em;
+    }
+}
+.dialog-overlay {
+    background-color: rgba(43, 46, 56, 0.9);
+}
+.dialog h1 {
+    margin: 0;
+    font-size: 1.25em;
+}
+.dialog-close {
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    font-weight: bold;
+    font-size: 1.25em;
+    width: 1.2em;
+    height: 1.2em;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.15s;
+}
+@media screen and (min-width: 700px) {
+    .dialog-close {
+        top: 1em;
+        right: 1em;
+    }
+    .dialog {
+        margin: 0 15px;
+    }
+}
+
+.row {
+
+    display: -ms-flexbox; /* IE10 */
+    display: flex;
+    -ms-flex-wrap: wrap; /* IE10 */
+    flex-wrap: wrap;
+    margin: 10px;
+}
+
+.alert {
+    padding: 10px;
+    background-color: #f44336; /* Red */
+    color: white;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border-color: black;
+    margin-right: 40%;
+}
+
+.caution {
+    padding: 1px 7px;
+    background-color: #f4d836; /* Red */
+    color: black;
+    margin: 7px;
+    border-radius: 5px;
+    border-color: black;
+}
+
+
+
+.col-25 {
+    -ms-flex: 25%; /* IE10 */
+    flex: 25%;
+}
+
+.col-50 {
+    -ms-flex: 50%; /* IE10 */
+    flex: 50%;
+}
+
+.col-75 {
+    -ms-flex: 75%; /* IE10 */
+    flex: 75%;
+}
+
+.col-25,
+.col-50,
+.col-75 {
+    padding: 0 16px;
+}
+
+.container {
+    background-color: #f2f2f2;
+    padding: 5px 20px 15px 20px;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+}
+
+input[type=text], input[type=date], input[type="email"], input[type="password"] {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+fieldset {
+    border-radius: 10px;
+}
+
+select {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+label {
+    margin-bottom: 10px;
+    display: block;
+}
+
+.icon-container {
+    margin-bottom: 20px;
+    padding: 7px 0;
+    font-size: 24px;
+}
+
+.btn {
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px;
+    margin: 10px 0;
+    border: none;
+    width: 100%;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 17px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+a {
+    color: #2196F3;
+}
+
+hr {
+    border: 1px solid lightgrey;
+}
+
+span.price {
+    float: right;
+    color: grey;
+}
+
+/* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
+@media (max-width: 800px) {
+
+    .dialog {
+        margin: 0 10px;
+    }
+}
+

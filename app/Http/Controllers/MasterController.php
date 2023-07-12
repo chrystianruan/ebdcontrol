@@ -18,11 +18,13 @@ class MasterController extends Controller
         $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', false)
+        ->where('users.congregacao_id', '=', auth()->user()->id)
         ->groupBy('id_nivel')
         ->get();
         $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', true)
+        ->where('users.congregacao_id', '=', auth()->user()->id)
         ->groupBy('id_nivel')
         ->get();
 
@@ -40,6 +42,7 @@ class MasterController extends Controller
         $user->username = 'supermaster';
         $user->password = bcrypt('@superMaster#admin2072');
         $user->id_nivel = 1;
+        $user->congregacao_id = 1;
         $user->save();
 
         return response("Usuário cadastrado");
@@ -53,10 +56,10 @@ class MasterController extends Controller
             'tipo.required' =>  'Tipo é obrigatório.',
         ]);
 
-        $dataAtual = date('d/m/Y');
         $sala = new Sala;
         $sala -> nome = $request->nome;
         $sala -> tipo = $request->tipo;
+        $sala -> congregacao_id = auth()->user()->congregacao_id;
         $sala -> save();
         return redirect('/master/cadastro/classe')->with('msg', 'Sala cadastrada com sucesso');
     }
@@ -66,13 +69,20 @@ class MasterController extends Controller
 
         if(isset($request->sala)) {
             $salas = Sala::where('id', '=', $request->sala)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
         } else {
-            $salas = Sala::orderBy('nome')
+            $salas = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')
             ->get();
         }
-        $pessoas = DB::select('select id_sala as ids, count(id) as quantidade from pessoas group by (ids);');
-        $classes = Sala::orderBy("nome")->get();
+        $pessoas = Pessoas::selectRaw('id_sala as ids, count(id) as quantidade')
+                            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                            ->groupBy('id_sala')
+                            ->get();
+        $classes = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy("nome")
+            ->get();
         return view('/master/filtro/classe',['salas' => $salas, 'pessoas' => $pessoas, 'salap' => $salap, 'classes' => $classes]);
     }
 
@@ -96,7 +106,11 @@ class MasterController extends Controller
             'nome.required' =>  'Nome é obrigatório.',
             'tipo.required' =>  'Tipo é obrigatório.',
         ]);
-        Sala::findOrFail($request -> id)->update($request->all());
+        Sala::findOrFail($request -> id)->update([
+            'nome' => $request->nome,
+            'tipo' => $request->tipo,
+            'congregacao_id' => auth()->user()->congregacao_id
+        ]);
         return redirect('/master/filtro/classe')->with('msg', 'Sala foi atualizada com sucesso');
     }
 

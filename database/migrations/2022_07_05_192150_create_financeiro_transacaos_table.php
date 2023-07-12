@@ -42,7 +42,9 @@ return new class extends Migration
 
 
 
-            $table->integer('id_tipo_original')->nullable();;
+            $table->integer('id_tipo_original')->nullable();
+
+            $table->foreignId('congregacao_id')->constrained('congregacaos');
 
         });
     }

@@ -16,3 +16,4 @@ use App\Http\Controllers\api\ApiController;
 */
 
 Route::get('/pessoas', [ApiController::class, 'getPessoas']);
+Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
