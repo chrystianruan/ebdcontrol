@@ -18,6 +18,7 @@ use App\Models\Chamada;
 use App\Models\Relatorio;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class AdminController extends Controller
@@ -1104,7 +1105,7 @@ class AdminController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
 
-        return \PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
+        return PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
         ->setPaper('a4', 'landscape')
         ->stream('relatorio.pdf');
     }
@@ -1121,7 +1122,7 @@ class AdminController extends Controller
             ->get();
 
 
-        return \PDF::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
+        return PDF::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
         ->stream('frequencia-realizar.pdf');
     }
 
@@ -1131,7 +1132,7 @@ class AdminController extends Controller
             ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
             ->findOrFail($id);
 
-        return \PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
+        return PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
         ->stream('frequencia-finalizada.pdf');
     }
 }

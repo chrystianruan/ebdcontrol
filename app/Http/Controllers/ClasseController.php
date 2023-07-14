@@ -14,6 +14,7 @@ use App\Models\Aviso;
 use App\Models\Chamada;
 use Carbon\Carbon;
 use DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ClasseController extends Controller
 {
@@ -457,7 +458,7 @@ class ClasseController extends Controller
 
         $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
 
-        return \PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
+        return PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
         ->stream('frequencia.pdf');
     }
 }
