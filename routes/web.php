@@ -21,7 +21,6 @@ use App\Http\Controllers\SuperMasterController;
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/', [AuthController::class, 'logar']);
 
-Route::get('/first-user', [MasterController::class, 'firstUser']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);

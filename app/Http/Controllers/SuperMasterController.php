@@ -20,7 +20,8 @@ class SuperMasterController extends Controller
         $setores = Setor::orderBy("nome")
             ->get();
         $users = User::select('users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
-            ->where('id_nivel', '=', 1);
+            ->where('id_nivel', '=', 1)
+            ->where('users.id', '>', 1);
         if ($request->congregacao) {
             $users = $users->where('congregacao_id', '=', $request->congregacao);
         }
@@ -46,10 +47,15 @@ class SuperMasterController extends Controller
         $user = User::select('users.*', 'congregacaos.nome as congregacao_nome', 'setors.nome as setor_nome', 'setors.id as setor_id')
             ->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
             ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
+            ->where('users.id', '>', 1)
             ->findOrFail($id);
-        $setores = Setor::orderBy("nome")->get();
+        if($user->id !== 1) {
+            $setores = Setor::orderBy("nome")->get();
 
-        return view('super-master.edit.user', compact(['user', 'setores']));
+            return view('super-master.edit.user', compact(['user', 'setores']));
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function updateUserSuperMaster(Request $request, $id) {
@@ -67,19 +73,28 @@ class SuperMasterController extends Controller
 
         ]);
         $user = User::findOrFail($id);
-        $user->name = $request->nome;
-        $user->username = $request->username;
-        $user->congregacao_id = $request->congregacao;
-        $user->super_master = $request->supermaster;
-        $user->status = $request->status;
-        $user->save();
+        if($user->id !== 1) {
+            $user->name = $request->nome;
+            $user->username = $request->username;
+            $user->congregacao_id = $request->congregacao;
+            $user->super_master = $request->supermaster;
+            $user->status = $request->status;
+            $user->save();
+            return redirect('/super-master/filters/users')->with('msg', 'Usuário atualizado com sucesso');
+        } else {
+            return redirect()->back();
+        }
 
-        return redirect('/super-master/filters/users')->with('msg', 'Usuário atualizado com sucesso');
+
     }
 
     public function editPasswordUserSuperMaster($id) {
         $user = User::findOrFail($id);
-        return view('super-master.edit.password-user')->with(compact(['user']));
+        if($user->id !== 1) {
+            return view('super-master.edit.password-user')->with(compact(['user']));
+        } else {
+            return redirect()->back();
+        }
     }
     public function updatePasswordUserSuperMaster(Request $request, $id) {
         $this->validate($request, [
@@ -91,10 +106,14 @@ class SuperMasterController extends Controller
 
         ]);
         $user = User::findOrFail($id);
-        $user->password = bcrypt($request->password);
-        $user->save();
+        if($user->id !== 1) {
+            $user->password = bcrypt($request->password);
+            $user->save();
+            return redirect('/super-master/filters/users')->with('msg', 'Senha de usuário atualizado com sucesso');
 
-        return redirect('/super-master/filters/users')->with('msg', 'Senha de usuário atualizado com sucesso');
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function newCongregacao(Request $request) {

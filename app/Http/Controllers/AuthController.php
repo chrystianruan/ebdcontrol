@@ -104,6 +104,7 @@ class AuthController extends Controller
         if(isset($request->nome) && empty($request->nivel) && empty($request -> status)) {
             $users = User::where([['name', 'like', '%'.$request -> nome.'%']])
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->where('id', '>', 1)
                 ->get();
 
         }
@@ -111,6 +112,7 @@ class AuthController extends Controller
         elseif(empty($request->nome) && isset($request->nivel) && empty($request -> status)) {
             $users = User::where('id_nivel', '=', $request->nivel)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->where('id', '>', 1)
                 ->get();
 
         }
@@ -118,6 +120,7 @@ class AuthController extends Controller
         elseif(empty($request->nome) && empty($request->nivel) && isset($request -> status)) {
             $users = User::where('status', $request->status)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->where('id', '>', 1)
                 ->get();
 
         }
@@ -125,12 +128,13 @@ class AuthController extends Controller
         elseif(empty($request->nome) && isset($request->nivel) && isset($request -> status)) {
             $users = User::where('id_nivel', '=', $request->nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('id', '>', 1)
             ->where('status', $request->status)
             ->get();
 
         }
          else {
-            $users = User::all();
+            $users = User::where('id', '>', 1)->get();
         }
 
         return view('/master/filtro/usuario', ['niveis' => $niveis, 'users' => $users, 'nome' => $nome,
@@ -140,11 +144,15 @@ class AuthController extends Controller
 
     public function editUserMaster($id) {
         $user = User::findOrFail($id);
-        $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+        if($user->id !== 1) {
+            $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')
             ->get();
 
-        return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
+            return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function updateUserMaster(Request $request) {
@@ -165,19 +173,28 @@ class AuthController extends Controller
             'status.max' =>  'Esse Status não pode ser cadastrado.',
 
         ]);
-
-            User::findOrFail($request->id)->update([
-                'id_nivel' => $request->id_nivel,
-                'status' => $request->status
-            ]);
-            return redirect('/master/filtro/usuario')->with('msg', 'Usuário atualizado com sucesso.');
+            $user = User::findOrFail($request->id);
+            if($user->id !== 1) {
+                User::findOrFail($request->id)->update([
+                    'id_nivel' => $request->id_nivel,
+                    'status' => $request->status
+                ]);
+                return redirect('/master/filtro/usuario')->with('msg', 'Usuário atualizado com sucesso.');
+            } else {
+                return redirect()->back();
+            }
 
 
     }
 
     public function editUserPassword($id) {
+
         $user = User::findOrFail($id);
-        return view('/master/edit/usuario-senha', ['user' => $user]);
+        if($user->id !== 1) {
+            return view('/master/edit/usuario-senha', ['user' => $user]);
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function updateUserPassword(Request $request) {
@@ -189,12 +206,16 @@ class AuthController extends Controller
             'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
 
         ]);
-
-        if(isset($request->id_nivel) || isset($request->name) || isset($request->username) || isset($request->status)) {
-            return redirect('/master/filtro/usuario')->with('msg2', 'Seu usuário não tem permissão');
+        $user = User::findOrFail($request->id);
+        if($user->id !== 1) {
+            if (isset($request->id_nivel) || isset($request->name) || isset($request->username) || isset($request->status)) {
+                return redirect('/master/filtro/usuario')->with('msg2', 'Seu usuário não tem permissão');
+            } else {
+                User::findOrFail($request->id)->update(['password' => bcrypt($request->password)]);
+                return redirect('/master/filtro/usuario')->with('msg', 'Senha de Usuário atualizada com sucesso.');
+            }
         } else {
-            User::findOrFail($request->id)->update(['password' => bcrypt($request->password)]);
-            return redirect('/master/filtro/usuario')->with('msg', 'Senha de Usuário atualizada com sucesso.');
+            return redirect()->back();
         }
 
 

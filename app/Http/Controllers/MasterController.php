@@ -19,12 +19,14 @@ class MasterController extends Controller
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', false)
         ->where('users.congregacao_id', '=', auth()->user()->id)
+        ->where('users.id', '>', 1)
         ->groupBy('id_nivel')
         ->get();
         $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', true)
         ->where('users.congregacao_id', '=', auth()->user()->id)
+        ->where('users.id', '>', 1)
         ->groupBy('id_nivel')
         ->get();
 
@@ -37,17 +39,6 @@ class MasterController extends Controller
         return view('/master/cadastro/classe', ['dataAtual' => $dataAtual]);
     }
 
-    public function firstUser() {
-        $user = new User;
-        $user->username = 'supermaster';
-        $user->password = bcrypt('@superMaster#admin2072');
-        $user->id_nivel = 1;
-        $user->super_master = 1;
-        $user->congregacao_id = 1;
-        $user->save();
-
-        return response("Usuário cadastrado");
-    }
     public function storeSalaMaster(Request $request) {
         $this->validate($request, [
             'nome' => ['required'],
