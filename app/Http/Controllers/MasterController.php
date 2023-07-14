@@ -18,14 +18,14 @@ class MasterController extends Controller
         $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', false)
-        ->where('users.congregacao_id', '=', auth()->user()->id)
+        ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
         ->groupBy('id_nivel')
         ->get();
         $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
         ->where('status', true)
-        ->where('users.congregacao_id', '=', auth()->user()->id)
+        ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
         ->groupBy('id_nivel')
         ->get();
