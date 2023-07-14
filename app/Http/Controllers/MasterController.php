@@ -42,6 +42,7 @@ class MasterController extends Controller
         $user->username = 'supermaster';
         $user->password = bcrypt('@superMaster#admin2072');
         $user->id_nivel = 1;
+        $user->super_master = 1;
         $user->congregacao_id = 1;
         $user->save();
 

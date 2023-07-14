@@ -11,3 +11,23 @@ html {
 .container {
     text-align: center;
 }
+.main {
+    padding: 15px;
+}
+button {
+    color: black;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.links a {
+    margin: 10px;
+}
+.links a i {
+    font-size: 2em;
+}
