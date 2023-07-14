@@ -47,7 +47,7 @@
                                 </select>
 
                                 <label for="nivel"><i class="fa fa-level-down"></i>Congregacão <font style="color:red;font-weight: bold">*</font></label>
-                                <select name="congregacao   " id="congregacao" required> </select>
+                                <select name="congregacao" id="congregacao" required> </select>
 
 
                                 <label for="nivel"><i class="fa fa-admin"></i>SuperMaster <font style="color:red;font-weight: bold">*</font><input type="checkbox" value="1" name="super_master"></label>
