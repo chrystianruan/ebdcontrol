@@ -1122,8 +1122,8 @@ class AdminController extends Controller
             ->get();
 
 
-        return PDF::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
-        ->stream("frequencia.pdf",array('Attachment'=>0));
+        return Pdf::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
+        ->stream("frequencia.pdf", array('Attachment'=>0));
         exit();
     }
 
