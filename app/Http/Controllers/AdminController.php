@@ -1105,7 +1105,7 @@ class AdminController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
 
-        return PDF::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
+        return Pdf::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
         ->setPaper('a4', 'landscape')
         ->stream('relatorio.pdf');
     }
@@ -1124,7 +1124,6 @@ class AdminController extends Controller
 
         return Pdf::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
         ->stream("frequencia.pdf", array('Attachment'=>0));
-        exit();
     }
 
     public function generatePdfToChamadas($id) {
@@ -1133,7 +1132,7 @@ class AdminController extends Controller
             ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
             ->findOrFail($id);
 
-        return PDF::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
+        return Pdf::loadView('/admin/visualizar/pdf-chamada', compact(['chamada']))
         ->stream('frequencia-finalizada.pdf');
     }
 }
