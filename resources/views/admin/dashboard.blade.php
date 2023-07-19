@@ -126,11 +126,9 @@
 </div>
 
     <div class="info" >
-        <form action="print-chamada">
-            @method("POST")
         <h2>Chamadas Físicas</h2> <hr  style="margin-bottom: 2%">
         <h3>Classe</h3>
-       <select class="select-classe" name="classe" required>
+       <select class="select-classe" name="classe" id="select-classe" required>
             <option selected disabled value="">Selecionar</option>
            @foreach($salas as $sala)
                <option value="{{ $sala->id }}"> {{ $sala->nome }}</option>
@@ -139,10 +137,11 @@
 
         <h3>Data</h3>
 
-        <input type="date" class="input-date" name="date" required>
+        <input type="date" class="input-date" name="date" id="date" required>
         <h3></h3>
-        <button class="btn-print">Gerar chamada física</button>
-        </form>
+        <a id="a-visualizar-pdf" href="">
+            <button class="btn-print">Gerar chamada física</button>
+        </a>
 
     </div>
 
@@ -178,7 +177,9 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<script src="/js/dashboard-admin.js"></script>
 <script>
+
 const ctx = document.getElementById('myChart').getContext('2d');
 const myChart = new Chart(ctx, {
     type: 'line',

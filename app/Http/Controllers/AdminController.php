@@ -1110,12 +1110,11 @@ class AdminController extends Controller
         ->stream('relatorio.pdf');
     }
 
-    public function generatePdfToChamadasNotRealized(Request $request) {
-        $classe = $request->classe;
-        $classeSelected = Sala::select('nome')->findOrFail($classe);
-        $date = $request->date;
+    public function generatePdfToChamadasNotRealized($idClasse, $dateRequest) {
+        $classeSelected = Sala::select('nome')->findOrFail($idClasse);
+        $date = $dateRequest;
         $pessoas = Pessoa::select("pessoas.nome as nome_pessoa", "funcaos.nome as nome_funcao")
-            ->whereJsonContains('id_sala', $classe)
+            ->whereJsonContains('id_sala', $idClasse)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
             ->orderBy('pessoas.nome')
@@ -1123,7 +1122,7 @@ class AdminController extends Controller
 
 
         return Pdf::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
-        ->stream("frequencia.pdf", array('Attachment'=>0));
+        ->stream("frequencia.pdf");
     }
 
     public function generatePdfToChamadas($id) {
