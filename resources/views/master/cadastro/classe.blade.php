@@ -5,7 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="/css/cadastroAviso.css">
-         
+
 <div class="container" style="width:60%;">
         <header>Cadastro de sala - {{$dataAtual}}</header>
         <form action="/master/cadastro/classe" method="POST" style="overflow-y: hidden; min-height: 300px">
@@ -23,7 +23,7 @@
 
                 <div class="details personal">
                     <span class="title">Informações</span>
-                    
+
                     <div class="fields">
                         <div class="input-field">
                             <label>Nome<font style="color:red;font-weight: bold">*</font></label>
@@ -31,10 +31,10 @@
                         </div>
 
                         <div class="input-field">
-                        
+
                         <label>Tipo <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" name="tipo"  placeholder="Digite o tipo de sala" required>
-                      
+
                         </div>
 
 
@@ -42,17 +42,18 @@
                             <span class="btnText">Enviar</span>
                             <i class="uil uil-navigator"></i>
                         </button>
-                </div> 
-            
+                </div>
 
-
+                </div>
+                </div>
         </form>
     </div>
 
+
     <script>
-setTimeout(function() {
-    $('#successMessage').fadeOut('fast');
-}, 3000); 
+        setTimeout(function() {
+            $('#successMessage').fadeOut('fast');
+        }, 3000);
 
     </script>
 

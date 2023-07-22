@@ -2,13 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Sala;
-
-
-
-
 use Carbon\Carbon;
 use DB;
 
@@ -68,7 +65,7 @@ class MasterController extends Controller
             ->orderBy('nome')
             ->get();
         }
-        $pessoas = Pessoas::selectRaw('id_sala as ids, count(id) as quantidade')
+        $pessoas = Pessoa::selectRaw('id_sala as ids, count(id) as quantidade')
                             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                             ->groupBy('id_sala')
                             ->get();

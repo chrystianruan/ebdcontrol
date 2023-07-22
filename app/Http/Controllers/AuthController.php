@@ -49,15 +49,17 @@ class AuthController extends Controller
     public function indexUsuarioMaster() {
 
         $dataAtual = date('d/m/Y');
+        $niveisRestricted = Sala::where('id', '=', 1)
+            ->orWhere('id', '=', 2);
         $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')
+            ->union($niveisRestricted)
             ->get();
         return view('/master/cadastro/usuario', ['niveis' => $niveis, 'dataAtual' => $dataAtual]);
     }
 
     public function storeUsuarioMaster(Request $request) {
-        $lastNivel = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('id', 'desc')
+        $lastNivel = Sala::orderBy('id', 'desc')
             ->first();
         $this->validate($request, [
             'name' => ['required'],
@@ -97,8 +99,11 @@ class AuthController extends Controller
         $nome = request('nome');
         $nivel = request('nivel');
         $status = request('status');
+        $niveisRestricted = Sala::where('id', '=', 1)
+            ->orWhere('id', '=', 2);
         $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')
+            ->union($niveisRestricted)
             ->get();
         //nome
         if(isset($request->nome) && empty($request->nivel) && empty($request -> status)) {
@@ -134,7 +139,7 @@ class AuthController extends Controller
 
         }
          else {
-            $users = User::where('id', '>', 1)->get();
+            $users = User::where('id', '>', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
         }
 
         return view('/master/filtro/usuario', ['niveis' => $niveis, 'users' => $users, 'nome' => $nome,
@@ -145,10 +150,12 @@ class AuthController extends Controller
     public function editUserMaster($id) {
         $user = User::findOrFail($id);
         if($user->id !== 1) {
+            $niveisRestricted = Sala::where('id', '=', 1)
+                ->orWhere('id', '=', 2);
             $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')
-            ->get();
-
+                ->orderBy('nome')
+                ->union($niveisRestricted)
+                ->get();
             return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
         } else {
             return redirect()->back();
@@ -156,8 +163,7 @@ class AuthController extends Controller
     }
 
     public function updateUserMaster(Request $request) {
-        $lastNivel = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('id', 'desc')
+        $lastNivel = Sala::orderBy('id', 'desc')
             ->first();
         $this->validate($request, [
             'id_nivel' => ['required', 'integer', 'min:1', 'max:'.$lastNivel -> id],
