@@ -166,9 +166,15 @@ class AuthController extends Controller
         $lastNivel = Sala::orderBy('id', 'desc')
             ->first();
         $this->validate($request, [
+            'name' => ['required'],
+            'username' => ['required', 'min:6', 'unique:users,username'],
             'id_nivel' => ['required', 'integer', 'min:1', 'max:'.$lastNivel -> id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
         ], [
+            'name.required' => 'Nome é obrigatório.',
+            'username.required' =>  'Nome de usuário é obrigatório.',
+            'username.min' => 'O nome de usuário precisa ter no mínimo 6 dígitos.',
+            'username.unique' => 'Esse nome de usuário já está sendo usado.',
             'id_nivel.required' =>  'Nível é obrigatório.',
             'id_nivel.integer' =>  'Esse nível não pode ser cadastrado.',
             'id_nivel.min' =>  'Esse nível não pode ser cadastrado.',
@@ -182,6 +188,8 @@ class AuthController extends Controller
             $user = User::findOrFail($request->id);
             if($user->id !== 1) {
                 User::findOrFail($request->id)->update([
+                    'name' => $request->name,
+                    'username' => $request->username,
                     'id_nivel' => $request->id_nivel,
                     'status' => $request->status
                 ]);
