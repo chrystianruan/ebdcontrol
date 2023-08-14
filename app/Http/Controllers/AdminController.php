@@ -987,7 +987,7 @@ class AdminController extends Controller
         }
         $chamadas = Chamada::select('chamadas.id', 'chamadas.created_at', 'salas.nome', 'matriculados', 'presentes', 'assist_total', 'visitantes', 'biblias', 'revistas')
         ->whereDate('chamadas.created_at', Carbon::today())
-        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+        ->where('chamadas.congregacao_id', '=', auth()->user()->congregacao_id)
         ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
         ->get();
         $salas = Sala::where('id', '>', 2)->get();

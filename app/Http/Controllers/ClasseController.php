@@ -23,10 +23,10 @@ class ClasseController extends Controller
     $dataAno = date('Y');
     $nivel = auth()->user()->id_nivel;
     $idadesPessoas = DB::table('pessoas')
-    ->select(DB::raw('count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades'))
+    ->select(DB::raw('count(id) as qtd, timestampdiff(YEAR, pessoas.data_nasc, current_timestamp()) as idades'))
     ->whereJsonContains('id_sala', ''.$nivel)
     ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-    ->groupBy(DB::raw('floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25);'))
+    ->groupBy(DB::raw('timestampdiff(YEAR, pessoas.data_nasc, current_timestamp())'))
     ->get();
     $formacoes = Pessoa::select(DB::raw('pessoas.id_formation, count(pessoas.id) as qtdPessoas, formations.nome'))
     ->whereJsonContains('id_sala', ''.$nivel)
