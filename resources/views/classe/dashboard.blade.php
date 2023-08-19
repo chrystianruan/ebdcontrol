@@ -3,8 +3,11 @@
 @section('title', 'Início')
 
 @section('content')
-
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <link rel="stylesheet" href="/css/inicioClasse.css">
+<div id="retorno" class="retorno">
+    <p></p>
+</div>
 @if($chamadaDia->count() == 0 && date('w') == 0)
 <div class="orientation">
     <div class="aaa">
@@ -12,6 +15,35 @@
     </div>
 </div>
 @endif
+
+<div class="dialog" id="modal-presencas">
+    <div class="dialog-overlay" tabindex="-1"></div>
+    <div class="dialog-content" role="dialog">
+        <div role="document">
+            <button class="dialog-close" id="dialog-close-user">&times;</button>
+            <h2>Relatório de presenças</h2>
+            <hr>
+            <p id="periodo"></p>
+            <div style="overflow-x:scroll">
+            <table id="table">
+                <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Função</th>
+                    <th>Data de nascimento</th>
+                    <th>Presenças</th>
+                </tr>
+                </thead>
+                <tbody id="tbody-data">
+
+                </tbody>
+            </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <div class="grid-container">
 
     <div class="info">
@@ -121,6 +153,20 @@
         @endif
     </div>
 
+    <div class="info">
+        <h2>Relatório de presenças</h2> <hr  style="margin-bottom: 2%">
+
+        <h3>Data início</h3>
+
+        <input type="date" class="input-date" name="initial_date" id="initial_date" required style="width: 100%; padding: 5px">
+        <h3>Data fim</h3>
+        <input type="date" class="input-date" name="final_date" id="final_date" required style="width: 100%; padding: 5px">
+        <h3></h3>
+        <a >
+        <button id="a-visualizar-pdf" class="btn-visualizar-relatorio" style="">Gerar relatório</button>
+        </a>
+    </div>
+
     <div class="info" >
         <h2>Importante</h2> <hr  style="margin-bottom: 2%">
         <h3>Aniversariantes do mês ({{date('m')}})</h3>
@@ -132,9 +178,7 @@
 
       </div>
 
-
-
- <div class="graficoX">
+    <div class="graficoX">
         <canvas id="myChartX" width="500" height="500"></canvas>
 </div>
 
@@ -155,9 +199,134 @@
 
 
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<script src="/js/dashboard-classe.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" integrity="sha384-THVO/sM0mFD9h7dfSndI6TS0PgAGavwKvB5hAxRRvc0o9cPLohB0wb/PTA7LdUHs" crossorigin="anonymous"></script>
 <script>
+
+    let initialDateSelected = document.getElementById("initial_date");
+    let finalDateSelected = document.getElementById("final_date");
+    let linkVisualizarPdf = document.getElementById("a-visualizar-pdf")
+    let modalPresencas = document.getElementById("modal-presencas");
+    let btnClose = document.getElementById("dialog-close-user");
+    let table = document.getElementById("table");
+    let tbodyData = document.getElementById("tbody-data");
+    let periodo = $('#periodo');
+    let alertDiv = document.getElementById("alert-div");
+    let alertMsg = $('#alert-msg');
+
+    btnClose.addEventListener("click", function() {
+       modalPresencas.style.display = "none";
+        $('#tbody-data').empty();
+        $('#periodo').empty();
+    });
+
+    linkVisualizarPdf.addEventListener("click", generateDataToRelatorio);
+
+
+    function returnMsg(msgPrint) {
+        alert(msgPrint);
+    }
+
+
+
+    function generateDataToRelatorio() {
+        if (initialDateSelected.value && finalDateSelected.value) {
+            var initial = new Date(initialDateSelected.value);
+            var final = new Date(finalDateSelected.value);
+
+            if (initial < final) {
+                $.ajax({
+                    url: '{{ route('relatorio.per.date') }}',
+                    type: 'POST',
+                    data: {
+                        initialDate: initialDateSelected.value,
+                        finalDate: finalDateSelected.value,
+                        congregacaoId: {{ auth()->user()->congregacao_id }},
+                        classeId: {{ auth()->user()->id_nivel }},
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                    },
+                })
+                .done(function(data){
+                    let dataJson = JSON.parse(data);
+                    let uniqueIds = getUniqueIds(dataJson);
+                    let dataIndex = getData(uniqueIds, dataJson);
+                    formatData(dataIndex);
+
+                })
+                .fail(function(jqXHR, textStatus, msg){
+                    alert(msg);
+                });
+            } else {
+                returnMsg("A data inicial é maior que a final")
+            }
+        } else {
+            returnMsg("Os dois campos de data precisam ser selecionados");
+        }
+
+    }
+
+    function getUniqueIds(dataJson) {
+        let uniqueIds = [];
+        for(i = 0; i< dataJson.length; i++){
+            if(uniqueIds.indexOf(dataJson[i].id) === -1){
+                uniqueIds.push(dataJson[i].id);
+            }
+        }
+        return uniqueIds;
+    }
+    function getData(uniqueIds, dataJson) {
+        let dataFormated = [];
+        let presencas = [];
+        for (let i = 0; i < uniqueIds.length; i++) {
+            if(dataFormated.indexOf(dataJson[i].id) === -1){
+                let presencasOfPerson = dataJson.filter((d) => d.id == uniqueIds[i]).map((d) => d.presenca);
+                presencas.push(presencasOfPerson);
+
+                let object = {
+                    id: dataJson[i].id,
+                    nome: dataJson[i].nome,
+                    data_nasc: dataJson[i].data_nasc,
+                    id_funcao: dataJson[i].id_funcao,
+                    presencas: presencasOfPerson,
+                }
+                dataFormated.push(object);
+            }
+        }
+
+        return dataFormated;
+    }
+    function formatData(data) {
+        let jsonData = JSON.stringify(data)
+        $.ajax({
+            url : "{{ route('format.data.relatorio') }}",
+            type : 'POST',
+            data : {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                data: jsonData,
+            },
+        })
+            .done(function(dataFormated){
+                modalPresencas.style.display = "block";
+                periodo.append(`Período: ${initialDateSelected.value.split('-').reverse().join('/')} a ${finalDateSelected.value.split('-').reverse().join('/')}`)
+                var rows;
+                $(dataFormated).each(function(i, data) {
+                    rows += "<tr>"
+                    rows += "<td>" + data.nome + "</td>"
+                    rows += "<td>" + data.id_funcao + "</td>"
+                    rows += "<td>" + data.data_nasc + "</td>"
+                    rows += "<td>" + data.presencas + "</td>"
+                    rows += "</tr>"
+                })
+                $('#tbody-data').append(rows);
+
+            })
+            .fail(function(jqXHR, textStatus, msg){
+                alert(msg);
+            });
+    }
+
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
         type: 'pie',

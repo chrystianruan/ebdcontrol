@@ -241,7 +241,7 @@ class AdminController extends Controller
         $pessoa->prof_comum = $request->prof_comum;
         $pessoa->id_public = $request->id_public;
         $pessoa->save();
-        return redirect('/admin/cadastro/pessoa')->with('msg', 'Pessoa cadastrada com sucesso');
+        return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
     }
 
 

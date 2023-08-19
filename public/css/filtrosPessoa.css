@@ -12,7 +12,7 @@ body {
 }
 
 table {
-  
+
   background: #7b4ea51a;
   border-radius: 0.40em;
   border-collapse: collapse;
@@ -38,7 +38,7 @@ tbody tr {
 }
 
 tbody tr:nth-of-type(even) {
-  background-color: #f3f3f3;
+  background-color: #141222;
 }
 
 .disabled td {
@@ -65,7 +65,7 @@ button {
 .resett {
   background-color: red;
   color: white;
-  
+
 }
 
 .filter:hover {
@@ -91,7 +91,7 @@ button {
   background-color: rgb(165, 172, 167);
   color: white;
   transition: all 0.2s linear;
-  
+
 }
 
 tbody .disabled:hover  {
@@ -119,7 +119,7 @@ form .title{
   float: left;
   margin: 0.4%;
   cursor: pointer;
-  
+
 }
 
 .btnFilter2 {
@@ -145,7 +145,7 @@ form .title{
   border-radius: 5px;
   background: dodgerblue
 
-  
+
 }
 .itens input {
   width: 300px;
@@ -185,9 +185,9 @@ form .title{
 i{
 
   font-weight: 650;
-  
+
 }
- 
+
 mark {
   border-radius: 5px;
   padding: 0 1px;

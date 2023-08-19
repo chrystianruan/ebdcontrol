@@ -39,8 +39,8 @@
         <td>@if($p -> id_funcao == 1) Aluno @elseif($p -> id_funcao == 2) Prof. @elseif($p -> id_funcao == 3) Sec. @elseif($p -> id_funcao == 4) Sec. @elseif($p -> id_funcao == 5) Superint. @else Erro @endif</td>
         <td>
             <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
-                <option selected value = "1" style="background-color: green">Sim</option>
-                <option value = "2" style="background-color: red">Não</option>
+                <option selected value=1 style="background-color: green">Sim</option>
+                <option value=0 style="background-color: red">Não</option>
             </select>
         </tr>
         @endforeach

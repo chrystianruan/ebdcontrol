@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MasterController;
+use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\SuperMasterController;
 
 
@@ -20,15 +21,17 @@ use App\Http\Controllers\SuperMasterController;
 */
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/', [AuthController::class, 'logar']);
-
-
+Route::get('/cadastro', [GeneralController::class, 'indexPessoa']);
+Route::get('/pessoas', [GeneralController::class, 'searchPessoaClasse']);
+Route::post('/pessoas', [GeneralController::class, 'searchPessoaClasse']);
+Route::post('/admin/cadastro/pessoa', [AdminController::class, 'storePessoa']);
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
     Route::get('/sobre', function () { return view('/about'); });
-
+    Route::post('/format/data/relatorio', [GeneralController::class, 'formatData'])->name('format.data.relatorio');
 });
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
@@ -46,6 +49,7 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::post('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::get('/classe/pdf-chamada/{id}', [ClasseController::class, 'generatePdfToChamadas']);
+    Route::post('/classe/relatorio/', [ClasseController::class, 'generateRelatorioPerDate'])->name('relatorio.per.date');
 
 });
 
@@ -79,7 +83,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 
     Route::get('/admin/cadastro/pessoa', [AdminController::class, 'indexPessoa']);
-    Route::post('/admin/cadastro/pessoa', [AdminController::class, 'storePessoa']);
+
     Route::get('/admin/filtro/pessoa', [AdminController::class, 'showFilterPessoa']);
     Route::post('/admin/filtro/pessoa', [AdminController::class, 'searchPessoa']);
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);

@@ -19,7 +19,7 @@ for (let presenca of presencas) {
             } else {
                 pessoas.forEach((function(pessoa) {
                     if (presenca.id.replace('presenca-', '') == pessoa.id) {
-                        pessoa.presenca = 2;
+                        pessoa.presenca = 0;
                     }
                 }));
                 presenca.style.cssText = "background-color: red;" + "color: white;";
@@ -28,10 +28,6 @@ for (let presenca of presencas) {
             }
             pessoasValue.value = JSON.stringify(pessoas);
     });
-}
-
-function confirmSend() {
-
 }
 
 visitantes.addEventListener("keyup", function() {
