@@ -158,7 +158,7 @@
                         <option value=2>Não</option>
                     </select>
 
-                    <label>É/foi professor comum? <font style="color:red;font-weight: bold">*</font></label>
+                    <label>É/foi professor secular? <font style="color:red;font-weight: bold">*</font></label>
                     <select class="inputprof" name="prof_comum">
                         <option selected disabled value="">Selecionar</option>
                         <option value=1>Sim</option>
