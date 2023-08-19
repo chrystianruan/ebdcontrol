@@ -158,11 +158,11 @@
 
         <h3>Data início</h3>
 
-        <input type="date" class="input-date" name="initial_date" id="initial_date" required style="width: 100%; padding: 5px">
+        <input type="date" class="input-date" name="initial_date" id="initial_date" required>
         <h3>Data fim</h3>
-        <input type="date" class="input-date" name="final_date" id="final_date" required style="width: 100%; padding: 5px">
+        <input type="date" class="input-date" name="final_date" id="final_date" required>
         <h3></h3>
-        <a >
+        <a>
         <button id="a-visualizar-pdf" class="btn-visualizar-relatorio" style="">Gerar relatório</button>
         </a>
     </div>
