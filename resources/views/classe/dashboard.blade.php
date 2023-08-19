@@ -278,17 +278,15 @@
     }
     function getData(uniqueIds, dataJson) {
         let dataFormated = [];
-        let presencas = [];
         for (let i = 0; i < uniqueIds.length; i++) {
-            if(dataFormated.indexOf(dataJson[i].id) === -1){
+            if(dataFormated.indexOf(uniqueIds[i].id) === -1){
                 let presencasOfPerson = dataJson.filter((d) => d.id == uniqueIds[i]).map((d) => d.presenca);
-                presencas.push(presencasOfPerson);
-
+                let pessoa = dataJson.find(({ id }) => id === uniqueIds[i]);
                 let object = {
-                    id: dataJson[i].id,
-                    nome: dataJson[i].nome,
-                    data_nasc: dataJson[i].data_nasc,
-                    id_funcao: dataJson[i].id_funcao,
+                    id: pessoa.id,
+                    nome: pessoa.nome,
+                    data_nasc: pessoa.data_nasc,
+                    id_funcao: pessoa.id_funcao,
                     presencas: presencasOfPerson,
                 }
                 dataFormated.push(object);
@@ -308,6 +306,7 @@
             },
         })
             .done(function(dataFormated){
+                console.log(dataFormated);
                 modalPresencas.style.display = "block";
                 periodo.append(`Período: ${initialDateSelected.value.split('-').reverse().join('/')} a ${finalDateSelected.value.split('-').reverse().join('/')}`)
                 var rows;
