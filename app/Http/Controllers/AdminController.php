@@ -131,8 +131,8 @@ class AdminController extends Controller
             'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
             'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone'],
             'id_formation' => ['required', 'integer', 'min: 1', 'max:'.$formations->count()],
-            'id_sala' => ['required', 'max: 1'],
-            'id_sala.*' => ['integer', 'min: 3', 'max:'.$lastSala->id],
+            'id_sala' => ['required', 'max:'.$lastSala->id],
+//            'id_sala.*' => ['integer', 'min: 3', 'max:'.$lastSala->id], TODO:descomentar
             'interesse' => ['required', 'integer', 'min: 1', 'max: 3'],
             'frequencia_ebd' => ['integer', 'min: 1', 'max: 3'],
             'curso_teo' => ['integer', 'min: 1', 'max: 2'],
@@ -173,9 +173,9 @@ class AdminController extends Controller
 
             'id_sala.required' =>  'Classe é obrigatória.',
             'id_sala.max' =>  'Pessoa só pode ser cadastrada em uma classe',
-            'id_sala.*.integer' =>  'Classe digitada não existe',
-            'id_sala.*.min' =>  'Classe digitada não existe',
-            'id_sala.*.max' =>  'Classe digitada não existe',
+//            'id_sala.*.integer' =>  'Classe digitada não existe', TODO:descomentar
+//            'id_sala.*.min' =>  'Classe digitada não existe', TODO:descomentar
+//            'id_sala.*.max' =>  'Classe digitada não existe', TODO:descomentar
 
             'interesse.required' =>  'Interesse é obrigatório.',
             'interesse.integer' =>  'Interesse escolhido não existe.',
