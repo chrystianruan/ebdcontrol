@@ -119,7 +119,8 @@ class AdminController extends Controller
         $publicos = Publico::all();
         $ufs = Uf::all();
         $formations = Formation::all();
-        $lastSala = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+//        TODO: colocar auth()->user()->congregacao_id quando acabar o periodo de recadastramento externo
+        $lastSala = Sala::where('congregacao_id', '=', 1)
             ->orderBy('id', 'desc')
             ->first();
         $this->validate($request, [
