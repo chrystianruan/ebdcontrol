@@ -29,7 +29,6 @@ class GeneralController extends Controller
 
     public function searchPessoaClasse(Request $request)
     {
-        $nivelUser = auth()->user()->id_nivel;
         $nome = request('nome');
         $sexo = request('sexo');
         $niver = request('niver');
