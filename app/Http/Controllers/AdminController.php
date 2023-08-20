@@ -31,8 +31,10 @@ class AdminController extends Controller
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')->get();
-        $formations = Pessoa::selectRaw('id_formation, count(pessoas.id) as qtd, formations.nome')
-            ->join('formations','formations.id', '=', 'pessoas.id_formation')
+        $formations = Pessoa::select(DB::raw('pessoas.id_formation, count(pessoas.id) as qtd, formations.nome'))
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->join('formations', 'pessoas.id_formation', '=', 'formations.id')
+            ->groupBy('id_formation')
             ->get();
         $dataMes = date('n');
         $dataAno = date('Y');

@@ -279,7 +279,7 @@ const myChart2 = new Chart(ctx2, {
 
 const ctx3 = document.getElementById('myChart3');
 const myChart3 = new Chart(ctx3, {
-    type: 'polarArea',
+    type: 'pie',
     data: {
         labels: [@foreach($formations as $for) '{{$for -> nome}}', @endforeach],
         datasets: [{

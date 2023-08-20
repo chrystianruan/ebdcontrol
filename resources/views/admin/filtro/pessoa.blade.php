@@ -205,11 +205,13 @@
             <a href="/admin/visualizar/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
             <a href="/admin/edit/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
 
-            <form action="/admin/filtro/pessoa/{{$pessoa -> id}}" style="float:left; " method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>
-            </form> </div> </td>
+{{--            <form action="/admin/filtro/pessoa/{{$pessoa -> id}}" style="float:left; " method="POST">--}}
+{{--            @csrf--}}
+{{--            @method('DELETE')--}}
+{{--            <button type="submit" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>--}}
+{{--            </form> --}}
+                </div>
+            </td>
     </tr>
 
   </tbody>
