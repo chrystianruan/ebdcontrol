@@ -301,7 +301,8 @@ class AdminController extends Controller
         }
 
         if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse);
+            $pessoas = $pessoas->where('interesse', $request->interesse)
+            ->where('id_funcao', '<>', 2);
         }
 
         if ($request->situacao) {
