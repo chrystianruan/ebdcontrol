@@ -36,7 +36,7 @@
         <tr>
         <td>{{ $p -> nome}}</td>
         <td>{{ date('d/m', strtotime($p -> data_nasc)) }}</td>
-        <td>@if($p -> id_funcao == 1) Aluno @elseif($p -> id_funcao == 2) Prof. @elseif($p -> id_funcao == 3) Sec. @elseif($p -> id_funcao == 4) Sec. @elseif($p -> id_funcao == 5) Superint. @else Erro @endif</td>
+        <td>{{ $p->nome_funcao }}</td>
         <td>
             <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
                 <option selected value=1 style="background-color: green">Sim</option>

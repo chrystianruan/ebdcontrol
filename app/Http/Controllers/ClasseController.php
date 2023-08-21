@@ -289,7 +289,8 @@ class ClasseController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereDate('created_at', Carbon::today())
             ->get();
-        $pessoas = Pessoa::select('id', 'nome', 'data_nasc', 'id_funcao', DB::raw("'1' as presenca"))
+        $pessoas = Pessoa::select('pessoas.id', 'pessoas.nome', 'data_nasc', 'id_funcao', DB::raw("'1' as presenca"), 'funcaos.nome as nome_funcao')
+            ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
             ->whereJsonContains('id_sala', '' . $sala)
             ->where('situacao', '=', 1)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)

@@ -3,6 +3,12 @@
 @section('title', 'Início')
 
 @section('content')
+<style>
+    .marker {
+        font-weight: bolder;
+        color: yellow
+    }
+</style>
 <link rel="stylesheet" href="/css/saber.css">
 <div class="card-container">
 	<span class="pro" @if($pessoa->situacao == 1) style="background-color: green" @else  style="background-color: red" @endif>@if($pessoa->situacao == 1)Ativo @else Inativo @endif</span>
@@ -20,9 +26,9 @@
 
 	@endif" alt="user" />
 	<h3>{{$pessoa -> nome}}	</h3>
-	<h4>@foreach($salas as $sala)@foreach($pessoa->id_sala as $ids) @if($sala->id == $ids) {{$sala->nome}},  @endif @endforeach @endforeach</h4>
-	<h6 style="color: yellow">@if($pessoa->id_funcao == 1) Aluno @elseif($pessoa->id_funcao == 2) Professor @elseif($pessoa->id_funcao == 3) Secretário/Classe @elseif($pessoa->id_funcao == 4) Secretário/Adm @elseif($pessoa->id_funcao == 5) Superintendente @else Erro @endif</h6>
-	<p> Idade: <span style="color: yellow">
+	<h4>@foreach($salas as $sala)@foreach($pessoa->id_sala as $ids) @if($sala->id == $ids) {{$sala->nome}}@if(count($pessoa->id_sala) > 1 && $pessoa->id_sala[0]),@endif  @endif @endforeach @endforeach</h4>
+	<h6 style="color: yellow">{{ $pessoa->funcao_nome }}</h6>
+	<p> Idade: <span class="marker">
 		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano
         @else
@@ -31,21 +37,34 @@
 
 		({{date('d/m/Y', strtotime($pessoa -> data_nasc))}})</span>
 	</p>
-	<p>Endereço:  <span style="color: yellow">{{$pessoa -> cidade}} /@foreach($ufs as $uf) @if($uf -> id == $pessoa -> id_uf) {{$uf -> nome}} @endif @endforeach </span> </p>
-	<p>N° de telefone: @if($pessoa -> telefone == null) <span style="color: #aaa">Sem dados</span> @else {{$pessoa -> telefone}} @endif</p>
-    <p>Paternidade/Maternidade: @if($pessoa -> paternidade_maternidade == null) <span style="color: #aaa">Não</span> @else {{ $pessoa->paternidade_maternidade }} @endif</p>
+	<p>Endereço:  <span class="marker">{{$pessoa -> cidade}} / {{ $pessoa->nome_uf }}</span> </p>
+	<p>N° de telefone:  <span class="marker"> @if($pessoa -> telefone == null)</span> <span style="color: #aaa">Sem dados</span> @else {{$pessoa -> telefone}} @endif</p>
+    <p>Paternidade/Maternidade: <span class="marker"> @if($pessoa -> paternidade_maternidade == null) <span style="color: #aaa">Não</span> @else {{ $pessoa->paternidade_maternidade }} @endif </span></p>
 
 	<div class="skills">
 		<h6>Infos Gerais</h6>
 		<ul>
-			<li>@foreach($formations as $f) @if($pessoa -> id_formation == $f -> id) {{$f -> nome}} @endif @endforeach </li>
+			<li>Escolaridade: <span class="marker">{{ $pessoa->nome_formation }} </span></li>
 			@if($pessoa->cursos != null)
-			<li>{{$pessoa->cursos}}</li>
+			<li>Cursos: <span class="marker">{{$pessoa->cursos}}</span></li>
 			@endif
 		</ul>
+        @if ($pessoa->interesse === 1 || $pessoa->interesse === 3)
+        <h6>Interesse em ser professor</h6>
+        <ul>
+            <li>Resposta: <span class="marker">@if ($pessoa->interesse === 1) Sim @else Talvez @endif</span></li>
+        </ul>
+        <ul>
+            <li>Sempre frequentou a EBD? <span class="marker">@if($pessoa->frequencia_ebd == 1) Sim @elseif($pessoa->frequencia_ebd == 2) Não @else Mais ou menos @endif </span> </li>
+            <li>Possui curso de teologia? <span class="marker">@if($pessoa->curso_teo == 1) Sim @else Não @endif </span></li>
+            <li>É/foi professor da EBD? <span class="marker">@if($pessoa->prof_ebd == 1) Sim @else Não @endif </span></li>
+            <li>É/foi professor secular? <span class="marker">@if($pessoa->prof_comum == 1) Sim @else Não @endif </span></li>
+            <li>Para qual público prefere dar aula? <span class="marker">{{$pessoa->nome_publico}}</span></li>
+        </ul>
+        @endif
 	</div>
+
+
+
 </div>
-
-
-
 @endsection

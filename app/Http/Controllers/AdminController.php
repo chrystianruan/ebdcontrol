@@ -899,12 +899,17 @@ class AdminController extends Controller
     }
 
     public function showPessoa($id) {
-        $pessoa = Pessoa::findOrFail($id);
+        $pessoa = Pessoa::select('pessoas.*', 'ufs.nome as nome_uf',
+            'funcaos.nome as nome_funcao', 'formations.nome as nome_formation',
+            'publicos.nome as nome_publico'
+        )
+            ->join('ufs', 'ufs.id', '=', 'pessoas.id_uf')
+            ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+            ->join('formations', 'formations.id', '=', 'pessoas.id_formation')
+            ->leftJoin('publicos', 'publicos.id', '=', 'pessoas.id_public')
+            ->findOrFail($id);
         $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
-        $ufs = Uf::orderBy("nome")->get();
-        $publicos = Publico::all();
-        $formations = Formation::all();
-        return view('/admin/visualizar/pessoa', ['pessoa' => $pessoa, 'ufs' => $ufs, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations]);
+        return view('/admin/visualizar/pessoa', ['pessoa' => $pessoa, 'salas' => $salas, ]);
     }
 
     public function showFinanceiroTransacao($id) {
