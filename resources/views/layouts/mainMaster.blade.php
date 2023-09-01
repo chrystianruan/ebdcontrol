@@ -38,12 +38,12 @@
     </div>
 </div>
 <div>
-  @if(session('msg'))
-      <p class="msg" id="sucessMessage">{{session('msg')}}</p>
-  @endif
-  @if(session('msg2'))
-      <p class="msg2" id="sucessMessage">{{session('msg2')}}</p>
-  @endif
+    @if(session('msg'))
+        <p class="msg" id="msg">{{session('msg')}}</p>
+    @endif
+    @if(session('msg2'))
+        <p class="msg2" id="msg2">{{session('msg2')}}</p>
+    @endif
 </div>
   @yield('content')
 <script>
