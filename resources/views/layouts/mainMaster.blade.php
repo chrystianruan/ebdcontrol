@@ -56,18 +56,20 @@ function myFunction() {
   }
 }
 
-function hideMsg() {
-    let msg = document.getElementById("msg");
-    msg.style = "display:none";
-  }
+  @if(session('msg'))
+    function hideMsg() {
+      let msg = document.getElementById("msg");
+      msg.style = "display:none";
+    }
 
-  function hideMsg2() {
-    let msg2 = document.getElementById("msg2");
-    msg2.style = "display:none";
-  }
+    function hideMsg2() {
+      let msg2 = document.getElementById("msg2");
+      msg2.style = "display:none";
+    }
 
   setTimeout(hideMsg, 2000);
   setTimeout(hideMsg2, 3000);
+  @endif
 </script>
 
 </body>

@@ -31,13 +31,19 @@
             <label for="nome"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
             <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}">
 
-            <div class="input-field" id="nomeResp" style="display:none">
+              <div class="input-field" id="nomeResp" style="display:none">
 
-              <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
-              <input type="text" name="responsavel" id="responsavel" value="{{old('responsavel')}}" placeholder="Digite o nome do responsável do aluno">
+                  <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
+                  <input type="text" name="responsavel" id="nome_responsavel" value="{{old('responsavel')}}" placeholder="Digite o nome do responsável do aluno">
 
-            </div>
+              </div>
 
+              <div class="input-field" id="numeroResp" style="display:none">
+
+                  <label>Número do responsável <font style="color:red;font-weight: bold">*</font></label>
+                  <input type="text" name="telefone_responsavel" id="telefone_responsavel" value="{{old('telefone_responsavel')}}" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o número do responsável do aluno">
+
+              </div>
             <label for="sexo"><i class="fa fa-genderless"></i>Sexo <font style="color:red;font-weight: bold">*</font></label>
             <select name="sexo" required>
               <option selected disabled value="">Selecionar</option>
@@ -76,9 +82,10 @@
               </select>
               </div>
             </div>
+          <div id="numero_pessoa">
             <label for="fname"><i class="fa fa-phone"></i>N° de Telefone (com DDD) <span style="color: blue"></span> </label>
             <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{old('telefone')}}">
-          </>
+          </div>
 
           <div class="col-50">
             <h3>Informações Gerais</h3>
@@ -163,31 +170,6 @@ integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
 crossorigin="anonymous"></script>
 
 <script>
-   $("#interesse").change(function() {
-    if (this.value == 1 || this.value == 3) {
-      $('#registerp').show();
-      $('.inputprof').attr('required','required');
-    } else {
-      $('#registerp').hide();
-      $('.inputprof').removeAttr('required');
-    }
-  });
-
-  $("#scales").change(function() {
-    if (this.checked) {
-      $('#nomeResp').show();
-      $('#responsavel').attr('required','required');
-    } else {
-      $('#nomeResp').hide();
-      $('#responsavel').removeAttr('required');
-    }
-  });
-
-  $(document).ready(function() {
-  $("#field").keyup(function() {
-      $("#field").val(this.value.match(/[0-9]*/));
-  });
-});
 
 </script>
 @endsection

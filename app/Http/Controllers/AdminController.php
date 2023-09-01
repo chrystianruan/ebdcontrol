@@ -122,7 +122,7 @@ class AdminController extends Controller
         $ufs = Uf::all();
         $formations = Formation::all();
 
-        $lastSala = Sala::where('congregacao_id', '=', 1) //TODO: colocar auth()->user()->congregacao_id quando acabar o periodo de recadastramento externo
+        $lastSala = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('id', 'desc')
             ->first();
         $this->validate($request, [
@@ -132,9 +132,9 @@ class AdminController extends Controller
             'data_nasc' => ['required'],
             'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
             'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone'],
+            'telefone_responsavel' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999'],
             'id_formation' => ['required', 'integer', 'min: 1', 'max:'.$formations->count()],
             'id_sala' => ['required', 'max:'.$lastSala->id],
-//            'id_sala.*' => ['integer', 'min: 3', 'max:'.$lastSala->id], TODO:descomentar
             'interesse' => ['required', 'integer', 'min: 1', 'max: 3'],
             'frequencia_ebd' => ['integer', 'min: 1', 'max: 3'],
             'curso_teo' => ['integer', 'min: 1', 'max: 2'],
@@ -168,6 +168,10 @@ class AdminController extends Controller
             'telefone.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
             'telefone.unique' =>  'O telefone já existe.',
 
+            'telefone_responsavel.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
+
             'id_formation.required' =>  'Formação é obrigatória.',
             'id_formation.integer' =>  'Formação escolhida não existe.',
             'id_formation.min' =>  'Formação escolhida não existe.',
@@ -175,9 +179,6 @@ class AdminController extends Controller
 
             'id_sala.required' =>  'Classe é obrigatória.',
             'id_sala.max' =>  'Pessoa só pode ser cadastrada em uma classe',
-//            'id_sala.*.integer' =>  'Classe digitada não existe', TODO:descomentar
-//            'id_sala.*.min' =>  'Classe digitada não existe', TODO:descomentar
-//            'id_sala.*.max' =>  'Classe digitada não existe', TODO:descomentar
 
             'interesse.required' =>  'Interesse é obrigatório.',
             'interesse.integer' =>  'Interesse escolhido não existe.',
@@ -226,6 +227,7 @@ class AdminController extends Controller
             $pessoa->paternidade_maternidade = null;
         }
         $pessoa->responsavel = $request->responsavel;
+        $pessoa->telefone_responsavel = $request->telefone_responsavel;
         $pessoa->ocupacao = $request->ocupacao;
         $pessoa->cidade = $request->cidade;
         $pessoa->data_nasc = $request->data_nasc;
@@ -235,7 +237,7 @@ class AdminController extends Controller
         $pessoa->cursos = $request->cursos;
         $pessoa->id_sala = ["$request->id_sala"];
         $pessoa->id_funcao = 1;
-        $pessoa->congregacao_id = 1; //TODO: colocar auth()->user()->congregacao_id quando acabar o periodo de recadastramento externo
+        $pessoa->congregacao_id = auth()->user()->congregacao_id;
         $pessoa->situacao = 1;
         $pessoa->interesse = $request->interesse;
         $pessoa->frequencia_ebd = $request->frequencia_ebd;
@@ -367,6 +369,7 @@ class AdminController extends Controller
             'data_nasc' => ['required'],
             'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
             'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone,'.$request->id],
+            'telefone_responsavel' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999'],
             'id_formation' => ['required', 'integer', 'min: 1', 'max:'.$formations->count()],
             'id_sala' => ['required', 'max: 2'],
             'id_sala.*' => ['integer', 'min: 3', 'max:'.$lastSala -> id, 'distinct'],
@@ -395,6 +398,10 @@ class AdminController extends Controller
             'telefone.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
             'telefone.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
             'telefone.unique' =>  'O telefone já existe.',
+
+            'telefone_responsavel.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
 
             'id_formation.required' =>  'Formação é obrigatória.',
             'id_formation.integer' =>  'Formação escolhida não existe.',
@@ -446,6 +453,7 @@ class AdminController extends Controller
         }
         $pessoa-> data_nasc = $request->data_nasc;
         $pessoa-> responsavel = $request->responsavel;
+        $pessoa->telefone_responsavel = $request->telefone_responsavel;
         $pessoa-> ocupacao = $request->ocupacao;
         $pessoa-> cidade = $request->cidade;
         $pessoa-> id_uf = $request->id_uf;

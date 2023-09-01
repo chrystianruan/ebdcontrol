@@ -21,10 +21,7 @@ use App\Http\Controllers\SuperMasterController;
 */
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/', [AuthController::class, 'logar']);
-Route::get('/cadastro', [GeneralController::class, 'indexPessoa']);
-Route::get('/pessoas', [GeneralController::class, 'searchPessoaClasse']);
-Route::post('/pessoas', [GeneralController::class, 'searchPessoaClasse']);
-Route::post('/admin/cadastro/pessoa', [AdminController::class, 'storePessoa']);
+
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
@@ -83,7 +80,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 
     Route::get('/admin/cadastro/pessoa', [AdminController::class, 'indexPessoa']);
-
+    Route::post('/admin/cadastro/pessoa', [AdminController::class, 'storePessoa']);
     Route::get('/admin/filtro/pessoa', [AdminController::class, 'showFilterPessoa']);
     Route::post('/admin/filtro/pessoa', [AdminController::class, 'searchPessoa']);
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);

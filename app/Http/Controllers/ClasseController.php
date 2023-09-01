@@ -105,7 +105,8 @@ class ClasseController extends Controller
             'filhos' => ['required', 'integer', 'min: 1', 'max: 2'],
             'data_nasc' => ['required'],
             'id_uf' => ['required', 'integer', 'min: 1', 'max:' . $ufs->count()],
-            'telefone' => ['max: 11'],
+            'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone'],
+            'telefone_responsavel' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999'],
             'id_formation' => ['required', 'integer', 'min: 1', 'max:' . $formations->count()],
             'id_sala' => ['max: 1'],
             'id_sala.*' => ['integer', 'min:' . $nivelUser, 'max:' . $nivelUser],
@@ -137,7 +138,14 @@ class ClasseController extends Controller
             'id_uf.min' => 'UF escolhida não existe.',
             'id_uf.max' => 'UF escolhida não existe.',
 
-            'telefone.max' => 'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone.unique' =>  'O telefone já existe.',
+
+            'telefone_responsavel.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
+            'telefone_responsavel.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
 
             'id_formation.required' => 'Formação é obrigatória.',
             'id_formation.integer' => 'Formação escolhida não existe.',
@@ -197,6 +205,7 @@ class ClasseController extends Controller
         }
         $pessoa->data_nasc = $request->data_nasc;
         $pessoa->responsavel = $request->responsavel;
+        $pessoa->telefone_responsavel = $request->telefone_responsavel;
         $pessoa->ocupacao = $request->ocupacao;
         $pessoa->cidade = $request->cidade;
         $pessoa->id_uf = $request->id_uf;

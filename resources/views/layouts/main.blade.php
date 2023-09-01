@@ -93,12 +93,12 @@
           <li><a class="link_name" href="#">Relatórios</a></li>
           <li><a href="/admin/relatorios/cadastro">Cadastro (Relatório do dia) </a></li>
           <li><a href="/admin/relatorios/todos">Todos</a></li>
-  
+
         </ul>
       </li>
-      
 
-     
+
+
       <li>
         <a href="/sobre">
           <i class='bx bx-info-circle' ></i>
@@ -133,10 +133,10 @@
             </div>
   <section class="home-section" >
     <div class="home-content" >
-    
+
       <i class='bx bx-menu' ></i>
       @yield('content')
-    
+
   </section>
   <script
   src="https://code.jquery.com/jquery-3.6.0.js"
@@ -158,30 +158,42 @@ sidebarBtn.addEventListener("click", ()=>{
   sidebar.classList.toggle("close");
 });
 
+$("#interesse").change(function() {
+  if (this.value == 1 || this.value == 3) {
+    $('#registerp').show();
+    $('.inputprof').attr('required','required');
+  } else {
+    $('#registerp').hide();
+    $('.inputprof').removeAttr('required');
+  }
+});
 
- $("#interesse").change(function() {
-    if (this.value == 1 || this.value == 3) {
-      $('#registerp').show();
-      $('.inputprof').attr('required','required');
-    } else {
-      $('#registerp').hide();
-      $('.inputprof').removeAttr('required');
-    }
+$("#scales").change(function() {
+  if (this.checked) {
+    $('#nomeResp').show();
+    $('#numeroResp').show();
+    $('#numero_pessoa').hide();
+    $('#nome_responsavel').attr('required','required');
+    $('#telefone_responsavel').attr('required','required');
+  } else {
+    $('#nomeResp').hide();
+    $('#numeroResp').hide();
+    $('#numero_pessoa').show();
+    $('#nome_responsavel').removeAttr('required');
+    $('#telefone_responsavel').removeAttr('required');
+  }
+});
+
+$(document).ready(function() {
+  $("#field").keyup(function() {
+    $("#field").val(this.value.match(/[0-9]*/));
   });
-
-  $("#scales").change(function() {
-    if (this.checked) {
-      $('#nomeResp').show();
-      $('#responsavel').attr('required','required');
-    } else {
-      $('#nomeResp').hide();
-      $('#responsavel').removeAttr('required');
-    }
+  $("#telefone_responsavel").keyup(function() {
+    $("#telefone_responsavel").val(this.value.match(/[0-9]*/));
   });
+});
 
-  
-  
-
+@if(session('msg'))
   function hideMsg() {
     let msg = document.getElementById("msg");
     msg.style = "display:none";
@@ -194,8 +206,7 @@ sidebarBtn.addEventListener("click", ()=>{
 
   setTimeout(hideMsg, 2000);
   setTimeout(hideMsg2, 3000);
- 
-
+  @endif
   </script>
 
 </body>

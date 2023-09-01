@@ -40,7 +40,10 @@
 	<p>Endereço:  <span class="marker">{{$pessoa -> cidade}} / {{ $pessoa->nome_uf }}</span> </p>
 	<p>N° de telefone:  <span class="marker"> @if($pessoa -> telefone == null)</span> <span style="color: #aaa">Sem dados</span> @else {{$pessoa -> telefone}} @endif</p>
     <p>Paternidade/Maternidade: <span class="marker"> @if($pessoa -> paternidade_maternidade == null) <span style="color: #aaa">Não</span> @else {{ $pessoa->paternidade_maternidade }} @endif </span></p>
-
+    @if($pessoa->responsavel)
+    <p>Nome responsável: <span class="marker">{{ $pessoa->responsavel }} </span> </p>
+    <p>Número de telefone do responsável: <span class="marker">{{ $pessoa->telefone_responsavel }} </span> </p>
+    @endif
 	<div class="skills">
 		<h6>Infos Gerais</h6>
 		<ul>

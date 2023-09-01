@@ -3,291 +3,203 @@
 @section('title', 'Início')
 
 @section('content')
+    <link rel="stylesheet" href="/css/cadastroClasse.css">
+    <div class="row" style="margin: 2%">
+        <div class="col-75">
+            <div class="container">
+                <h2>Formulário de cadastro</h2>
+                <hr>
+                <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="col-50">
 
-<link rel="stylesheet" href="/css/cadastro.css">
-<div class="container" style="margin-left:5%;">
-        <header>Edição de pessoa - {{date('d/m/Y')}}</header>
+                        <h3>Informações Pessoais</h3>
+                        @if ($errors->any())
+                            <div class="alert">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-        <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
-            @method('PUT')
-        @csrf
-            <div class="form first">
+                        <label style="padding: 5px; background-color: #C3E6CB; border-radius: 10px; border: 1px solid #ccc">
+                            <input type="checkbox"  id="scales" @if($pessoa->responsavel) checked @endif name="scales"> Menor de idade
+                        </label>
 
-            @if ($errors->any())
-            <div class="alert">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
-
-
-                <div class="details personal">
-                    <div style="float:right; margin-right: 2%">
-                        <label>Menor de idade?</label>
-                        <input type="checkbox"  id="scales"  @if($pessoa -> responsavel != null) checked @endif>
                         <label>Situação</label>
-                        <select style="background: none; padding: 0; margin: 0; height: auto" name="situacao" required>
+                        <select name="situacao" required>
                             <option @if($pessoa -> situacao == 1) selected @endif value="1">Ativo</option>
                             <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
                         </select>
-                    </div>
-                    <span class="title">Informações pessoais</span>
+                        <label for="id_label_single">
+                            Classe
 
-
-                    <div class="fields">
-                        <div class="input-field">
-                            <label>Nome completo <font style="color:red;font-weight: bold">*</font></label>
-                            <input type="text" name="nome" required placeholder="Digite o nome" value="{{$pessoa -> nome}}">
-                        </div>
-
-
-
-                        <div class="input-field" id="nomeResp" style="display:@if($pessoa -> responsavel == null)none @endif">
-
-                        <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
-                        <input type="text" name="responsavel" id="responsavel" placeholder="Digite o nome do responsável" value="{{$pessoa -> responsavel}}">
-
-                        </div>
-
-                        <div class="input-field" style="width: 130px">
-                            <label>Sexo <font style="color:red;font-weight: bold">*</font></label>
-                            <select name="sexo" required>
-                                <option selected disabled value="">Selecionar</option>
-                                <option @if($pessoa->sexo == 1) selected @endif value="1">Masculino</option>
-                                <option  @if($pessoa->sexo == 2) selected @endif value="2">Feminino</option>
-
-                            </select>
-                        </div>
-
-                        <div class="input-field" style="width: 130px">
-                            <label>Tem filhos?<span style="color:red;font-weight: bold">*</span></label>
-                            <select name="filhos" required>
-                                <option selected disabled value="">Selecionar</option>
-                                <option @if($pessoa->paternidade_maternidade == null) selected @endif value="1">Não</option>
-                                <option @if($pessoa->paternidade_maternidade == "Pai" || $pessoa->paternidade_maternidade == "Mãe") selected @endif value="2">Sim</option>
-
-                            </select>
-                        </div>
-
-
-
-                        <div class="input-field"  style="width: 200px">
-                            <label>Data de nascimento <font style="color:red;font-weight: bold">*</font> </label>
-                            <input type="date" name="data_nasc" placeholder="Digite a data de nascimento" required value="{{date('Y-m-d', strtotime($pessoa -> data_nasc))}}">
-                        </div>
-
-                        <div class="input-field">
-                            <label>Ocupação</label>
-                            <input type="text" name="ocupacao" placeholder="Ex.: estudante, professor, enfermeiro..." value="{{$pessoa->ocupacao}}">
-                        </div>
-
-
-                        <div class="input-field" style="width: 280px">
-                            <label>Cidade</label>
-                            <input type="text" name="cidade" placeholder="Digite a cidade" value="Parnamirim" value="{{$pessoa->cidade}}">
-                        </div>
-
-
-                        <div class="input-field" style="width: 80px">
-                            <label>UF <font style="color:red;font-weight: bold">*</font> </label>
-                            <select name="id_uf" required>
-                                <option disabled value="">Selecionar</option>
-                                <option selected value=20>RN</option>
-                                @foreach($ufs as $uf)
-                                <option @if($uf->id == $pessoa -> id_uf) selected @endif value="{{$uf -> id}}">{{$uf -> nome}}</option>
+                            <select class="select-classe" name="id_sala[]" multiple="multiple">
+                                @foreach($salas as $sala)
+                                    <option value="{{ $sala->id }}" @foreach($pessoa->id_sala as $ids) @if($ids == $sala->id) selected="selected" @endif @endforeach> {{ $sala->nome }}</option>
                                 @endforeach
-
                             </select>
-                        </div>
-
-                        <div class="input-field">
-                            <label>N° de telefone (DDD + número)<font style="color:red;font-weight: bold">*</font></label>
-                            <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{$pessoa -> telefone}}">
-                        </div>
-
-
-                        <div class="input-field">
-                            <label>Classe <font style="color:red;font-weight: bold">*</font></label>
-                            <div class="multipleSelection">
-                                <div class="selectBox"
-                                    onclick="showCheckboxes()">
-                                    <select>
-                                        <option>
-                                                @foreach($pessoa -> id_sala as $ids)
-                                                    @foreach($salas as $s)
-                                                        @if($ids == $s -> id)
-                                                            {{ $s -> nome }},
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                        </option>
-                                    </select>
-                                    <div class="overSelect"></div>
-                                </div>
-
-                                <div id="checkBoxes">
-                                    @foreach($salas as $sala)
-
-                                    <label for="first">
-                                        <input type="checkbox" @foreach($pessoa -> id_sala as $ids) @if($ids == $sala -> id ) checked @endif @endforeach   name="id_sala[]" value="{{$sala -> id}}" id="first" />
-                                        {{$sala -> nome}} - {{$sala -> tipo}}
-                                    </label>
-
-                                    @endforeach
-
-                                </div>
-                            </div>
-                        </div>
+                        </label>
 
                         <div class="input-field">
                             <label>Função <font style="color:red;font-weight: bold">*</font></label>
                             <select name="id_funcao" required>
                                 <option disabled value="">Selecionar</option>
                                 @foreach($functions as $function)
-                                <option @if($pessoa->id_funcao == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
+                                    <option @if($pessoa->id_funcao == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
                                 @endforeach
                             </select>
                         </div>
 
+                        <label for="nome"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
+                        <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{$pessoa->nome}}">
 
 
+                        <div class="input-field" id="nomeResp" @if(!$pessoa->responsavel)style="display: none"@endif>
 
-
-
-
-                    </div>
-                </div>
-
-                <div class="details ID">
-                    <span class="title">Informações gerais</span>
-
-                    <div class="fields">
-                    <div class="input-field">
-                            <label>Formação <font style="color:red;font-weight: bold">*</font></label>
-                            <select name="id_formation" required>
-                                <option selected disabled value="">Selecionar</option>
-                                @foreach($formations as $formation)
-                                <option @if($formation->id == $pessoa -> id_formation) selected @endif value="{{$formation -> id}}">{{$formation -> nome}}</option>
-                                @endforeach
-
-                            </select>
-                        </div>
-
-                        <div class="input-field">
-                            <label>Curso(s) (técnico ou superior)</label>
-                            <input type="text" name="cursos" placeholder="Digite os cursos que possui" value="{{$pessoa -> cursos}}">
-                        </div>
-
-
-
-
-
-
-
-                        <div class="input-field" >
-                            <label>Interesse em ser professor? <font style="color:red; font-weight: bold">*</font></label>
-                            <select required name="interesse" id="interesse">
-                                <option selected disabled value="">Selecionar</option>
-                                <option @if($pessoa->interesse == 1) selected @endif value="1">Sim</option>
-                                <option @if($pessoa->interesse == 2) selected @endif value="2">Não</option>
-                                <option @if($pessoa->interesse == 3) selected @endif value="3"> Talvez</option>
-                              </select>
-                        </div>
-
-
-
+                            <label>Nome do responsável <font style="color:red;font-weight: bold">*</font></label>
+                            <input type="text" name="responsavel" id="nome_responsavel" value="{{$pessoa->responsavel}}" placeholder="Digite o nome do responsável do aluno">
 
                         </div>
+
+                        <div class="input-field" id="numeroResp"  @if(!$pessoa->responsavel)style="display: none"@endif>
+
+                            <label>Número do responsável <font style="color:red;font-weight: bold">*</font></label>
+                            <input type="text" name="telefone_responsavel" id="telefone_responsavel" value="{{$pessoa->telefone_responsavel}}" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o número do responsável do aluno">
+
                         </div>
 
-
-              <div id="registerp" @if($pessoa->interesse == 2) style="display: none" @endif>
-                    <span class="title">Informações necessárias para <font style="color:blue">possível </font>professor </span>
-                    <div class="fields">
-
-                    <div class="input-field" style="width: 200px">
-                            <label>Sempre frequentou a EBD? <font style="color:red;font-weight: bold">*</font></label>
-                            <select class="inputprof" name="frequencia_ebd">
+                        <label for="sexo"><i class="fa fa-genderless"></i>Sexo <font style="color:red;font-weight: bold">*</font></label>
+                        <select name="sexo" required>
                             <option selected disabled value="">Selecionar</option>
-                                <option  @if($pessoa->frequencia_ebd == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->frequencia_ebd == 2) selected @endif value=2>Não</option>
-                                <option  @if($pessoa->frequencia_ebd == 3) selected @endif value=3>Mais ou menos</option>
-                                </select>
+                            <option @if($pessoa->sexo == 1) selected @endif value="1">Masculino</option>
+                            <option @if($pessoa->sexo == 2) selected @endif value="2">Feminino</option>
 
+                        </select>
+
+                        <label>Tem filhos? <span style="color:red;font-weight: bold">*</span></label>
+                        <select name="filhos" required>
+                            <option selected disabled value="">Selecionar</option>
+                            <option @if($pessoa->paternidade_maternidade == null) selected @endif value="1">Não</option>
+                            <option @if($pessoa->paternidade_maternidade) selected @endif value="2">Sim</option>
+
+                        </select>
+                        <label for="data_nasc"><i class="fa fa-calendar"></i>Data de nascimento <font style="color:red;font-weight: bold">*</font></label>
+                        <input type="date" id="data_nasc" required name="data_nasc" value="{{date('Y-m-d', strtotime($pessoa -> data_nasc))}}">
+
+                        <label for="ocupacao"><i class="fa fa-black-tie"></i>Ocupação</label>
+                        <input type="text" id="ocupacao" name="ocupacao"  value="{{ $pessoa->ocupacao }}" placeholder="Ex.: estudante, professor, policial...">
+
+                        <div class="row">
+                            <div class="col-50">
+                                <label for="cidade">Cidade <font style="color:red;font-weight: bold">*</font></label>
+                                <input type="text" id="cidade" name="cidade" placeholder="Digite a cidade" value="{{ $pessoa->cidade }}">
+                            </div>
+                            <div class="col-50">
+                                <label for="estado">Estado <font style="color:red;font-weight: bold">*</font></label>
+                                <select name="id_uf" required>
+                                    <option disabled value="">Selecionar</option>
+                                    <option selected value=20>RN</option>
+                                    @foreach($ufs as $uf)
+                                        <option @if($pessoa->id_uf == $uf -> id) selected @endif value="{{$uf -> id}}">{{$uf -> nome}}</option>
+                                    @endforeach
+
+                                </select>
+                            </div>
+                        </div>
+                        <div id="numero_pessoa">
+                            <label for="fname"><i class="fa fa-phone"></i>N° de Telefone (com DDD) <span style="color: blue"></span> </label>
+                            <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{ $pessoa->telefone }}">
+                        </div>
                     </div>
 
-                        <div class="input-field" style="width: 170px">
-                            <label>Possui curso de teologia? <font style="color:red;font-weight: bold">*</font></label>
-                            <select class="inputprof" name="curso_teo">
+                    <div class="col-50">
+                        <h3>Informações Gerais</h3>
+
+                        <label for="formations"><i class="fa fa-book"></i>Formação <font style="color:red;font-weight: bold">*</font></label>
+                        <select name="id_formation" required>
                             <option selected disabled value="">Selecionar</option>
-                                <option  @if($pessoa->curso_teo == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->curso_teo == 2) selected @endif value=2>Não</option>
-                                </select>
+                            @foreach($formations as $formation)
+                                <option @if($pessoa->id_formation == $formation -> id) selected @endif value="{{$formation -> id}}">{{$formation -> nome}}</option>
+                            @endforeach
 
-                        </div>
+                        </select>
+                        <label for="cursos">Curso(s) (técnico ou superior)</label>
+                        <input type="text" id="cursos" name="cursos" placeholder="Curso - Ano de conclusão" value=" {{ $pessoa->cursos }}">
 
-
-                        <div class="input-field" style="width: 160px">
-                            <label>É/foi professor da EBD? <font style="color:red;font-weight: bold">*</font></label>
-                            <select class="inputprof" name="prof_ebd">
+                        <label for="interesse">Interesse em ser professor da EBD? <font style="color:red;font-weight: bold">*</font></label>
+                        <select required name="interesse" id="interesse">
                             <option selected disabled value="">Selecionar</option>
-                                <option  @if($pessoa->prof_ebd == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->prof_ebd == 2) selected @endif value=2>Não</option>
-                                </select>
-
-                        </div>
-
-                        <div class="input-field" style="width: 160px">
-                            <label>É/foi professor comum? <font style="color:red;font-weight: bold">*</font></label>
-                            <select class="inputprof" name="prof_comum">
-                            <option selected disabled value="">Selecionar</option>
-                                <option  @if($pessoa->prof_comum == 1) selected @endif value=1>Sim</option>
-                                <option  @if($pessoa->prof_comum == 2) selected @endif value=2>Não</option>
-                                </select>
-
-                        </div>
-
-
-                        <div class="input-field" style="width: 200px">
-                            <label>Para qual público prefere dar aula? <font style="color:red;font-weight: bold">*</font></label>
-                            <select class="inputprof" name="id_public">
-                            <option selected disabled value="">Selecionar</option>
-                                @foreach($publicos as $publico)
-                                <option @if($pessoa -> id_public == $publico -> id) selected @endif value="{{$publico -> id}}">{{$publico -> nome}}</option>
-                                @endforeach
-                                </select>
-
-                        </div>
+                            <option @if($pessoa->interesse == 1) selected @endif value="1">Sim</option>
+                            <option @if($pessoa->interesse == 2) selected @endif value="2">Não</option>
+                            <option @if($pessoa->interesse == 3) selected @endif value="3"> Talvez</option>
+                        </select>
                     </div>
-                  </div>
-
-                        <button type="submit" class="sumbit">
-                            <span class="btnText">Enviar</span>
-                            <i class="uil uil-navigator"></i>
-                        </button>
-                </div>
 
 
 
-        </form>
+                    <div class="col-50" id="registerp" @if($pessoa->interesse == 2) style="display:none" @endif>
+                        <h3>Informações necessárias para interessado(a) em ser <span style="color: blue">possível</span> professor</h3>
+
+                        <label>Sempre frequentou a EBD? <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="frequencia_ebd">
+                            <option selected disabled value="">Selecionar</option>
+                            <option  @if($pessoa->frequencia_ebd == 1) selected @endif value=1>Sim</option>
+                            <option  @if($pessoa->frequencia_ebd == 2) selected @endif value=2>Não</option>
+                            <option  @if($pessoa->frequencia_ebd == 3) selected @endif value=3>Mais ou menos</option>
+                        </select>
+
+                        <label>Possui curso de teologia? <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="curso_teo">
+                            <option selected disabled value="">Selecionar</option>
+                            <option @if($pessoa->curso_teo == 1) selected @endif value=1>Sim</option>
+                            <option @if($pessoa->curso_teo == 2) selected @endif value=2>Não</option>
+                        </select>
+
+                        <label>É/foi professor da EBD? <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="prof_ebd">
+                            <option selected disabled value="">Selecionar</option>
+                            <option @if($pessoa->prof_ebd == 1) selected @endif value=1>Sim</option>
+                            <option @if($pessoa->prof_ebd == 2) selected @endif value=2>Não</option>
+                        </select>
+
+                        <label>É/foi professor secular? <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="prof_comum">
+                            <option selected disabled value="">Selecionar</option>
+                            <option @if($pessoa->prof_comum == 1) selected @endif value=1>Sim</option>
+                            <option @if($pessoa->prof_comum == 2) selected @endif value=2>Não</option>
+                        </select>
+
+                        <label>Para qual público prefere dar aula? <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="id_public">
+                            <option selected disabled value="">Selecionar</option>
+                            @foreach($publicos as $publico)
+                                <option @if($pessoa->id_public == $publico->id) selected @endif value="{{$publico -> id}}">{{$publico -> nome}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <input type="submit" value="Atualizar" class="btn">
+                </form>
+            </div>
+
+
+        </div>
     </div>
+
     <script
-    src="https://code.jquery.com/jquery-3.6.0.js"
-    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-    crossorigin="anonymous"></script>
-    <script src="/js/multi-select-dropdown.js"></script>
-<script>
-        $(document).ready(function() {
-    $("#field").keyup(function() {
-        $("#field").val(this.value.match(/[0-9]*/));
+        src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous">
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
+    <script>
+
+    $(document).ready(function() {
+        $('.select-classe').select2();
     });
-    });
-
-
-
-</script>
-<form>
+    </script>
 @endsection

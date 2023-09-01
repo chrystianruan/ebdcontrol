@@ -33,7 +33,7 @@
 
     <tbody>
         @foreach($pessoas as $p)
-        <tr>
+        <tr @if($p->id_funcao == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
         <td>{{ $p -> nome}}</td>
         <td>{{ date('d/m', strtotime($p -> data_nasc)) }}</td>
         <td>{{ $p->nome_funcao }}</td>
