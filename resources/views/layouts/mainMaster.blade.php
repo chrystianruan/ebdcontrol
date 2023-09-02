@@ -56,7 +56,7 @@ function myFunction() {
   }
 }
 
-  @if(session('msg'))
+  @if(session('msg') || session('msg2'))
     function hideMsg() {
       let msg = document.getElementById("msg");
       msg.style = "display:none";
