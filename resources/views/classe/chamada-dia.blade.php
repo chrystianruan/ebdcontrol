@@ -73,12 +73,12 @@
 
     <div class="inputs-extras">
         <label>Bíblias</label>
-        <input name="biblias" number" min="0" required value="{{old('biblias')}}">
+        <input name="biblias" type="number" min="0" required value="{{old('biblias')}}">
     </div>
 
     <div class="inputs-extras">
         <label>Revistas</label>
-        <input name="revistas" number" min="0" required value="{{old('revistas')}}">
+        <input name="revistas" type="number" min="0" required value="{{old('revistas')}}">
     </div>
     <div class="text" style="margin: 1%">
         <label>Observações</label>
