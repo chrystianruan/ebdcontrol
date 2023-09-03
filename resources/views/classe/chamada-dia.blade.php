@@ -5,7 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="/css/chamada.css">
-{{--@if(date('w') == 0)--}}
+@if(date('w') == 0)
 @if($chamadas -> count() == 0)
     @if ($errors->any())
     <div class="alert">
@@ -98,9 +98,9 @@
     <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe @foreach($salas as $s) @foreach($chamadas as $c) @if($c -> id_sala == $s -> id) {{ $s -> nome }} @endif @endforeach @endforeach já foi cadastrada ou hoje não é domingo. </p></div>
 
 @endif
-{{--@else--}}
-{{--    <div class="notRegister"> Hoje não é domingo </div>--}}
-{{--@endif--}}
+@else
+    <div class="notRegister"> Hoje não é domingo </div>
+@endif
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
  <script src="/js/chamada.js"></script>
 <script>
