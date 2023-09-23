@@ -63,6 +63,7 @@
             $('#numero_pessoa').hide();
             $('#nome_responsavel').attr('required','required');
             $('#telefone_responsavel').attr('required','required');
+            $('#field').val("");
         } else {
             $('#nomeResp').hide();
             $('#numeroResp').hide();

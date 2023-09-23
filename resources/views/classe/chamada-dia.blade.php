@@ -39,8 +39,8 @@
         <td>{{ $p->nome_funcao }}</td>
         <td>
             <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
-                <option selected value=1 style="background-color: green">Sim</option>
-                <option value=0 style="background-color: red">Não</option>
+                <option selected value="0" style="background-color: red">Não</option>
+                <option value="1" style="background-color: green">Sim</option>
             </select>
         </tr>
         @endforeach
@@ -58,27 +58,27 @@
 
     <div class="inputs-extras">
         <label>Presentes</label>
-        <input name="presentes" type="number" id="presentes" min="0" required readonly value="{{ $pessoas -> count() }}">
+        <input name="presentes" type="number" id="presentes" min="0" required readonly value="0">
     </div>
 
     <div class="inputs-extras">
         <label>Visitantes</label>
-        <input name="visitantes" type="number" id="visitantes" min="0" required value="{{old('presentes')}}">
+        <input name="visitantes" type="number" id="visitantes" min="0" required value="">
     </div>
 
     <div class="inputs-extras">
         <label>Assist. Total</label>
-        <input name="assist_total" type="number" min="0" id="assist_total" readonly required value="{{ $pessoas -> count() }}">
+        <input name="assist_total" type="number" min="0" id="assist_total" readonly required value="0">
     </div>
 
     <div class="inputs-extras">
         <label>Bíblias</label>
-        <input name="biblias" type="number" min="0" required value="{{old('biblias')}}">
+        <input name="biblias" type="number" min="0" required value="">
     </div>
 
     <div class="inputs-extras">
         <label>Revistas</label>
-        <input name="revistas" type="number" min="0" required value="{{old('revistas')}}">
+        <input name="revistas" type="number" min="0" required value="">
     </div>
     <div class="text" style="margin: 1%">
         <label>Observações</label>
