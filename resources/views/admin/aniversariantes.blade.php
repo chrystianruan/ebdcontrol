@@ -11,16 +11,16 @@
   <form action="/admin/aniversariantes" method="POST">
   @csrf
   <div class="fields">
-    
+
   <div class="itens">
   <legend class="title">Filtrar por: </legend>
   </div>
-  
-    <div class="itens">
-    
-    
 
-    
+    <div class="itens">
+
+
+
+
     <select name="classe">
       <option selected disabled value="">Classe</option>
       @foreach($salas as $s)
@@ -36,17 +36,17 @@
       @endforeach
 
     </select>
-    
+
 
 
     <div class="btnFilter">
     <button type="submit" class="filter">Filtrar</button>
     </div>
-    
+
     <div class="btnFilter">
     <button type="reset" class="resett">Limpar tudo</button>
     </div>
-    
+
   </div>
   </div>
   </form>
@@ -57,7 +57,7 @@
   <div class="busca">
 
   @if(isset($classe) || isset($mes))
-    <p class="tit">Buscando por:</p> 
+    <p class="tit">Buscando por:</p>
 
     @if(isset($classe))
     <p class="it">Classe: <i class="result">@foreach($salas as $s) @if($s -> id == $classe) {{$s-> nome}}  @endif @endforeach</i></p>
@@ -69,43 +69,45 @@
 
     @else
 
-    <p class="it">Buscando por: <i class="result">Aniversariantes do mês atual ({{date('m')}})</i></p> 
+    <p class="it">Buscando por: <i class="result">Aniversariantes do mês atual ({{date('m')}})</i></p>
 
     @endif
 
 
   </div>
 
-  
+
 
   <table style="margin:3%">
 
   @if($pessoas -> count() > 1)
-  <caption class="cont"><h4>Pessoas: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$pessoas -> count()}}</font></h4></caption>
+  <caption class="cont"><h4>Pessoas: <span style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$pessoas -> count()}}</span></h4></caption>
   @endif
 
   <thead>
     <tr>
-      <th>Nome
-      <th>Idade
-      <th>Data de Nascimento
-      <th>Classe
-      <th>Ação
+        <th>Nome</th>
+        <th>Data de Nascimento</th>
+        <th>Função</th>
+        <th>Classe</th>
+        <th>Ação</th>
+    </tr>
   </thead>
-  @foreach($pessoas as $p)
 
   <tbody>
-    <tr> <!-- <tr class="disabled">  -->
-     
-      <td>{{$p -> nome}}
-      <td>
-      <td>{{date('d/m/Y', strtotime($p -> data_nasc))}}
-      <td>@foreach($p -> id_sala as $ids) @foreach($salas as $s) @if($ids == $s -> id) {{$s -> nome}} @endif @endforeach @endforeach
-      <td><div style="text-align: center">
-            <a href="/admin/visualizar/pessoa/{{$p->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>   
-      
+      @foreach($pessoas as $p)
+        <tr @if ($p->id_funcao == 2 || $p->id_funcao == 4 || $p->id_funcao == 5) style="background-color: #d95eff" @endif>
+            <td>{{$p -> nome}}</td>
+            <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>{{date('d/m', strtotime($p -> data_nasc))}}</td>
+            <td>{{ $p->nome_funcao }}</td>
+            <td>@foreach($p -> id_sala as $ids) @foreach($salas as $s) @if($ids == $s -> id) {{$s -> nome}} @endif @endforeach @endforeach</td>
+            <td><div style="text-align: center">
+                <a href="/admin/visualizar/pessoa/{{$p->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
+                </div>
+            </td>
+        </tr>
+      @endforeach
   </tbody>
 
-  @endforeach
 </table>
 @endsection

@@ -25,7 +25,6 @@
     <thead>
         <tr>
         <th>Nome</th>
-        <th>Anivers.</th>
         <th style="max-width: 50px">Função</th>
         <th>Presente</th>
         </tr>
@@ -35,7 +34,6 @@
         @foreach($pessoas as $p)
         <tr @if($p->id_funcao == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
         <td>{{ $p -> nome}}</td>
-        <td>{{ date('d/m', strtotime($p -> data_nasc)) }}</td>
         <td>{{ $p->nome_funcao }}</td>
         <td>
             <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">

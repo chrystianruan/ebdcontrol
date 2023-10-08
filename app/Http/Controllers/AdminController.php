@@ -1082,28 +1082,40 @@ class AdminController extends Controller
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
         //mes
         if(isset($request -> mes) && empty($request -> classe)) {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->whereMonth('data_nasc', '=', $request->mes)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy("nome")
                 ->get();
 
         }
         //classe
         elseif(empty($request -> mes) && isset($request -> classe)) {
-            $pessoas = Pessoa::whereJsonContains('id_sala', $request->classe)
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->whereJsonContains('id_sala', $request->classe)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy("nome")
                 ->get();
 
         }
         //classe e mes
         elseif(isset($request -> mes) && isset($request -> classe)) {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', $request->mes)
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+            ->whereMonth('data_nasc', '=', $request->mes)
             ->whereJsonContains('id_sala', $request->classe)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy("nome")
             ->get();
 
         } else {
-            $pessoas = Pessoa::whereMonth('data_nasc', '=', Carbon::now())
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->whereMonth('data_nasc', '=', Carbon::now())
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy("nome")
                 ->get();
         }
 

@@ -463,13 +463,17 @@ class ClasseController extends Controller
         $meses_abv = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         //mes
         if (isset($request->mes)) {
-            $pessoas = Pessoa::whereJsonContains('id_sala', '' . $nivel)
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->whereJsonContains('id_sala', '' . $nivel)
                 ->whereMonth('data_nasc', '=', $request->mes)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->get();
 
         } else {
-            $pessoas = Pessoa::whereJsonContains('id_sala', '' . $nivel)
+            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->whereJsonContains('id_sala', '' . $nivel)
                 ->whereMonth('data_nasc', '=', Carbon::now())
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->get();
