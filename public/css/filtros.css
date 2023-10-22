@@ -38,7 +38,7 @@ tbody tr {
 }
 
 tbody tr:nth-of-type(even) {
-  background-color: rgba(14, 14, 14, 0.500);
+  background-color: #141222;
 }
 
 .disabled td {

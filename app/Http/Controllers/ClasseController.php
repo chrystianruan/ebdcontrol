@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\ChamadaRelatorioService;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -20,10 +21,12 @@ class ClasseController extends Controller
 {
 
     protected $generalController;
+    protected $chamadaRelatorioService;
 
-    public function __construct(GeneralController $generalController)
+    public function __construct(GeneralController $generalController, ChamadaRelatorioService $chamadaRelatorioService)
     {
         $this->generalController = $generalController;
+        $this->chamadaRelatorioService = $chamadaRelatorioService;
     }
 
     public function indexClasse()
@@ -393,7 +396,11 @@ class ClasseController extends Controller
         $chamada->congregacao_id = auth()->user()->congregacao_id;
         $chamada->save();
 
-        return redirect('/classe/todas-chamadas')->with('msg', 'Chamada realizada com sucesso!');
+        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
+
+        $result = $this->chamadaRelatorioService->saveRelatorio($chamadaRealizada);
+
+        return redirect('/classe/todas-chamadas')->with('msg', $result);
 
     }
 

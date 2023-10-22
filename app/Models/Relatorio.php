@@ -12,4 +12,8 @@ class Relatorio extends Model
     protected $casts = [
         'salas' => 'array'
     ];
+
+    public function ultimoRegistro() {
+        return Relatorio::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
+    }
 }

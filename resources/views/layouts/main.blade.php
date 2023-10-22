@@ -91,7 +91,7 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Relatórios</a></li>
-          <li><a href="/admin/relatorios/cadastro">Cadastro (Relatório do dia) </a></li>
+{{--          <li><a href="/admin/relatorios/cadastro">Cadastro (Relatório do dia) </a></li>--}}
           <li><a href="/admin/relatorios/todos">Todos</a></li>
 
         </ul>
