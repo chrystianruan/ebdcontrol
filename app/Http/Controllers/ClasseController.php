@@ -324,7 +324,7 @@ class ClasseController extends Controller
             ->get();
 
         if ($chamadas->count() == 1) {
-            return redirect('/classe/chamada-dia')->with('msg', 'A chamada não pode ser realizada.');
+            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
         }
         $pessoas = DB::table('pessoas')
             ->select('nome', 'data_nasc', 'id_funcao')

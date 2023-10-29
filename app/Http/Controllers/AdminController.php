@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\ChamadaService;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Pessoa;
@@ -23,9 +24,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class AdminController extends Controller
 {
-    //entrada cadastro master e classe
+    protected $chamadaService;
 
-    //fim
+    public function __construct(ChamadaService $chamadaService) {
+        $this->chamadaService = $chamadaService;
+    }
 
     public function index() {
         $salas = Sala::where('id', '>', 2)
@@ -1030,8 +1033,15 @@ class AdminController extends Controller
     public function searchRelatorios(Request $request) {
         $mes = request('mes');
         $ano = request('ano');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        $chamadas = Chamada::whereDate('created_at',  Carbon::today())
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+
+        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);
 
         //mes
         if(isset($request -> mes) && empty($request -> ano)) {
@@ -1061,7 +1071,9 @@ class AdminController extends Controller
                 ->orderBy('created_at', 'DESC')->get();
         }
 
-        return view('/admin/relatorios/todos', ['relatorios' => $relatorios, 'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano]);
+        return view('/admin/relatorios/todos', ['relatorios' => $relatorios,
+            'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano,
+            'chamadas' => $chamadas, 'salas' => $salas, 'classesFaltantes' => $classesFaltantes]);
 
     }
 

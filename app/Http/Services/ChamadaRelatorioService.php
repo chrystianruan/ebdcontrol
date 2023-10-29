@@ -9,10 +9,10 @@ use Carbon\Carbon;
 class ChamadaRelatorioService
 {
     /**
-     * @param object
+     * @param object $chamada
      * @return string
      */
-    public function saveRelatorio($chamada) {
+    public function saveRelatorio(object $chamada) : string {
         $chamadaToday = $this->haveChamadaInRelatorioToday();
         $chamadas = Chamada::select('chamadas.id', 'chamadas.created_at', 'salas.nome', 'matriculados', 'presentes', 'assist_total', 'visitantes', 'biblias', 'revistas')
             ->whereDate('chamadas.created_at', Carbon::today())
@@ -45,14 +45,14 @@ class ChamadaRelatorioService
         $ultimoRegistroRelatorio->assist_total = $ultimoRegistroRelatorio->assist_total + $chamada->assist_total;
         $ultimoRegistroRelatorio->save();
 
-        return "Chamada salva e registro atualizado em relatório";
+        return "Chamada salva e registro criado em relatório";
     }
 
 
     /**
      * @return boolean
      */
-    private function haveChamadaInRelatorioToday() {
+    private function haveChamadaInRelatorioToday() : bool {
         $relatorio = new Relatorio;
         $ultimoRegistroRelatorio = $relatorio->ultimoRegistro();
         if ($ultimoRegistroRelatorio) {
