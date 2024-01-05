@@ -938,6 +938,7 @@ class AdminController extends Controller
         $mes = request('mes');
         $ano = request('ano');
         $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', auth()->user()->congregacao_id)
             ->orderBy('nome')
             ->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
@@ -1034,6 +1035,7 @@ class AdminController extends Controller
         $mes = request('mes');
         $ano = request('ano');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
         $chamadas = Chamada::whereDate('created_at',  Carbon::today())
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
