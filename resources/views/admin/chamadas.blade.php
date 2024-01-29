@@ -109,6 +109,7 @@
       <th style="text-align:center">Assist. Total
       <th style="text-align:center">Bíblias
       <th style="text-align:center">Revistas
+      <th style="text-align:center">Observações</th>
       <th>Ação
   </thead>
   @foreach($chamadas as $c)
@@ -124,6 +125,7 @@
       <td style="text-align:center">{{$c -> assist_total}}
       <td style="text-align:center">{{$c -> biblias}}
       <td style="text-align:center">{{$c -> revistas}}
+        <td style="text-align:center">@if($c->observacoes)<i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i>@endif</td>
        <td><a href="/admin/visualizar/chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>
            <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
     </tr>
