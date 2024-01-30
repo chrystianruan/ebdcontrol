@@ -14,7 +14,7 @@
   <div class="itens">
   <legend class="title">Filtrar por: </legend>
   </div>
-  
+
     <div class="itens">
 
       <select name="mes">
@@ -22,7 +22,7 @@
           @foreach($meses_abv as $num => $nome)
               <option value="{{$num}}">{{$nome}} ({{$num}})</option>
           @endforeach
-  
+
       </select>
 
       <select name="ano">
@@ -30,10 +30,10 @@
           @for($i = 2022; $i <= date('Y'); $i++)
               <option value="{{$i}}">{{$i}}</option>
           @endfor
-  
+
       </select>
-    
-    
+
+
 
 
     <div class="btnFilter">
@@ -46,34 +46,34 @@
 
 
 
- 
+
   <div class="busca">
     @if(isset($mes) || isset($ano))
-    <p class="tit">Buscando por:</p> 
+    <p class="tit">Buscando por:</p>
 
     @if(isset($mes))
-    <li class="ponto">Mês: 
+    <li class="ponto">Mês:
         <i class="result">@foreach($meses_abv as $num => $nome) @if($mes == $num) {{$nome}} ({{$num}}) @endif @endforeach</i>
     </li>
     @endif
 
     @if(isset($ano))
-    <li class="ponto">Ano: 
+    <li class="ponto">Ano:
         <i class="result">{{$ano}}</i>
     </li>
     @endif
 
-    @else 
-    <p class="tit">Buscando por: <i class="result">Chamada de hoje</i></p> 
+    @else
+    <p class="tit">Buscando por: <i class="result">Chamada de hoje</i></p>
 
     @endif
   </div>
- 
+
 
 </div>
 
 
-  
+
 @if($chamadas->count() > 0)
   <div style="overflow-x:auto; margin: 1% 3%">
   <table style="width: 100%;">
@@ -86,6 +86,7 @@
         <th>Assist. Total</th>
         <th>Bíblias</th>
         <th>Revistas</th>
+        <th>Observações</th>
         <th>Ações</th>
       </tr>
     </thead>
@@ -99,6 +100,7 @@
         <td>{{ $c->assist_total }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->assist_total / $c->matriculados, 1, ',', '.') }}%) </span></td>
         <td>{{ $c->biblias }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->biblias / $c->assist_total, 1, ',', '.') }}%) </span></td>
         <td>{{ $c->revistas }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->revistas / $c->assist_total, 1, ',', '.') }}%)</span></td>
+        <td>@if($c->observacoes)<i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i> @endif</td>
         <td><a href="/classe/visualizar-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a>
         <a href="/classe/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5;float: left; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;float: left;" class='bx bxs-file-pdf'></i> </a> </td>
       </tr>
@@ -114,5 +116,5 @@
 </div>
 @endif
 
-     
+
 @endsection
