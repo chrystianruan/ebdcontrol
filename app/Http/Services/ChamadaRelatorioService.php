@@ -20,16 +20,15 @@ class ChamadaRelatorioService
             ->join('salas', 'chamadas.id_sala', '=', 'salas.id')
             ->get();
 
-
         $relatorio = new Relatorio;
         if (!$chamadaToday) {
             $relatorio->salas = $chamadas;
-            $relatorio->matriculados = $chamada->matriculados;
-            $relatorio->presentes =  $chamada->presentes;
-            $relatorio->visitantes = $chamada->visitantes;
-            $relatorio->assist_total = $chamada->assist_total;
-            $relatorio->biblias = $chamada->biblias;
-            $relatorio->revistas = $chamada->revistas;
+            $relatorio->matriculados = (int)$chamada->matriculados;
+            $relatorio->presentes =  (int)$chamada->presentes;
+            $relatorio->visitantes = (int)$chamada->visitantes;
+            $relatorio->assist_total = (int)$chamada->assist_total;
+            $relatorio->biblias = (int)$chamada->biblias;
+            $relatorio->revistas = (int)$chamada->revistas;
             $relatorio->congregacao_id = auth()->user()->congregacao_id;
             $relatorio->save();
 
@@ -37,12 +36,12 @@ class ChamadaRelatorioService
         }
         $ultimoRegistroRelatorio = $relatorio->ultimoRegistro();
         $ultimoRegistroRelatorio->salas = $chamadas;
-        $ultimoRegistroRelatorio->matriculados = $ultimoRegistroRelatorio->matriculados + $chamada->matriculados;
-        $ultimoRegistroRelatorio->presentes = $ultimoRegistroRelatorio->presentes + $chamada->presentes;
-        $ultimoRegistroRelatorio->visitantes = $ultimoRegistroRelatorio->visitantes + $chamada->visitantes;
-        $ultimoRegistroRelatorio->biblias = $ultimoRegistroRelatorio->biblias + $chamada->biblias;
-        $ultimoRegistroRelatorio->revistas = $ultimoRegistroRelatorio->revistas + $chamada->revistas;
-        $ultimoRegistroRelatorio->assist_total = $ultimoRegistroRelatorio->assist_total + $chamada->assist_total;
+        $ultimoRegistroRelatorio->matriculados = (int)$ultimoRegistroRelatorio->matriculados + (int)$chamada->matriculados;
+        $ultimoRegistroRelatorio->presentes = (int)$ultimoRegistroRelatorio->presentes + (int)$chamada->presentes;
+        $ultimoRegistroRelatorio->visitantes = (int)$ultimoRegistroRelatorio->visitantes + (int)$chamada->visitantes;
+        $ultimoRegistroRelatorio->biblias = (int)$ultimoRegistroRelatorio->biblias + (int)$chamada->biblias;
+        $ultimoRegistroRelatorio->revistas = (int)$ultimoRegistroRelatorio->revistas + (int)$chamada->revistas;
+        $ultimoRegistroRelatorio->assist_total = (int)$ultimoRegistroRelatorio->assist_total + (int)$chamada->assist_total;
         $ultimoRegistroRelatorio->save();
 
         return "Chamada salva e registro criado em relatório";

@@ -33,7 +33,7 @@ for (let presenca of presencas) {
 visitantes.addEventListener("keyup", function() {
 
     soma = parseInt(visitantes.value) + parseInt(presente.value);
-    assist_total.value = soma;
+    assist_total.value = parseInt(soma);
 
 });
 
