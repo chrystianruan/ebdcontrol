@@ -4,6 +4,7 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Congregacao;
+use App\Models\Pessoa;
 use App\Models\Setor;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -11,9 +12,9 @@ use App\Models\User;
 class ApiController extends Controller
 {
     public function getPessoas() {
-        $users = User::all();
+        $pessoas = Pessoa::all('nome');
 
-        return $users;
+        return $pessoas;
     }
 
     public function getSetors() {

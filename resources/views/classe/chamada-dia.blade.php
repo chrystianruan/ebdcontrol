@@ -5,7 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="/css/chamada.css">
-@if(date('w') == 0)
+@if(date('w') == 0 || date('Y-m-d') == $chamadaDiaBD->date)
 @if($chamadas -> count() == 0)
     @if ($errors->any())
     <div class="alert">

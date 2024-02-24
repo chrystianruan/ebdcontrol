@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
+use App\Models\ChamadaDiaCongregacao;
+use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -11,6 +14,13 @@ use DB;
 
 class MasterController extends Controller
 {
+
+    private $linkCadastroGeral;
+    private $chamadaDiaCongregacaoRepository;
+    public function __construct(LinkCadastroGeral $linkCadastroGeral, ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository) {
+        $this->linkCadastroGeral = $linkCadastroGeral;
+        $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
+    }
     public function dashboardMaster() {
         $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
         ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
@@ -27,8 +37,13 @@ class MasterController extends Controller
         ->groupBy('id_nivel')
         ->get();
 
+        $linkAtivo = $this->linkCadastroGeral->getLinkActive(auth()->user()->congregacao_id);
+        $chamadasLiberadasMes = $this->chamadaDiaCongregacaoRepository->findChamadasLiberadasByCongregacaoAndMonth(auth()->user()->congregacao_id, date('n'));
+
         return view('/master/dashboard', ['qtdUsersAtivos' => $qtdUsersAtivos,
-         'qtdUsersInativos' => $qtdUsersInativos]);
+         'qtdUsersInativos' => $qtdUsersInativos, 'linkAtivo' => $linkAtivo,
+        'chamadasLiberadasMes' => $chamadasLiberadasMes
+        ]);
     }
 
     public function indexSalaMaster() {

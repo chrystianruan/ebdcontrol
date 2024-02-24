@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Services\ChamadaRelatorioService;
+use App\Models\ChamadaDiaCongregacao;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -23,10 +25,16 @@ class ClasseController extends Controller
     protected $generalController;
     protected $chamadaRelatorioService;
 
-    public function __construct(GeneralController $generalController, ChamadaRelatorioService $chamadaRelatorioService)
+    protected $chamadaDiaCongregacaoRepository;
+
+    public function __construct(GeneralController $generalController,
+                                ChamadaRelatorioService $chamadaRelatorioService,
+    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository
+    )
     {
         $this->generalController = $generalController;
         $this->chamadaRelatorioService = $chamadaRelatorioService;
+        $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
     }
 
     public function indexClasse()
@@ -311,7 +319,11 @@ class ClasseController extends Controller
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
-        return view('/classe/chamada-dia', ['chamadas' => $chamadas, 'salas' => $salas, 'pessoas' => $pessoas]);
+
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        return view('/classe/chamada-dia', ['chamadas' => $chamadas,
+            'salas' => $salas, 'pessoas' => $pessoas,
+            'chamadaDiaBD' => $chamadaDiaBD]);
     }
 
     public function storeChamadaClasse(Request $request)

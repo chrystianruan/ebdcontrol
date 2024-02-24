@@ -206,3 +206,15 @@ table tbody tr:last-of-type {
     border-radius: 5px;
 }
 
+.btn-liberar {
+    padding: 7px;
+    color: white;
+    border-radius: 9px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-weight: bold;
+}
+.btn-liberar:hover {
+    border-radius: 5px;
+}
+
