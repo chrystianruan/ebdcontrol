@@ -218,3 +218,9 @@ table tbody tr:last-of-type {
     border-radius: 5px;
 }
 
+.bx.bx-trash{
+    margin:2%;
+    cursor: pointer;
+    color:red;
+}
+

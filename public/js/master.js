@@ -37,9 +37,9 @@ $('#liberar').click(function () {
             _token: $('meta[name="csrf-token"]').attr('content'),
         }
     })
-        .done(function(data){
+        .done(function(){
+            getChamadas();
             hideModalLiberarChamada();
-            console.log(data.response);
         })
         .error(function(jqXHR, textStatus, msg){
             alert(msg);
@@ -58,7 +58,6 @@ $('#liberar-link-cadastro').click(function () {
         .done(function(data){
             activeOrDesactiveLink();
             hideModalLiberarCadastro();
-            returnToUser()
 
         })
         .error(function(jqXHR, textStatus, msg){
@@ -90,5 +89,49 @@ function verifyLinkAtivo() {
 
 
 $(document).ready(verifyLinkAtivo());
+$(document).ready(getChamadas());
+
+function getChamadas() {
+    $.get( $('#url-chamadas-dia-mes').val(), function( data ) {
+        $('#list').empty();
+        generateListHtmlWithArrayOfChamadaDia(data)
+    });
+}
+
+function generateListHtmlWithArrayOfChamadaDia(chamadaDia) {
+    chamadaDia.forEach((item) => {
+        $('#list').append("<li class='li-chamadas-dia'>"+item.date+"<i class='bx bx-trash' id='chamada-"+item.id+"'></i>"+"</li>")
+    });
+}
+
+// $('.bx.bx-trash').forEach((item) => {
+//     if (item.click()) {
+//             $.ajax({
+//                 url: $('#url-apagar-chamada-dia')+item.id,
+//                 type: 'DELETE',
+//                 success: function(result) {
+//                     getChamadas();
+//                 }
+//             });
+//     }
+// })
+
+$(document).ready(function(){
+    $(document).on("click",".bx.bx-trash",function(){
+        $.ajax({
+            url: $('#url-apagar-chamada-dia').val()+"/"+this.id.replace("chamada-", ""),
+            type: 'DELETE',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+            },
+            success: function(result) {
+                getChamadas();
+            }
+        });
+    });
+});
+
+
+
 
 

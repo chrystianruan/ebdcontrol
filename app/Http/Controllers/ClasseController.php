@@ -321,9 +321,15 @@ class ClasseController extends Controller
             ->get();
 
         $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
         return view('/classe/chamada-dia', ['chamadas' => $chamadas,
             'salas' => $salas, 'pessoas' => $pessoas,
-            'chamadaDiaBD' => $chamadaDiaBD]);
+            'dateChamadaDia' => $dateChamadaDia]);
     }
 
     public function storeChamadaClasse(Request $request)

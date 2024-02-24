@@ -19,10 +19,11 @@ class ChamadaDiaCongregacaoRepository
     }
 
     public function findChamadasLiberadasByCongregacaoAndMonth(int $congregacaoId, int $month) {
-        return ChamadaDiaCongregacao::where('congregacao_id', $congregacaoId)
+        return ChamadaDiaCongregacao::selectRaw("id, DATE_FORMAT(date, '%d/%m') as date")
+            ->where('congregacao_id', $congregacaoId)
             ->whereMonth('date', '=', $month)
             ->where('active', true)
-            ->orderBY('id', 'desc')
+            ->orderBy('date', 'desc')
             ->get();
     }
     public function findChamadaDiaToday(int $congregacaoId, string $date) {

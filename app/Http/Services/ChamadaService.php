@@ -43,4 +43,8 @@ class ChamadaService
             'response' => 'Chamada liberada para o dia escolhido'
         ], 201);
     }
+
+    public function chamadasLiberadasMesAtual(int $congregacaoId, int $month) {
+        return $this->chamadaDiaCongregacaoRepository->findChamadasLiberadasByCongregacaoAndMonth($congregacaoId, $month);
+    }
  }

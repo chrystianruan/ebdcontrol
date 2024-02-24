@@ -76,6 +76,8 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
 
     Route::post('/master/liberar-chamada', [ChamadaController::class, 'liberarChamada']);
     Route::post('/master/liberar-cadastro', [PessoaController::class, 'liberarLinkCadastroGeral']);
+    Route::delete('/master/apagar-dia-chamada/{id}', [ChamadaController::class, 'apagarChamadaDia']);
+    Route::get('/master/chamadas-dia', [ChamadaController::class, 'chamadasLiberadaMes']);
 
 
 });
