@@ -31,12 +31,14 @@ class ClasseController extends Controller
 
     public function __construct(GeneralController $generalController,
                                 ChamadaRelatorioService $chamadaRelatorioService,
-    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository
+    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+    ChamadaService $chamadaService
     )
     {
         $this->generalController = $generalController;
         $this->chamadaRelatorioService = $chamadaRelatorioService;
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
+        $this->chamadaService = $chamadaService;
     }
 
     public function indexClasse()
