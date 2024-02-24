@@ -19,12 +19,10 @@
 .btn-modal:hover {
     background-color: #4CBB17;
 }
-#modal-user {
+#modal-user, #modal-liberar-chamada, #modal-congregacao, #modal-liberar-cadastro {
     display: none;
 }
-#modal-congregacao {
-    display: none;
-}
+
 .dialog[aria-hidden="true"] {
     border-radius: 10px;
 }

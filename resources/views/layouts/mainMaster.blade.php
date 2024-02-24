@@ -2,6 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 <link rel="stylesheet" href="/css/barMaster.css">
 <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -30,6 +31,15 @@
       <a href="/master/filtro/classe"><i class="fa fa-graduation-cap"></i>Classe</a>
     </div>
   </div>
+    <div class="dropdown">
+        <button class="dropbtn"><i class="fa fa-cogs"></i>Configurações
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="/master/filtro/usuario"><i class="fa fa-list"></i>Chamadas</a>
+            <a href="/master/filtro/classe"><i class="fa fa-user"></i>Pessoas</a>
+        </div>
+    </div>
   <a href="/sobre"><i class="fa fa-info-circle"></i>Sobre</a>
   <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
   <div style="float: right">

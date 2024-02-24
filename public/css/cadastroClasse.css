@@ -10,7 +10,7 @@
     padding: 0;
     background-color: #1d1b31;
   }
-  
+
   .row {
 
     display: -ms-flexbox; /* IE10 */
@@ -40,35 +40,35 @@
 }
 
 
-  
+
   .col-25 {
     -ms-flex: 25%; /* IE10 */
     flex: 25%;
   }
-  
+
   .col-50 {
     -ms-flex: 50%; /* IE10 */
     flex: 50%;
   }
-  
+
   .col-75 {
     -ms-flex: 75%; /* IE10 */
     flex: 75%;
   }
-  
+
   .col-25,
   .col-50,
   .col-75 {
     padding: 0 16px;
   }
-  
+
   .container {
     background-color: #f2f2f2;
     padding: 5px 20px 15px 20px;
     border: 1px solid lightgrey;
     border-radius: 3px;
   }
-  
+
   input[type=text], input[type=date], input[type="email"], input[type="password"] {
     width: 100%;
     margin-bottom: 20px;
@@ -88,18 +88,18 @@
     border: 1px solid #ccc;
     border-radius: 3px;
   }
-  
+
   label {
     margin-bottom: 10px;
     display: block;
   }
-  
+
   .icon-container {
     margin-bottom: 20px;
     padding: 7px 0;
     font-size: 24px;
   }
-  
+
   .btn {
     background-color: #04AA6D;
     color: white;
@@ -111,24 +111,24 @@
     cursor: pointer;
     font-size: 17px;
   }
-  
+
   .btn:hover {
     background-color: #45a049;
   }
-  
+
   a {
     color: #2196F3;
   }
-  
+
   hr {
     border: 1px solid lightgrey;
   }
-  
+
   span.price {
     float: right;
     color: grey;
   }
-  
+
   /* Responsive layout - when the screen is less than 800px wide, make the two columns stack on top of each other instead of next to each other (also change the direction - make the "cart" column go on top) */
   @media (max-width: 800px) {
     .row {
@@ -138,3 +138,13 @@
       margin-bottom: 20px;
     }
   }
+
+.msg {
+    background-color: #87df9b;
+    color: #155724;
+    border: 1px solid #C3E6CB;
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
+    padding: 10px;
+}
