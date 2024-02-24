@@ -66,7 +66,7 @@
 
     <div class="inputs-extras">
         <label>Assist. Total</label>
-        <input name="assist_total" type="number" min="0" id="assist_total" readonly required value="0">
+        <input type="number" min="0" id="assist_total" readonly required value="0">
     </div>
 
     <div class="inputs-extras">

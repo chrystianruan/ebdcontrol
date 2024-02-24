@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Services\ChamadaRelatorioService;
+use App\Http\Services\ChamadaService;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -22,11 +23,13 @@ class ClasseController extends Controller
 
     protected $generalController;
     protected $chamadaRelatorioService;
+    protected $chamadaService;
 
-    public function __construct(GeneralController $generalController, ChamadaRelatorioService $chamadaRelatorioService)
+    public function __construct(GeneralController $generalController, ChamadaRelatorioService $chamadaRelatorioService, ChamadaService $chamadaService)
     {
         $this->generalController = $generalController;
         $this->chamadaRelatorioService = $chamadaRelatorioService;
+        $this->chamadaService = $chamadaService;
     }
 
     public function indexClasse()
@@ -314,9 +317,7 @@ class ClasseController extends Controller
         return view('/classe/chamada-dia', ['chamadas' => $chamadas, 'salas' => $salas, 'pessoas' => $pessoas]);
     }
 
-    public function storeChamadaClasse(Request $request)
-    {
-
+    public function storeChamadaClasse(Request $request) {
         $sala = auth()->user()->id_nivel;
         $chamadas = Chamada::where('id_sala', '=', $sala)
             ->whereDate('created_at', Carbon::today())
@@ -333,65 +334,21 @@ class ClasseController extends Controller
             ->where('situacao', '=', 1)
             ->orderBy('nome')->get();
 
-
-        $this->validate($request, [
-            'id_sala' => ['integer', 'min' . $sala, 'max' . $sala],
-            'matriculados' => ['required', 'integer', 'min:' . $pessoas->count(), 'max:' . $pessoas->count()],
-            'presentes' => ['required', 'integer', 'min:0', 'max:' . $pessoas->count()],
-            'visitantes' => ['required', 'integer', 'min:0'],
-            'assist_total' => ['required', 'integer', 'min:' . $request->presentes + $request->visitantes, 'max:' . $request->presentes + $request->visitantes],
-            'biblias' => ['required', 'integer', 'min:0', 'max:' . $request->presentes + $request->visitantes],
-            'revistas' => ['required', 'integer', 'min:0', 'max:' . $request->presentes + $request->visitantes],
-            'observacoes' => ['max: 800']
-        ], [
-
-            'id_sala.integer' => 'Classe escolhida inexistente',
-            'id_sala.min' => 'Classe escolhida inexistente',
-            'id_sala.max' => 'Classe escolhida inexistente',
-
-            'matriculados.required' => 'O n° de matriculados é obrigatório',
-            'matriculados.integer' => 'O n° de matriculados é inválido',
-            'matriculados.min' => 'O n° de matriculados é inválido',
-            'matriculados.max' => 'O n° de matriculados é inválido',
-
-            'presentes.required' => 'O n° de presentes é obrigatório',
-            'presentes.integer' => 'O n° de presentes é inválido',
-            'presentes.min' => 'O n° de presentes é inválido',
-            'presentes.max' => 'O n° de presentes não pode ser maior que o de matriculados',
-
-            'visitantes.required' => 'O n° de visitantes é obrigatório',
-            'visitantes.integer' => 'O n° de visitantes é inválido',
-            'visitantes.min' => 'O n° de visitantes é inválido',
-
-            'assist_total.required' => 'O n° de assistência total é obrigatório',
-            'assist_total.integer' => 'O n° de assistência total é inválido',
-            'assist_total.min' => 'O n° de assistência total é inválido',
-            'assist_total.max' => 'O n° de assistência total é inválido',
-
-            'biblias.required' => 'O n° de Bíblias é obrigatório',
-            'biblias.integer' => 'O n° de Bíblias é inválido',
-            'biblias.min' => 'O n° de Bíblias é inválido',
-            'biblias.max' => 'O n° de Bíblias é maior que o de pessoas',
-
-            'revistas.required' => 'O n° de revistas é obrigatório',
-            'revistas.integer' => 'O n° de revistas é inválido',
-            'revistas.min' => 'O n° de revistas é inválido',
-            'revistas.max' => 'O n° de revistas é maior que o de pessoas',
-
-            'observacoes.max' => 'O campo de observações aceita, no máximo, 700 caracteres.'
-
-        ]);
-
+        $dataToInt = $this->chamadaService->convertToInt($request);
+        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
+        if ($validateRequest) {
+            return redirect()->back()->with('msg2', $validateRequest);
+        }
 
         $chamada = new Chamada;
         $chamada->id_sala = $sala;
         $chamada->nomes = $request->pessoas_presencas;
-        $chamada->matriculados = $request->matriculados;
-        $chamada->presentes = $request->presentes;
-        $chamada->visitantes = $request->visitantes;
-        $chamada->assist_total = $request->assist_total;
-        $chamada->biblias = $request->biblias;
-        $chamada->revistas = $request->revistas;
+        $chamada->matriculados = $pessoas->count();
+        $chamada->presentes = $dataToInt['presentes'];
+        $chamada->visitantes = $dataToInt['visitantes'];
+        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
+        $chamada->biblias = $dataToInt['biblias'];
+        $chamada->revistas = $dataToInt['revistas'];
         $chamada->observacoes = $request->observacoes;
         $chamada->congregacao_id = auth()->user()->congregacao_id;
         $chamada->save();
