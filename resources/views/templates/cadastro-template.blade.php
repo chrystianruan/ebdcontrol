@@ -11,9 +11,9 @@
                 <div class="col-50">
                     <h2>Cadastro Geral - <span style="color: #1d10a7">{{$congregacao->nome}}/ADPAR</span></h2>
                     <hr>
-                    <div class="caution">
-                        <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/classe/pessoas">pessoas</a>.</p>
-                    </div>
+{{--                    <div class="caution">--}}
+{{--                        <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/classe/pessoas">pessoas</a>.</p>--}}
+{{--                    </div>--}}
 
                     <h3>Informações Pessoais</h3>
                     @if ($errors->any())
