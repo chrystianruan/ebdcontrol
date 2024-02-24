@@ -12,14 +12,11 @@
 </head>
 <body>
     <div class="container">
-
+        <div style="margin: 12% 0">
         <div class="main">
-            Desenvolvido por Chrystian Ruan
-            <div class="links">
-                <a href="https://www.linkedin.com/in/chrystianruan/"> <i class='bx bxl-linkedin-square'></i> </a>
-                <a href="https://github.com/chrystianruan/"> <i class='bx bxl-github'></i> </a>
-            </div>
+            Desenvolvido pela equipe da secretaria da EBD - Templo Sede/ADPAR
         </div>
+
 
         @if(auth()->user()->id_nivel == 1)
             <a href="/master"><button>Voltar</button></a>
@@ -32,7 +29,7 @@
         @if(auth()->user()->id_nivel != 1 && auth()->user()->id_nivel != 2)
             <a href="/classe"><button>Voltar</button></a>
         @endif
-
+        </div>
     </div>
 </body>
 </html>

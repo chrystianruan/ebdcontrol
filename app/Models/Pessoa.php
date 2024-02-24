@@ -14,4 +14,5 @@ class Pessoa extends Model
     ];
 
     protected $dates = ['data_nasc'];
+
 }

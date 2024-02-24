@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Services\ChamadaRelatorioService;
 use App\Http\Services\ChamadaService;
+use App\Models\ChamadaDiaCongregacao;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -25,10 +27,17 @@ class ClasseController extends Controller
     protected $chamadaRelatorioService;
     protected $chamadaService;
 
-    public function __construct(GeneralController $generalController, ChamadaRelatorioService $chamadaRelatorioService, ChamadaService $chamadaService)
+    protected $chamadaDiaCongregacaoRepository;
+
+    public function __construct(GeneralController $generalController,
+                                ChamadaRelatorioService $chamadaRelatorioService,
+    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+    ChamadaService $chamadaService
+    )
     {
         $this->generalController = $generalController;
         $this->chamadaRelatorioService = $chamadaRelatorioService;
+        $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
         $this->chamadaService = $chamadaService;
     }
 
@@ -314,7 +323,17 @@ class ClasseController extends Controller
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
-        return view('/classe/chamada-dia', ['chamadas' => $chamadas, 'salas' => $salas, 'pessoas' => $pessoas]);
+
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
+        return view('/classe/chamada-dia', ['chamadas' => $chamadas,
+            'salas' => $salas, 'pessoas' => $pessoas,
+            'dateChamadaDia' => $dateChamadaDia]);
     }
 
     public function storeChamadaClasse(Request $request) {
