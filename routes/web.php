@@ -7,6 +7,8 @@ use App\Http\Controllers\ClasseController;
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\SuperMasterController;
+use App\Http\Controllers\ChamadaController;
+use App\Http\Controllers\PessoaController;
 
 
 /*
@@ -24,6 +26,9 @@ Route::post('/', [AuthController::class, 'logar']);
 
 Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
+
+Route::get('/cadastro/{congregacaoId}', [\App\Http\Controllers\PessoaController::class, 'indexCadastroGeral']);
+Route::post('/cadastro-geral', [PessoaController::class, 'storeOfGeral']);
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
@@ -68,6 +73,11 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::get('/master/edit/classe/{id}', [MasterController::class, 'editSalaMaster']);
     Route::put('/master/update/classe/{id}', [MasterController::class, 'updateSalaMaster']);
     Route::delete('/master/filtro/classe/{id}', [MasterController::class, 'destroySalaMaster']);
+
+    Route::post('/master/liberar-chamada', [ChamadaController::class, 'liberarChamada']);
+    Route::post('/master/liberar-cadastro', [PessoaController::class, 'liberarLinkCadastroGeral']);
+    Route::delete('/master/apagar-dia-chamada/{id}', [ChamadaController::class, 'apagarChamadaDia']);
+    Route::get('/master/chamadas-dia', [ChamadaController::class, 'chamadasLiberadaMes']);
 
 
 });

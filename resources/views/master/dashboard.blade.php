@@ -4,11 +4,14 @@
 
 @section('content')
 <link rel="stylesheet" href="/css/inicioClasse.css">
+<link rel="stylesheet" href="/css/supermaster.css">
+<div class="div-btn-modal" id="div-btn-modal">
+    <button class="btn-modal" id="btn-modal-liberar-cadastro"> Link de cadastro Geral</button>
+    <button class="btn-modal" id="btn-modal-liberar-chamada"> Liberar chamada </button>
+</div>
+@include('templates.modal-liberar-cadastro')
+@include('templates.modal-liberar-chamada')
 <div class="grid-container">
-
-
-
-
 <div class="graficoY">
     <canvas id="myChart" width="500" height="500"></canvas>
 </div>
@@ -18,6 +21,8 @@
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="/js/master.js"></script>
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
