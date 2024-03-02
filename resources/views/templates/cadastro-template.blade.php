@@ -1,8 +1,5 @@
 <div class="row" style="margin: 2%">
     <input type="hidden" id="url" value="{{ url('/api/pessoas') }}">
-    @if(session('msg'))
-        <p class="msg" id="msg">{{session('msg')}}</p>
-    @endif
     <div class="col-75">
         <div class="container">
             <form action="/cadastro-geral" method="POST">

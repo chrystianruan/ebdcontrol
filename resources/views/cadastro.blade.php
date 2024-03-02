@@ -11,6 +11,9 @@
     <link rel="icon" type="imagem/png" href="/img/logo_ebd.png" />
 </head>
 <body>
+@if(session('msg'))
+    <p class="msg" id="msg">{{session('msg')}}</p>
+@endif
 @include('templates.cadastro-template')
 <script
     src="https://code.jquery.com/jquery-3.6.0.js"
@@ -66,7 +69,7 @@
         msg2.style = "display:none";
     }
 
-    setTimeout(hideMsg, 2000);
+    setTimeout(hideMsg, 4000);
     setTimeout(hideMsg2, 3000);
     @endif
 </script>
