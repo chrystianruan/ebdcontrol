@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <meta name="csrf-token" content="{{ csrf_token() }}" />
      <link rel="stylesheet" href="/css/bar.css">
      <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -92,7 +93,8 @@
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Relatórios</a></li>
 {{--          <li><a href="/admin/relatorios/cadastro">Cadastro (Relatório do dia) </a></li>--}}
-          <li><a href="/admin/relatorios/todos">Todos</a></li>
+          <li><a href="/admin/relatorios/todos">De chamadas</a></li>
+            <li><a href="/admin/relatorios/presenca-classe">De presenças</a></li>
 
         </ul>
       </li>
@@ -141,59 +143,12 @@
   <script
   src="https://code.jquery.com/jquery-3.6.0.js"
   integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-  crossorigin="anonymous"></script>
+  crossorigin="anonymous">
+  </script>
 
-<script>
-let arrow = document.querySelectorAll(".arrow");
-for (var i = 0; i < arrow.length; i++) {
-  arrow[i].addEventListener("click", (e)=>{
- let arrowParent = e.target.parentElement.parentElement;//selecting main parent of arrow
- arrowParent.classList.toggle("showMenu");
-  });
-}
-let sidebar = document.querySelector(".sidebar");
-let sidebarBtn = document.querySelector(".bx-menu");
-console.log(sidebarBtn);
-sidebarBtn.addEventListener("click", ()=>{
-  sidebar.classList.toggle("close");
-});
+  <script src="/js/layoutMain.js"></script>
 
-$("#interesse").change(function() {
-  if (this.value == 1 || this.value == 3) {
-    $('#registerp').show();
-    $('.inputprof').attr('required','required');
-  } else {
-    $('#registerp').hide();
-    $('.inputprof').removeAttr('required');
-  }
-});
-
-$("#scales").change(function() {
-  if (this.checked) {
-    $('#nomeResp').show();
-    $('#numeroResp').show();
-    $('#numero_pessoa').hide();
-    $('#nome_responsavel').attr('required','required');
-    $('#telefone_responsavel').attr('required','required');
-    $('#field').val("");
-  } else {
-    $('#nomeResp').hide();
-    $('#numeroResp').hide();
-    $('#numero_pessoa').show();
-    $('#nome_responsavel').removeAttr('required');
-    $('#telefone_responsavel').removeAttr('required');
-  }
-});
-
-$(document).ready(function() {
-  $("#field").keyup(function() {
-    $("#field").val(this.value.match(/[0-9]*/));
-  });
-  $("#telefone_responsavel").keyup(function() {
-    $("#telefone_responsavel").val(this.value.match(/[0-9]*/));
-  });
-});
-
+  <script>
 @if(session('msg') || session('msg2'))
   function hideMsg() {
     let msg = document.getElementById("msg");
@@ -209,6 +164,7 @@ $(document).ready(function() {
   setTimeout(hideMsg2, 3000);
   @endif
   </script>
+  @stack('scripts')
 
 </body>
 </html>

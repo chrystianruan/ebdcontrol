@@ -93,6 +93,12 @@ button {
 
 }
 
+.baixar {
+    background-color: darkorange;
+    color: white;
+
+}
+
 .resett {
   background-color: red;
   color: white;
@@ -103,6 +109,12 @@ button {
   background-color: rgb(165, 172, 167);
   color: white;
   transition: all 0.2s linear;
+
+}
+.baixar:hover {
+    background-color: rgb(165, 172, 167);
+    color: white;
+    transition: all 0.2s linear;
 
 }
 
@@ -127,6 +139,14 @@ button {
 
 tbody .disabled:hover  {
   background: none;
+}
+.itens .title {
+    display: block;
+    margin-bottom: 2px;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 6px 0;
+    color: white;
 }
 
 form .title{
@@ -167,6 +187,14 @@ form .title{
   padding: 0 12px;
   border: 1px solid #aaa;
   border-radius: 5px;
+}
+
+.btnBaixar button {
+    height: 25px;
+    margin: 5px 0;
+    padding: 0 12px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
 }
 
 .btnFilter2 button {

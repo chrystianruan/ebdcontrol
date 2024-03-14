@@ -9,6 +9,7 @@ use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\SuperMasterController;
 use App\Http\Controllers\ChamadaController;
 use App\Http\Controllers\PessoaController;
+use App\Http\Controllers\RelatorioController;
 
 
 /*
@@ -33,7 +34,9 @@ Route::post('/cadastro-geral', [PessoaController::class, 'storeOfGeral']);
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
     Route::get('/sobre', function () { return view('/about'); });
-    Route::post('/format/data/relatorio', [GeneralController::class, 'formatData'])->name('format.data.relatorio');
+    Route::post('/format/data/relatorio', [RelatorioController::class, 'formatData'])->name('format.data.relatorio');
+    Route::post('/get/relatorios/presenca-classe/', [RelatorioController::class, 'generateRelatorioPerDate'])->name('relatorio.per.date');
+    Route::post('/baixar-relatorio', [RelatorioController::class, 'generatePdfToRelatorioPresenca'])->name('baixar.relatorio.presenca');
 });
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
@@ -51,7 +54,6 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::post('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::get('/classe/pdf-chamada/{id}', [ClasseController::class, 'generatePdfToChamadas']);
-    Route::post('/classe/relatorio/', [ClasseController::class, 'generateRelatorioPerDate'])->name('relatorio.per.date');
 
 });
 
@@ -132,6 +134,14 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::post('/admin/relatorios/todos', [AdminController::class, 'searchRelatorios']);
     Route::get('/admin/visualizar/relatorio/{id}', [AdminController::class, 'showRelatorio']);
     Route::get('/admin/visualizar/pdf-relatorio/{id}', [AdminController::class, 'generatePdfToRelatorios']);
+
+    Route::get('/admin/relatorios/presenca-classe', function () {
+        $classes = \App\Models\Sala::where('congregacao_id', auth()->user()->congregacao_id)
+            ->where('id', '>', 2)
+            ->orderBy('nome')
+            ->get();
+        return view('/admin/relatorios/presenca-classe', compact('classes'));
+    });
 
 
 

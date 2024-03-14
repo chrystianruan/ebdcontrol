@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
-use App\Http\Services\ChamadaRelatorioService;
 use App\Http\Services\ChamadaService;
 use App\Models\ChamadaDiaCongregacao;
 use Illuminate\Http\Request;
@@ -17,6 +16,7 @@ use App\Models\Uf;
 use App\Models\Aviso;
 use App\Models\Chamada;
 use Carbon\Carbon;
+use App\Http\Services\RelatorioService;
 use DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -24,19 +24,19 @@ class ClasseController extends Controller
 {
 
     protected $generalController;
-    protected $chamadaRelatorioService;
+    protected $relatorioService;
     protected $chamadaService;
 
     protected $chamadaDiaCongregacaoRepository;
 
     public function __construct(GeneralController $generalController,
-                                ChamadaRelatorioService $chamadaRelatorioService,
+                                RelatorioService $relatorioService,
     ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
     ChamadaService $chamadaService
     )
     {
         $this->generalController = $generalController;
-        $this->chamadaRelatorioService = $chamadaRelatorioService;
+        $this->relatorioService = $relatorioService;
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
         $this->chamadaService = $chamadaService;
     }
@@ -374,7 +374,7 @@ class ClasseController extends Controller
 
         $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
 
-        $result = $this->chamadaRelatorioService->saveRelatorio($chamadaRealizada);
+        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
 
         return redirect('/classe/todas-chamadas')->with('msg', $result);
 
