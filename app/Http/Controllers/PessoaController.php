@@ -40,7 +40,7 @@ class PessoaController extends Controller
         $check = request('scales');
         $route = "cadastro.pessoa.classe";
 
-        $congregacao = Congregacao::select('*', DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
+        $congregacao = Congregacao::select('*', DB::raw('congregacaos.id as congregacao_id'),DB::raw('setors.id as setor_id'), DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
             ->findOrFail(auth()->user()->congregacao_id);
 
@@ -58,7 +58,7 @@ class PessoaController extends Controller
         $check = request('scales');
         $route = "cadastro.pessoa.admin";
 
-        $congregacao = Congregacao::select('*', DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
+        $congregacao = Congregacao::select('*', DB::raw('congregacaos.id as congregacao_id'),DB::raw('setors.id as setor_id'), DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
             ->findOrFail(auth()->user()->congregacao_id);
 
@@ -78,7 +78,7 @@ class PessoaController extends Controller
         $route = "cadastro.pessoa.geral";
         $check = request('scales');
 
-        $congregacao = Congregacao::select('*', DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
+        $congregacao = Congregacao::select('*', DB::raw('congregacaos.id as congregacao_id'),DB::raw('setors.id as setor_id'), DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
             ->findOrFail(base64_decode($congregacaoId));
 

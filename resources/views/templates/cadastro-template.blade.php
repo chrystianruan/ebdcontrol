@@ -8,7 +8,7 @@
         <div class="container">
             <form action="{{route($route)}}" method="POST">
                 @csrf
-                <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->id }}">
+                <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->congregacao_id }}">
                 @if ($route == "cadastro.pessoa.classe")
                 <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->id_nivel }}">
                 @endif
