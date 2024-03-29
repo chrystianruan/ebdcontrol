@@ -3,10 +3,12 @@
 namespace App\Http\Services;
 
 use App\Http\Controllers\Controller;
+use App\Http\Enums\FuncaoEnum;
 use App\Http\Enums\TipoCadastroPessoaEnum;
 use App\Models\Formation;
 use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
+use App\Models\PessoaSala;
 use App\Models\Publico;
 use App\Models\Sala;
 use App\Models\Uf;
@@ -138,7 +140,7 @@ class PessoaService
             'id_public.max' =>  'Público escolhido não existe.',
 
         ]);
-
+        $hash = hash('sha256', mt_rand());
         $pessoa = new Pessoa;
         $pessoa-> nome = $request->nome;
         $pessoa-> sexo = $request->sexo;
@@ -169,7 +171,31 @@ class PessoaService
         $pessoa->prof_ebd = $request->prof_ebd;
         $pessoa->prof_comum = $request->prof_comum;
         $pessoa->id_public = $request->id_public;
+        $pessoa->hash = $hash;
         $pessoa->save();
+
+        $pessoaCadastrada = Pessoa::where('hash', $hash)->first();
+
+        $this->storePessoaInSala($pessoa->id, $classeIdRequest);
+
+        $pessoaCadastrada->hash = null;
+        $pessoaCadastrada->save();
+
         return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
+    }
+
+    public function storePessoaInSala(int $pessoaId, int $salaId) : void {
+        try {
+            $pessoaSala = new PessoaSala();
+            $pessoaSala->pessoa_id = $pessoaId;
+            $pessoaSala->sala_id = $salaId;
+            $pessoaSala->funcao_id = FuncaoEnum::ALUNO;
+            $pessoaSala->active = 1;
+            $pessoaSala->save();
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+
     }
 }

@@ -1,5 +1,9 @@
 $(document).ready(function () {
-    $.get( $('#url').val(), function( data ) {
+    $.post( $('#url').val(),
+        {
+            congregacao_id: $('#congregacao').val()
+        })
+        .done(function( data ) {
         let array = getOnlyNames(data)
         $('#nome').autocomplete({
             source: array

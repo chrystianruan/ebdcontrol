@@ -11,8 +11,8 @@ use App\Models\User;
 
 class ApiController extends Controller
 {
-    public function getPessoas() {
-        $pessoas = Pessoa::all('nome');
+    public function getPessoas(Request $request) {
+        $pessoas = Pessoa::where('congregacao_id', $request->congregacao_id)->get();
 
         return $pessoas;
     }

@@ -2,9 +2,8 @@
 
 namespace App\Http\Enums;
 
-class TipoCadastroPessoaEnum
-{
-    const ADMIN = 1;
-    const CLASSE = 2;
-    const GERAL = 3;
+enum TipoCadastroPessoaEnum : int {
+    case ADMIN = 1;
+    case CLASSE = 2;
+    case GERAL = 3;
 }
