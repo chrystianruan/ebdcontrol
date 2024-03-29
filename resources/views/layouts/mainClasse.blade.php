@@ -8,6 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="icon" type="imagem/png" href="/img/logo_ebd.png" />
+    @stack('cadastro-pessoa-css')
     <title>EBDControl</title>
 </head>
 <body>
@@ -36,7 +37,11 @@
       @endif
 </div>
   @yield('content')
-
+  <script
+      src="https://code.jquery.com/jquery-3.6.0.js"
+      integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+      crossorigin="anonymous">
+  </script>
   <script>
     function myFunction() {
       var x = document.getElementById("myTopnav");
@@ -46,41 +51,6 @@
         x.className = "topnav";
       }
     }
-    $("#interesse").change(function() {
-        if (this.value == 1 || this.value == 3) {
-            $('#registerp').show();
-            $('.inputprof').attr('required','required');
-        } else {
-            $('#registerp').hide();
-            $('.inputprof').removeAttr('required');
-        }
-    });
-
-    $("#scales").change(function() {
-        if (this.checked) {
-            $('#nomeResp').show();
-            $('#numeroResp').show();
-            $('#numero_pessoa').hide();
-            $('#nome_responsavel').attr('required','required');
-            $('#telefone_responsavel').attr('required','required');
-            $('#field').val("");
-        } else {
-            $('#nomeResp').hide();
-            $('#numeroResp').hide();
-            $('#numero_pessoa').show();
-            $('#nome_responsavel').removeAttr('required');
-            $('#telefone_responsavel').removeAttr('required');
-        }
-    });
-
-    $(document).ready(function() {
-        $("#field").keyup(function() {
-            $("#field").val(this.value.match(/[0-9]*/));
-        });
-        $("#telefone_responsavel").keyup(function() {
-            $("#telefone_responsavel").val(this.value.match(/[0-9]*/));
-        });
-    });
     @if(session('msg') || session('msg2'))
         function hideMsg() {
         let msg = document.getElementById("msg");
@@ -96,5 +66,6 @@
       setTimeout(hideMsg2, 3000);
   @endif
     </script>
+  @stack('scripts-cadastro')
 </body>
 </html>

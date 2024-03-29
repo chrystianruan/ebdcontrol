@@ -1,12 +1,19 @@
+@push('cadastro-pessoa-css')
+    <link rel="stylesheet" href="/css/cadastroClasse.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+@endpush
 <div class="row" style="margin: 2%">
     <input type="hidden" id="url" value="{{ url('/api/pessoas') }}">
     <div class="col-75">
         <div class="container">
-            <form action="/cadastro-geral" method="POST">
+            <form action="{{route($route)}}" method="POST">
                 @csrf
-                <input type="hidden" name="congregacao" value="{{ $congregacao->id }}">
+                <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->id }}">
+                @if ($route == "cadastro.pessoa.classe")
+                <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->id_nivel }}">
+                @endif
                 <div class="col-50">
-                    <h2>Cadastro Geral - <span style="color: #1d10a7">{{$congregacao->nome}}/ADPAR</span></h2>
+                    <h2>{{$title}} - <span style="color: #1d10a7">{{$congregacao->congregacao_nome}} | {{ $congregacao->setor_nome }} | IEADERN PARNAMIRIM</span></h2>
                     <hr>
 {{--                    <div class="caution">--}}
 {{--                        <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/classe/pessoas">pessoas</a>.</p>--}}
@@ -86,6 +93,7 @@
                         <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{old('telefone')}}">
                     </div>
 
+                    @if ($route != "cadastro.pessoa.classe")
                     <label>Classe <font style="color:red;font-weight: bold">*</font></label>
                     <select class="inputprof" name="classe">
                         <option selected disabled value="">Selecionar</option>
@@ -93,7 +101,7 @@
                             <option @if(old('classe') == $c->id) selected @endif value="{{ $c->id }}">{{ $c->nome }}</option>
                         @endforeach
                     </select>
-
+                    @endif
                     <div class="col-50">
                         <h3>Informações Gerais</h3>
 
@@ -171,3 +179,9 @@
     </div>
 
 </div>
+
+@push('scripts-cadastro')
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="/js/pessoas.js"></script>
+    <script src="/js/cadastroPessoa.js"></script>
+@endpush

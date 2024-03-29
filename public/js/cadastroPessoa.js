@@ -1,4 +1,12 @@
-
+$("#interesse").change(function() {
+    if (this.value == 1 || this.value == 3) {
+        $('#registerp').show();
+        $('.inputprof').attr('required','required');
+    } else {
+        $('#registerp').hide();
+        $('.inputprof').removeAttr('required');
+    }
+});
 $("#scales").change(function() {
     if (this.checked) {
         $('#nomeResp').show();

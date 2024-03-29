@@ -12,11 +12,11 @@ class  LinkCadastroGeral extends Model
         return LinkCadastroGeral::where('active')
             ->get();
     }
-    public function getLink(int $congregacaoId) {
+    public function getLink(int $congregacaoId) : LinkCadastroGeral {
         return LinkCadastroGeral::where('congregacao_id', $congregacaoId)
             ->first();
     }
-    public function getLinkActive(int $congregacaoId) {
+    public function getLinkActive(int $congregacaoId) : LinkCadastroGeral {
         return LinkCadastroGeral::where('congregacao_id', $congregacaoId)
             ->where('active', 1)
             ->first();

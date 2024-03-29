@@ -11,13 +11,3 @@ console.log(sidebarBtn);
 sidebarBtn.addEventListener("click", ()=>{
     sidebar.classList.toggle("close");
 });
-
-$("#interesse").change(function() {
-    if (this.value == 1 || this.value == 3) {
-        $('#registerp').show();
-        $('.inputprof').attr('required','required');
-    } else {
-        $('#registerp').hide();
-        $('.inputprof').removeAttr('required');
-    }
-});
