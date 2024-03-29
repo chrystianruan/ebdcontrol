@@ -12,9 +12,9 @@
 <body>
 
 <p>Olá, {{auth()->user()-> name}}</p>
-@if((auth()->user()->id_nivel != 1) && (auth()->user()->id_nivel != 2) && auth()->user()->status == false)<a href="/classe/">Acessar a área de Secretário/Classe ou professor</a>@endif
-@if(auth()->user()->id_nivel == 2 && auth()->user()->status == false)<a href="/admin/">Acessar a área Admin</a>@endif
-@if(auth()->user()->id_nivel == 1 && auth()->user()->status == false)<a href="/master/">Acessar a área Master</a>@endif
+@if((auth()->user()->id_nivel != 1) && (auth()->user()->id_nivel != 2) && auth()->user()->status == false)<p><a href="/classe/">Acessar a área de Secretário/Classe ou professor</a></p>@endif
+@if(auth()->user()->id_nivel <= 2 && auth()->user()->status == false)<p><a href="/admin/">Acessar a área Admin</a></p>@endif
+@if(auth()->user()->id_nivel == 1 && auth()->user()->status == false)<p><a href="/master/">Acessar a área Master</a></p>@endif
 @if(auth()->user()->super_master)<p><a href="/super-master/">Acessar a área SuperMaster</a></p>@endif
 @if (session('danger'))
             <div class="alert">

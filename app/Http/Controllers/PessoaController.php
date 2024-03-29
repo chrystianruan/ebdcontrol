@@ -36,7 +36,7 @@ class PessoaController extends Controller
 
     }
     public function indexCadastroClasse() {
-        $title = "Cadastro Admin";
+        $title = "Cadastro Classe";
         $check = request('scales');
         $route = "cadastro.pessoa.classe";
 
