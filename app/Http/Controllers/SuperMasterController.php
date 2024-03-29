@@ -61,7 +61,7 @@ class SuperMasterController extends Controller
     public function updateUserSuperMaster(Request $request, $id) {
         $this->validate($request, [
             'nome' => ['required'],
-            'username' => ['required'],
+            'username' => ['required', 'min:6', 'unique:users,username,'.$request->id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
         ], [
             'nome.required' => 'Nome é obrigatório',

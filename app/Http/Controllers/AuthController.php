@@ -167,7 +167,7 @@ class AuthController extends Controller
             ->first();
         $this->validate($request, [
             'name' => ['required'],
-            'username' => ['required', 'min:6', 'unique:users,username'],
+            'username' => ['required', 'min:6', 'unique:users,username,'.$request->id],
             'id_nivel' => ['required', 'integer', 'min:1', 'max:'.$lastNivel -> id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
         ], [
