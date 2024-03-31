@@ -19,7 +19,7 @@
 
     }
     .center-item {
-        margin-left: 7.5%;
+        margin-left: 5%;
         float: left;
     }
 
@@ -143,7 +143,7 @@
 <body>
 <div class="container">
     <div class="center">
-        <img src="img/logo-adpar.jpg" class="center-item" width="70">
+        <img src="img/logo-nova-adpar.jpg" class="center-item" width="100">
         <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
         <img class="center-item" src="img/logo_ebd.jpg" width="70">
 
