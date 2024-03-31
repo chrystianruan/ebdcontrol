@@ -15,7 +15,7 @@
 @endif
   <div class="container">
     <div style="display: flex; justify-content:center; flex-wrap: wrap; margin: 2%">
-      <img width=90 src="/img/logo-adpar.png">
+      <img width=100 src="/img/logo-nova-adpar.png">
       <img width=70  src="/img/logo_ebd.png">
     </div>
       <div class="wrapper">

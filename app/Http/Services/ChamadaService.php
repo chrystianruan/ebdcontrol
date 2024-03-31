@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Models\ChamadaDiaCongregacao;
+use Illuminate\Database\Eloquent\Collection;
 
 class ChamadaService
 {
@@ -13,18 +14,26 @@ class ChamadaService
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
     }
 
-    public function classesNotSendChamada(object $salas, object $chamadas) : array {
+    public function classesNotSendChamada(Collection $salas, Collection $chamadas) : array {
         $classes = [];
 
         foreach($salas as $sala) {
-            foreach($chamadas as $chamada) {
-                if ($sala->id != $chamada->id_sala) {
-                    $classes[] = ''.$sala->nome;
-                }
+            if (!$this->isPresentInChamadas($chamadas, $sala->id)){
+                array_push($classes, $sala->nome);
             }
         }
 
         return $classes;
+    }
+
+    public function isPresentInChamadas(Collection $chamadas, int $itemId) {
+        foreach ($chamadas as $c) {
+            if ($itemId == $c->id_sala) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function convertToInt(object $request) : array {
