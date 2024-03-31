@@ -4,6 +4,8 @@
 
 @section('content')
     <link rel="stylesheet" href="/css/cadastroClasse.css">
+    <input type="hidden" value="{{ base64_encode(auth()->user()->congregacao_id) }}" id="congregacao">
+    <input type="hidden" value="{{ url('/') }}" id="url">
     <div class="row" style="margin: 2%">
         <div class="col-75">
             <div class="container">
@@ -118,7 +120,7 @@
                                 </thead>
                                 <tbody id="tbody-add-classe">
                                     <tr class="tr-tbody-add-classe">
-                                        <td><button class="btn-tr-tbody-delete-classe" type="button"><i class="bx bx-trash" style="font-size: 1.6em"> </i></button></td>
+                                        <td><button class="btn-tr-tbody-delete-classe" type="button" id=""><i class="bx bx-trash" style="font-size: 1.6em"> </i></button></td>
                                         <td>
                                             <select>
                                                 @foreach($salas as $sala)
