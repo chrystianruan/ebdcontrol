@@ -14,8 +14,8 @@
                 <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" id="list-salas" value="{{ $salasOfPessoa }}">
                     <div class="col-50">
-
                         <h3>Informações Pessoais</h3>
                         @if ($errors->any())
                             <div class="alert">
@@ -119,23 +119,25 @@
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-add-classe">
-                                    <tr class="tr-tbody-add-classe">
-                                        <td><button class="btn-tr-tbody-delete-classe" type="button" id=""><i class="bx bx-trash" style="font-size: 1.6em"> </i></button></td>
+                                @foreach($salasOfPessoa as $sp)
+                                    <tr class="tr-tbody-add-classe" id="tr-{{ $sp->id }}">
+                                        <td><button class="btn-tr-tbody-delete-classe" type="button" id="{{ $sp->id }}"><i class="bx bx-trash" style="font-size: 1.6em"> </i></button></td>
                                         <td>
-                                            <select>
+                                            <select id="select-classe-{{ $sp->id }}" class="select-classe">
                                                 @foreach($salas as $sala)
-                                                    <option value="{{ $sala->id }}" @foreach($pessoa->id_sala as $ids) @if($ids == $sala->id) selected="selected" @endif @endforeach> {{ $sala->nome }}</option>
+                                                    <option value="{{ $sala->id }}" @if($sala->id == $sp->sala_id) selected @endif> {{ $sala->nome }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                         <td>
-                                            <select>
+                                            <select id="select-funcao-{{ $sp->id }}" class="select-funcao">
                                                 @foreach($functions as $function)
-                                                    <option @if($pessoa->id_funcao == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
+                                                    <option @if($sp->funcao_id == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
                                                 @endforeach
                                             </select>
                                         </td>
                                     </tr>
+                                @endforeach
                                 </tbody>
                             </table>
                             <button class="btn-adicionar-classe" id="btn-adicionar-classe" type="button">Adicionar classe</button>
@@ -221,12 +223,5 @@
         crossorigin="anonymous">
     </script>
     <script src="/js/editPessoa.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
-    <script>
-
-    $(document).ready(function() {
-        $('.select-classe').select2();
-    });
-    </script>
+    <script src="/js/updatePessoa.js"></script>
 @endsection

@@ -224,9 +224,9 @@ class PessoaService
 
     private function clearPessoaSala(int $pessoaId) : void {
         try {
-            $pessoaSala = $this->pessoaSalaRepository->getPessoaSala($pessoaId);
-            foreach ($pessoaSala as $p) {
-                $pessoaSala = PessoaSala::findOrFail($p->id);
+            $salasPessoa = $this->pessoaSalaRepository->getSalasOfPessoa($pessoaId);
+            foreach ($salasPessoa as $sp) {
+                $pessoaSala = PessoaSala::findOrFail($sp->id);
                 $pessoaSala->delete();
             }
         } catch (\Exception $exception) {

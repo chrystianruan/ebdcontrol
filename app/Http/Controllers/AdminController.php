@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Services\ChamadaService;
+use App\Models\PessoaSala;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Pessoa;
@@ -25,9 +27,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class AdminController extends Controller
 {
     protected $chamadaService;
+    protected $pessoaSalaRepository;
 
-    public function __construct(ChamadaService $chamadaService) {
+    public function __construct(ChamadaService $chamadaService, PessoaSalaRepository $pessoaSalaRepository) {
         $this->chamadaService = $chamadaService;
+        $this->pessoaSalaRepository = $pessoaSalaRepository;
     }
 
     public function index() {
@@ -355,7 +359,8 @@ class AdminController extends Controller
         $functions = Funcao::all();
         $publicos = Publico::all();
         $formations = Formation::all();
-        return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'functions' => $functions, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations]);
+        $salasOfPessoa = $this->pessoaSalaRepository->getSalasOfPessoa($id);
+        return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'functions' => $functions, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations, 'salasOfPessoa' => $salasOfPessoa]);
 
     }
 
