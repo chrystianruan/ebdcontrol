@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePessoaRequest;
+use App\Http\Requests\UpdatePessoaRequest;
 use App\Http\Services\PessoaService;
 use App\Models\Congregacao;
 use App\Models\Formation;
@@ -87,14 +89,12 @@ class PessoaController extends Controller
             'route' => $route]);
     }
 
-    public function storeFromAdmin(Request $request) {
-        return $this->pessoaService->store($request, intval($request->classe), intval($request->congregacao));
+    public function store(StorePessoaRequest $request) {
+        return $this->pessoaService->store($request);
     }
-    public function storeFromGeral(Request $request) {
-        return $this->pessoaService->store($request, intval($request->classe), intval($request->congregacao));
-    }
-    public function storeFromClasse(Request $request) {
-        return $this->pessoaService->store($request, intval($request->classe), intval($request->congregacao));
+
+    public function update(UpdatePessoaRequest $request) {
+        return $this->pessoaService->update($request);
     }
 
 

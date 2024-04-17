@@ -29,7 +29,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::get('/cadastro/{congregacaoId}', [\App\Http\Controllers\PessoaController::class, 'indexCadastroGeral']);
-Route::post('/cadastro-geral', [PessoaController::class, 'storeFromGeral'])->name('cadastro.pessoa.geral');
+Route::post('/cadastro-geral', [PessoaController::class, 'store'])->name('cadastro.pessoa.geral');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
@@ -42,7 +42,7 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);
     Route::get('/classe/cadastro-pessoa', [PessoaController::class, 'indexCadastroClasse']);
-    Route::post('/classe/cadastro-pessoa', [PessoaController::class, 'storeFromClasse'])->name('cadastro.pessoa.classe');
+    Route::post('/classe/cadastro-pessoa', [PessoaController::class, 'store'])->name('cadastro.pessoa.classe');
     Route::get('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::post('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::get('/classe/visualizar-pessoa/{id}', [ClasseController::class, 'showPessoaClasse']);
@@ -92,12 +92,12 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 
     Route::get('/admin/cadastro/pessoa', [PessoaController::class, 'indexCadastroAdmin']);
-    Route::post('/admin/cadastro/pessoa', [PessoaController::class, 'storeFromAdmin'])->name('cadastro.pessoa.admin');
+    Route::post('/admin/cadastro/pessoa', [PessoaController::class, 'store'])->name('cadastro.pessoa.admin');
     Route::get('/admin/filtro/pessoa', [AdminController::class, 'showFilterPessoa']);
     Route::post('/admin/filtro/pessoa', [AdminController::class, 'searchPessoa']);
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);
     Route::get('/admin/edit/pessoa/{id}', [AdminController::class, 'editPessoa']);
-    Route::put('/admin/update/pessoa/{id}', [AdminController::class, 'updatePessoa']);
+    Route::put('/admin/update/pessoa/{id}', [PessoaController::class, 'update']);
     Route::delete('/admin/filtro/pessoa/{id}', [AdminController::class, 'destroyPessoa']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);

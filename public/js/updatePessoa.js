@@ -14,6 +14,7 @@ $(document).on("change", ".select-classe", function() {
         classes.push(classe)
     }
     console.log(classes)
+    $('#list-salas').val(JSON.stringify(classes));
 })
 
 $(document).on("change", ".select-funcao", function() {
@@ -29,7 +30,7 @@ $(document).on("change", ".select-funcao", function() {
         }
         classes.push(classe)
     }
-    console.log(classes)
+    $('#list-salas').val(JSON.stringify(classes));
 })
 
 

@@ -14,7 +14,7 @@
                 <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
                     @csrf
                     @method('PUT')
-                    <input type="hidden" id="list-salas" value="{{ $salasOfPessoa }}">
+                    <input type="hidden" id="list-salas" name="list_salas" value="{{ $salasOfPessoa }}">
                     <div class="col-50">
                         <h3>Informações Pessoais</h3>
                         @if ($errors->any())

@@ -21,7 +21,7 @@ function appendOptionsInSelectSala(congregacao, selectClasseId) {
         dataType: 'json',
         success: data => {
             var option;
-            option += '<option value="disabled">Selecionar</option>'
+            option += '<option selected value="" disabled>Selecionar</option>'
             $.each(data, function(i, obj){
                 option += `<option value="${obj.id}">${obj.nome}</option>`;
             })
@@ -39,7 +39,7 @@ function appendOptionsInSelectFuncao(selectFuncaoId) {
         dataType: 'json',
         success: data => {
             var option;
-            option += '<option value="disabled">Selecionar</option>'
+            option += '<option  selected value="" disabled>Selecionar</option>'
             $.each(data, function(i, obj){
                 option += `<option value="${obj.id}">${obj.nome}</option>`;
             })
