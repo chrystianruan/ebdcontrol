@@ -8,5 +8,6 @@ enum FuncaoEnum : int
     case PROFESSOR = 2;
     case SECRETARIO_CLASSE = 3;
     case SECRETARIO_ADMIN = 4;
-    case SUPERINTENDENTE = 5;
+    case PROFESSOR_SUBSTITUTO = 5;
+    case AUXILIAR_SALA = 6;
 }

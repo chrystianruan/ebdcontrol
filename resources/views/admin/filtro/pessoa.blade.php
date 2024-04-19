@@ -150,7 +150,7 @@
   </div>
 
   @if($pessoas->count() > 0)
-  <table style="margin:3%">
+  <table style="margin:3%; overflow-x: scroll">
   <caption class="cont"><h4>Matriculados: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$pessoas -> count()}}</font></caption>
   <thead>
     <tr>
@@ -159,8 +159,7 @@
       <th>Data Nascimento
       <th>Sexo
       <th>N° de telefone
-      <th>Classe
-      <th>Função
+      <th>Classe/Funcão
 
       <th style="text-align: center">Ações
   </thead>
@@ -190,15 +189,7 @@
 
           @endif
 
-      <td style="width: 180px">
-        @foreach($pessoa->id_sala as $id_sal)
-              @foreach($salas as $sal)
-                  @if($sal -> id == $id_sal)
-                   <li> {{$sal->nome}}</li>
-                  @endif
-              @endforeach
-          @endforeach
-      <td>@if($pessoa -> id_funcao == 1) Aluno @elseif($pessoa -> id_funcao == 2) Professor @elseif($pessoa -> id_funcao == 3) Secretário/Classe @elseif($pessoa -> id_funcao == 4) Secretário/Adm @elseif($pessoa -> id_funcao == 5) Superintendente @else Erro @endif
+        <td style="width: 180px"> Visualizar</td>
 
 
             <td style="min-width:170px;"><div style="text-align: center">

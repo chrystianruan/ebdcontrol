@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Http\Controllers\Controller;
 use App\Http\Enums\FuncaoEnum;
 use App\Http\Enums\TipoCadastroPessoaEnum;
+use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
 use App\Http\Requests\UpdatePessoaRequest;
@@ -26,10 +27,10 @@ class PessoaService
 {
     use ValidatesRequests;
     private $linkCadastroGeral;
-    private $pessoaSalaRepository;
-    public function __construct(LinkCadastroGeral $linkCadastroGeral, PessoaSalaRepository $pessoaSalaRepository) {
+    private $pessoaRepository;
+    public function __construct(LinkCadastroGeral $linkCadastroGeral, PessoaRepository $pessoaRepository) {
         $this->linkCadastroGeral = $linkCadastroGeral;
-        $this->pessoaSalaRepository = $pessoaSalaRepository;
+        $this->pessoaRepository = $pessoaRepository;
     }
     public function liberarLinkGeral(int $congregacaoId) {
         $linkExistente = $this->linkCadastroGeral->getLink($congregacaoId);
@@ -84,8 +85,6 @@ class PessoaService
             $pessoa->telefone = $request->telefone;
             $pessoa->id_formation = $request->id_formation;
             $pessoa->cursos = $request->cursos;
-            $pessoa->id_sala = ["$classeIdRequest"];
-            $pessoa->id_funcao = 1;
             $pessoa->congregacao_id = $congregacaoIdRequest;
             $pessoa->situacao = 1;
             $pessoa->interesse = $request->interesse;
@@ -133,7 +132,6 @@ class PessoaService
             $pessoa-> telefone = $request->telefone;
             $pessoa-> id_formation = $request->id_formation;
             $pessoa-> cursos = $request->cursos;
-            $pessoa-> id_funcao = $request->id_funcao;
             $pessoa-> situacao = $request->situacao;
             $pessoa-> interesse = $request->interesse;
             $pessoa-> frequencia_ebd = $request->frequencia_ebd;
@@ -159,7 +157,7 @@ class PessoaService
             $pessoaSala = new PessoaSala();
             $pessoaSala->pessoa_id = $pessoaId;
             $pessoaSala->sala_id = $salaId;
-            $pessoaSala->funcao_id = FuncaoEnum::ALUNO;
+            $pessoaSala->funcao_id = FuncaoEnum::ALUNO->value;
             $pessoaSala->active = 1;
             $pessoaSala->save();
 
@@ -186,7 +184,7 @@ class PessoaService
 
     private function clearPessoaSala(int $pessoaId) : void {
         try {
-            $salasPessoa = $this->pessoaSalaRepository->getSalasOfPessoa($pessoaId);
+            $salasPessoa = $this->pessoaRepository->getSalasOfPessoa($pessoaId);
             foreach ($salasPessoa as $sp) {
                 $pessoaSala = PessoaSala::findOrFail($sp->id);
                 $pessoaSala->delete();

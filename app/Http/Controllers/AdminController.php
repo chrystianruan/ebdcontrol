@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Repositories\PessoaSalaRepository;
-use App\Http\Requests\UpdatePessoaRequest;
+use App\Http\Enums\FuncaoEnum;
+use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
-use App\Models\PessoaSala;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Pessoa;
@@ -28,11 +27,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class AdminController extends Controller
 {
     protected $chamadaService;
-    protected $pessoaSalaRepository;
+    protected $pessoaRepository;
 
-    public function __construct(ChamadaService $chamadaService, PessoaSalaRepository $pessoaSalaRepository) {
+    public function __construct(ChamadaService $chamadaService, PessoaRepository $pessoaRepository) {
         $this->chamadaService = $chamadaService;
-        $this->pessoaSalaRepository = $pessoaSalaRepository;
+        $this->pessoaRepository = $pessoaRepository;
     }
 
     public function index() {
@@ -59,10 +58,7 @@ class AdminController extends Controller
         $quantidadeMaes = Pessoa::where('paternidade_maternidade', '=', 'Mãe')
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->count();
-        $interesseProf = Pessoa::where('interesse', '<>', 2)
-            ->where('id_funcao', '<>', 2)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->count();
+        $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoCount();
         //$idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
         $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -83,11 +79,7 @@ class AdminController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->count();
         $sexos = [$mativo, $minativo, $fativo, $finativo];
-        $funcoes = Pessoa::select(DB::raw('count(pessoas.id) as qtd, id_funcao, funcaos.nome'))
-        ->join('funcaos', 'pessoas.id_funcao', '=', 'funcaos.id')
-        ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-        ->groupBy('id_funcao')
-        ->get();
+        $funcoes = $this->getArrayQuantidadePessoasPerFuncao();
         $chamadasMesTotal = Chamada::select(DB::raw('date_format(created_at, "%d/%m/%Y") as data, sum(matriculados) as mat, sum(presentes) as pre, sum(visitantes) as vis'))
         ->whereMonth('created_at', '=', Carbon::now())
         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -112,153 +104,18 @@ class AdminController extends Controller
           'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes]);
     }
 
-    public function indexPessoa() {
-        $check = request('scales');
-        $salas = Sala::where('id', '>', 2)->orderBy('nome')
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-        $ufs = Uf::orderBy("nome")->get();
-        $publicos = Publico::all();
-        $formations = Formation::all();
-        $dataAtual = date('d/m/Y');
-        return view('/admin/cadastro/pessoa', ['dataAtual' => $dataAtual, 'salas' => $salas, 'ufs' => $ufs, 'publicos' => $publicos,
-         'formations' => $formations, 'check' => $check]);
-    }
-
-    public function storePessoa(Request $request) {
-        $publicos = Publico::all();
-        $ufs = Uf::all();
-        $formations = Formation::all();
-
-        $lastSala = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('id', 'desc')
-            ->first();
-        $this->validate($request, [
-            'nome' => ['required'],
-            'sexo' => ['required', 'integer', 'min: 1', 'max: 2'],
-            'filhos' => ['required', 'integer', 'min: 1', 'max: 2'],
-            'data_nasc' => ['required'],
-            'id_uf' => ['required', 'integer', 'min: 1', 'max:'.$ufs->count()],
-            'telefone' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999', 'unique:pessoas,telefone'],
-            'telefone_responsavel' => ['nullable', 'integer', 'min:11111111111', 'max:99999999999'],
-            'id_formation' => ['required', 'integer', 'min: 1', 'max:'.$formations->count()],
-            'id_sala' => ['required', 'max:'.$lastSala->id],
-            'interesse' => ['required', 'integer', 'min: 1', 'max: 3'],
-            'frequencia_ebd' => ['integer', 'min: 1', 'max: 3'],
-            'curso_teo' => ['integer', 'min: 1', 'max: 2'],
-            'id_funcao' => ['integer', 'min:1', 'max:1'],
-            'situacao' => ['integer', 'min:1', 'max:1'],
-            'prof_ebd' => ['integer', 'min: 1', 'max: 2'],
-            'prof_comum' => ['integer', 'min: 1', 'max: 2'],
-            'id_public' => ['integer', 'min: 1', 'max:'.$publicos->count()],
-        ], [
-            'nome.required' =>  'Nome é obrigatório.',
-
-            'sexo.required' =>  'Sexo é obrigatório.',
-            'sexo.integer' =>  'Só é aceito o sexo masculino ou feminino',
-            'sexo.min' =>  'Só é aceito o sexo masculino ou feminino',
-            'sexo.max' =>  'Só é aceito o sexo masculino ou feminino',
-
-            'filhos.required' =>  'Campo de filhos é obrigatório.',
-            'filhos.integer' =>  'Só é aceito ter ou não filhos',
-            'filhos.min' =>  'Só é aceito ter ou não filhos',
-            'filhos.max' =>  'Só é aceito ter ou não filhos',
-
-            'data_nasc.required' =>  'Data de nascimento é obrigatória.',
-
-            'id_uf.required' =>  'UF é obrigatória.',
-            'id_uf.integer' =>  'UF escolhida não existe.',
-            'id_uf.min' =>  'UF escolhida não existe.',
-            'id_uf.max' =>  'UF escolhida não existe.',
-
-            'telefone.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
-            'telefone.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
-            'telefone.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
-            'telefone.unique' =>  'O telefone já existe.',
-
-            'telefone_responsavel.integer' =>  'O telefone precisa de 11 dígitos: DDD + número',
-            'telefone_responsavel.min' =>  'O telefone precisa de 11 dígitos: DDD + número',
-            'telefone_responsavel.max' =>  'O telefone precisa de 11 dígitos: DDD + número',
-
-            'id_formation.required' =>  'Formação é obrigatória.',
-            'id_formation.integer' =>  'Formação escolhida não existe.',
-            'id_formation.min' =>  'Formação escolhida não existe.',
-            'id_formation.max' =>  'Formação escolhida não existe.',
-
-            'id_sala.required' =>  'Classe é obrigatória.',
-            'id_sala.max' =>  'Pessoa só pode ser cadastrada em uma classe',
-
-            'interesse.required' =>  'Interesse é obrigatório.',
-            'interesse.integer' =>  'Interesse escolhido não existe.',
-            'interesse.min' =>  'Interesse escolhido não existe.',
-            'interesse.max' =>  'Interesse escolhido não existe.',
-
-            'frequencia_ebd.integer' =>  'Frequência escolhida não existe.',
-            'frequencia_ebd.min' =>  'Frequência escolhida não existe.',
-            'frequencia_ebd.max' =>  'Frequência escolhida não existe.',
-
-            'curso_teo.integer' =>  'Valor inválido para curso de Teologia',
-            'curso_teo.min' =>  'Valor inválido para curso de Teologia',
-            'curso_teo.max' =>  'Valor inválido para curso de Teologia',
-
-            'id_funcao.integer' =>  'Pessoa só pode ser cadastrada como aluno',
-            'id_funcao.min' =>  'Pessoa só pode ser cadastrada como aluno',
-            'id_funcao.max' =>  'Pessoa só pode ser cadastrada como aluno',
-
-            'situacao.integer' =>  'Pessoa só pode ser cadastrada como ativa',
-            'situacao.min' =>  'Pessoa só pode ser cadastrada como ativa',
-            'situacao.max' =>  'Pessoa só pode ser cadastrada como ativa',
-
-            'prof_ebd.integer' =>  'Escolha para professor de EBD escolhida não existe.',
-            'prof_ebd.min' =>  'Escolha para professor de EBD escolhida não existe.',
-            'prof_ebd.max' =>  'Escolha para professor de EBD escolhida não existe.',
-
-            'prof_comum.integer' =>  'Escolha para professor comum escolhida não existe.',
-            'prof_comum.min' =>  'Escolha para professor comum escolhida não existe.',
-            'prof_comum.max' =>  'Escolha para professor comum escolhida não existe.',
-
-            'id_public.integer' =>  'Público escolhido não existe.',
-            'id_public.min' =>  'Público escolhido não existe.',
-            'id_public.max' =>  'Público escolhido não existe.',
-
-        ]);
-
-        $pessoa = new Pessoa;
-        $pessoa-> nome = $request->nome;
-        $pessoa-> sexo = $request->sexo;
-        if ($request->filhos == 2 && $request->sexo == 1) {
-            $pessoa->paternidade_maternidade = "Pai";
+    public function getArrayQuantidadePessoasPerFuncao() : array {
+        $array = [];
+        foreach(Funcao::all() as $funcao) {
+            $quantidade = $this->pessoaRepository->findByFuncaoIdCount($funcao->id);
+            $array[] = [
+                'funcao_nome' => $quantidade[0]->funcao_nome,
+                'quantidade_pessoas' => $quantidade[0]->quantidade_pessoas,
+            ];
         }
-        elseif ($request->filhos == 2 && $request->sexo == 2) {
-            $pessoa->paternidade_maternidade = "Mãe";
-        } else {
-            $pessoa->paternidade_maternidade = null;
-        }
-        $pessoa->responsavel = $request->responsavel;
-        $pessoa->telefone_responsavel = $request->telefone_responsavel;
-        $pessoa->ocupacao = $request->ocupacao;
-        $pessoa->cidade = $request->cidade;
-        $pessoa->data_nasc = $request->data_nasc;
-        $pessoa->id_uf = $request->id_uf;
-        $pessoa->telefone = $request->telefone;
-        $pessoa->id_formation = $request->id_formation;
-        $pessoa->cursos = $request->cursos;
-        $pessoa->id_sala = ["$request->id_sala"];
-        $pessoa->id_funcao = 1;
-        $pessoa->congregacao_id = auth()->user()->congregacao_id;
-        $pessoa->situacao = 1;
-        $pessoa->interesse = $request->interesse;
-        $pessoa->frequencia_ebd = $request->frequencia_ebd;
-        $pessoa->curso_teo = $request->curso_teo;
-        $pessoa->prof_ebd = $request->prof_ebd;
-        $pessoa->prof_comum = $request->prof_comum;
-        $pessoa->id_public = $request->id_public;
-        $pessoa->save();
-        return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
+
+        return $array;
     }
-
-
-
 
     public function showFilterPessoa() {
         $pessoas = Pessoa::orderBy('nome')
@@ -360,7 +217,7 @@ class AdminController extends Controller
         $functions = Funcao::all();
         $publicos = Publico::all();
         $formations = Formation::all();
-        $salasOfPessoa = $this->pessoaSalaRepository->getSalasOfPessoa($id);
+        $salasOfPessoa = $this->pessoaRepository->getSalasOfPessoa($id);
         return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'functions' => $functions, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations, 'salasOfPessoa' => $salasOfPessoa]);
 
     }

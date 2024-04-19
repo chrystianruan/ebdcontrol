@@ -7,12 +7,7 @@ $('#btn-adicionar-classe').click(function() {
 
 });
 
-$(document).on("click", ".btn-tr-tbody-delete-classe", function() {
-    var check = confirm("Tem certeza que deseja excluir essa classe? ");
-    if (check) {
-        $("#tr-"+this.id).remove();
-    }
-});
+
 
 function appendOptionsInSelectSala(congregacao, selectClasseId) {
     $.ajax({

@@ -247,10 +247,10 @@ const ctx2 = document.getElementById('myChart2');
 const myChart2 = new Chart(ctx2, {
     type: 'pie',
     data: {
-        labels: [@foreach($funcoes as $funcao) '{{$funcao->nome}}', @endforeach ],
+        labels: [@for($i = 0; $i < count($funcoes); $i++) '{{$funcoes[$i]['funcao_nome']}}', @endfor ],
         datasets: [{
             label: 'Funções',
-            data: [@foreach($funcoes as $funcao) {{$funcao->qtd}}, @endforeach ],
+            data: [@for($i = 0; $i < count($funcoes); $i++) {{$funcoes[$i]['quantidade_pessoas']}}, @endfor ],
             backgroundColor: [
                 'rgba(255, 99, 132, 0.7)',
                 'rgba(54, 162, 235, 0.7)',

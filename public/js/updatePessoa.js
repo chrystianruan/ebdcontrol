@@ -15,7 +15,7 @@ $(document).on("change", ".select-classe", function() {
     }
     console.log(classes)
     $('#list-salas').val(JSON.stringify(classes));
-})
+});
 
 $(document).on("change", ".select-funcao", function() {
     let idFormated = this.id.replace("select-funcao-", "");
@@ -31,7 +31,17 @@ $(document).on("change", ".select-funcao", function() {
         classes.push(classe)
     }
     $('#list-salas').val(JSON.stringify(classes));
-})
+});
+
+$(document).on("click", ".btn-tr-tbody-delete-classe", function() {
+    var check = confirm("Tem certeza que deseja excluir essa classe? ");
+    if (check) {
+        $("#tr-"+this.id).remove();
+        let index = classes.findIndex(obj => obj.id == this.id);
+        classes.splice(index, 1)
+        $('#list-salas').val(JSON.stringify(classes));
+    }
+});
 
 
 function checkIdExists(id) {
