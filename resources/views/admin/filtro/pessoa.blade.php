@@ -189,7 +189,16 @@
 
           @endif
 
-        <td style="width: 180px"> Visualizar</td>
+        <td style="width: 180px">  <div class="wrapper">
+                Visualizar
+                <div class="tooltip">
+                    <ul>
+                    @foreach($pessoa->salas as $key=>$sala)
+                        <li>{{ $sala->nome }} <span style="color: blue"> ({{ $pessoa->funcoes[$key]['nome'] }}) </span> </li>
+                    @endforeach
+                    </ul>
+                </div>
+            </div></td>
 
 
             <td style="min-width:170px;"><div style="text-align: center">
