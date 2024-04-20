@@ -36,10 +36,15 @@ $(document).on("change", ".select-funcao", function() {
 $(document).on("click", ".btn-tr-tbody-delete-classe", function() {
     var check = confirm("Tem certeza que deseja excluir essa classe? ");
     if (check) {
-        $("#tr-"+this.id).remove();
-        let index = classes.findIndex(obj => obj.id == this.id);
-        classes.splice(index, 1)
-        $('#list-salas').val(JSON.stringify(classes));
+        if (classes.length > 1) {
+            $("#tr-"+this.id).remove();
+            let index = classes.findIndex(obj => obj.id == this.id);
+            classes.splice(index, 1)
+            $('#list-salas').val(JSON.stringify(classes));
+        } else {
+            alert("Deve existir pelo menos um registro de classe")
+        }
+
     }
 });
 
