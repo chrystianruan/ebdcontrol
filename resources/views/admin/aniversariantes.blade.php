@@ -88,19 +88,17 @@
     <tr>
         <th>Nome</th>
         <th>Data de Nascimento</th>
-        <th>Função</th>
-        <th>Classe</th>
+        <th>Classe/Função</th>
         <th>Ação</th>
     </tr>
   </thead>
 
   <tbody>
       @foreach($pessoas as $p)
-        <tr @if ($p->id_funcao == 2 || $p->id_funcao == 4 || $p->id_funcao == 5) style="background-color: #d95eff" @endif>
+        <tr @if (in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::SECRETARIO_ADMIN->value, array_column($p->funcoes->toArray(), 'id'))) style="background-color: #d95eff" @endif>
             <td>{{$p -> nome}}</td>
             <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>{{date('d/m', strtotime($p -> data_nasc))}}</td>
-            <td>{{ $p->nome_funcao }}</td>
-            <td>@foreach($p -> id_sala as $ids) @foreach($salas as $s) @if($ids == $s -> id) {{$s -> nome}} @endif @endforeach @endforeach</td>
+            <td><ul>@foreach($p->salas as $key=>$sala) <li> {{ $sala->nome }} ({{ $p->funcoes[$key]['nome'] }})</li> @endforeach</ul></td>
             <td><div style="text-align: center">
                 <a href="/admin/visualizar/pessoa/{{$p->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
                 </div>

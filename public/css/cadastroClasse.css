@@ -148,3 +148,37 @@
     text-align: center;
     padding: 10px;
 }
+
+.div-add-sala {
+    background-color: transparent;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    width: 100%;
+}
+.btn-adicionar-classe {
+    width: 100%;
+    text-align: center;
+    cursor: pointer;
+    padding: 5px;
+    background-color: #ccc;
+    color: black;
+    border-radius: 8px;
+    border: 0.5px solid #ccc;
+}
+
+.btn-adicionar-classe:hover {
+    background-color:#cbd5e0;
+}
+
+.btn-tr-tbody-delete-classe {
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 12px;
+  cursor: pointer;
+  border: none;
+  background-color: transparent;
+}
+.btn-tr-tbody-delete-classe:hover {
+  background-color: #ccc;
+}
