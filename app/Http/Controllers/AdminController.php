@@ -58,7 +58,7 @@ class AdminController extends Controller
         $quantidadeMaes = Pessoa::where('paternidade_maternidade', '=', 'Mãe')
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->count();
-        $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoCount();
+        $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoAndSalaCount();
         //$idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
         $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -75,9 +75,7 @@ class AdminController extends Controller
         $finativo = Pessoa::where('sexo', '=', 2)->where('situacao', '=', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->count();
-        $alunosInativos = Pessoa::where('situacao', '=', 2)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->count();
+        $alunosInativos = $this->pessoaRepository->getInativos();
         $sexos = [$mativo, $minativo, $fativo, $finativo];
         $funcoes = $this->getArrayQuantidadePessoasPerFuncao();
         $chamadasMesTotal = Chamada::select(DB::raw('date_format(created_at, "%d/%m/%Y") as data, sum(matriculados) as mat, sum(presentes) as pre, sum(visitantes) as vis'))
@@ -145,7 +143,7 @@ class AdminController extends Controller
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        $pessoas = Pessoa::select('pessoas.*');
+        $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
 
         if ($request->nome) {
             $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
@@ -160,11 +158,11 @@ class AdminController extends Controller
         }
 
         if ($request->sala) {
-            $pessoas = $pessoas->whereJsonContains('id_sala', $request->sala);
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
         }
 
         if($request->id_funcao) {
-            $pessoas = $pessoas->where('id_funcao', $request->id_funcao);
+            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
         }
 
         if($request->interesse) {
@@ -181,7 +179,8 @@ class AdminController extends Controller
         }
 
         $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')
+            ->orderBy('pessoas.nome')
+            ->groupBy('pessoa_id')
             ->get();
 
         return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
@@ -838,39 +837,47 @@ class AdminController extends Controller
         //mes
         if(isset($request -> mes) && empty($request -> classe)) {
             $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
                 ->whereMonth('data_nasc', '=', $request->mes)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->orderBy("nome")
+                ->groupBy('pessoa_id')
                 ->get();
 
         }
         //classe
         elseif(empty($request -> mes) && isset($request -> classe)) {
             $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-                ->whereJsonContains('id_sala', $request->classe)
+                ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+                ->where('pessoa_salas.sala_id', $request->classe)
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->orderBy("nome")
+                ->groupBy('pessoa_id')
                 ->get();
 
         }
         //classe e mes
         elseif(isset($request -> mes) && isset($request -> classe)) {
             $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
             ->whereMonth('data_nasc', '=', $request->mes)
-            ->whereJsonContains('id_sala', $request->classe)
+                ->where('pessoa_salas.sala_id', $request->classe)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->orderBy("nome")
+                ->groupBy('pessoa_id')
             ->get();
 
         } else {
             $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
+                ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
                 ->whereMonth('data_nasc', '=', Carbon::now())
                 ->where('congregacao_id', '=', auth()->user()->congregacao_id)
                 ->orderBy("nome")
+                ->groupBy('pessoa_id')
                 ->get();
         }
 

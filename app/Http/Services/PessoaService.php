@@ -4,12 +4,12 @@ namespace App\Http\Services;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\FuncaoEnum;
-use App\Http\Enums\TipoCadastroPessoaEnum;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
 use App\Http\Requests\UpdatePessoaRequest;
 use App\Models\Formation;
+use App\Models\Funcao;
 use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
 use App\Models\PessoaSala;
@@ -192,5 +192,18 @@ class PessoaService
         } catch (\Exception $exception) {
             throw $exception;
         }
+    }
+
+    public function getArrayQuantidadePessoasPerFuncao(int $salaId = null) : array {
+        $array = [];
+        foreach(Funcao::all() as $funcao) {
+            $quantidade = $this->pessoaRepository->findByFuncaoIdCount($funcao->id, $salaId);
+            $array[] = [
+                'funcao_nome' => $quantidade[0]->funcao_nome,
+                'quantidade_pessoas' => $quantidade[0]->quantidade_pessoas,
+            ];
+        }
+
+        return $array;
     }
 }

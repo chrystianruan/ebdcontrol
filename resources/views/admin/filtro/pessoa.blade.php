@@ -190,7 +190,7 @@
           @endif
 
         <td style="width: 180px">  <div class="wrapper">
-                Visualizar
+                Ver classes
                 <div class="tooltip">
                     <ul>
                     @foreach($pessoa->salas as $key=>$sala)

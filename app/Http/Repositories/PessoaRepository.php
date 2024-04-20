@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Http\Enums\FuncaoEnum;
+use App\Http\Enums\StatusEnum;
 use App\Models\Pessoa;
 use App\Models\PessoaSala;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,15 +11,20 @@ use Illuminate\Support\Facades\DB;
 
 class PessoaRepository
 {
-    //[collect(array_column($professores, 'pessoa_id'))->map(function ($val) {return (int) $val;})])
-    public function findByInteresseAndCongregacaoCount() : ?int {
+
+    public function findByInteresseAndCongregacaoAndSalaCount($salaId = null) : ?Collection {
         $professores = $this->findByFuncaoUnique(FuncaoEnum::PROFESSOR->value);
-        return Pessoa::join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+        $pessoas = Pessoa::join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
             ->where('interesse', '<>', 2)
             ->where('pessoa_salas.funcao_id', FuncaoEnum::ALUNO->value)
             ->whereNotIn('pessoas.id', $professores->map(function ($professor) { return $professor->pessoa_id; }))
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->count();
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id);
+
+        if ($salaId !== null) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $salaId);
+        }
+
+        return $pessoas->get();
     }
 
     public function findByFuncaoUnique(int $funcaoId)  {
@@ -37,7 +43,7 @@ class PessoaRepository
             ->get();
     }
 
-    public function findByFuncaoIdCount($funcaoId) : ?array{
+    public function findByFuncaoIdCount(int $funcaoId, int $salaId = null) : ?array{
         $userLogado = auth()->user();
         $query =
             "select
@@ -54,10 +60,45 @@ class PessoaRepository
                  where
                      ps.funcao_id = $funcaoId
                  and
-		            p.congregacao_id = $userLogado->congregacao_id
-                 group by
-                     pessoa_id) c";
+		            p.congregacao_id = $userLogado->congregacao_id";
+
+        if ($salaId != null) {
+            $query .= " and ps.sala_id = $salaId";
+        }
+
+        $query .= " group by pessoa_id) c";
 
         return DB::select($query);
+    }
+    public function getAniversariantesMes(int $salaId = null) : ?Collection {
+        $pessoas = PessoaSala::join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+            ->where('pessoas.congregacao_id', auth()->user()->congregacao_id)
+            ->whereMonth('data_nasc', '=',  date('n'));
+
+        if ($salaId != null) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $salaId);
+        }
+
+        return $pessoas->groupBy('pessoa_salas.pessoa_id')->get();
+    }
+
+    public function getInativos(int $salaId = null) : ?Collection {
+        $pessoas = PessoaSala::join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+            ->where('pessoas.congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('pessoas.situacao', '=', StatusEnum::INATIVO->value);
+
+        if ($salaId != null) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $salaId);
+        }
+
+        return $pessoas->groupBy('pessoa_salas.pessoa_id')->get();
+    }
+
+    public function findBySalaIdAndSituacao(int $salaId, int $situacao = 1) : ?Collection {
+        return PessoaSala::join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                    ->where('pessoa_salas.sala_id', $salaId)
+                    ->where('pessoas.situacao', $situacao)
+                    ->groupBy('pessoa_salas.pessoa_id')
+                    ->get();
     }
 }

@@ -16,4 +16,5 @@ class PessoaSalaRepository
             ->get();
     }
 
+
 }

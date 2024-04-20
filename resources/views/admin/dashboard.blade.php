@@ -119,9 +119,9 @@
   <h3>Aniversariantes do mês ({{date('m')}})</h3>
   <li>@if($niverMes < 1) Nenhum aniversariante nesse mês @else <span style="font-weight: bold; color:chartreuse">{{$niverMes}}</span> nesse mês @endif <a style="color: deepskyblue" href="/admin/aniversariantes"> Aniversariantes </a> </li>
   <h3>Interessados em ser professor</h3>
-  <li>@if($interesseProf < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf}}</span> interessado(s) @endif</li>
+  <li>@if($interesseProf->count() < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf->count()}}</span> interessado(s) @endif</li>
   <h3>Inativos</h3>
-  <li>@if($alunosInativos < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{$alunosInativos}}</span> inativo(s) @endif</li>
+  <li>@if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{ $alunosInativos->count() }}</span> inativo(s) @endif</li>
 
 </div>
 
