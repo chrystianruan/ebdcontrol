@@ -148,10 +148,10 @@
 
             <tbody>
 
-            @foreach($pessoas as $pessoa)
+            @foreach($pessoas as $key => $pessoa)
                 <tr>
-                    <td> {{ $pessoa->nome_pessoa }}</td>
-                    <td> {{ $pessoa->nome_funcao }}</td>
+                    <td> {{ $pessoa->pessoa_nome }}</td>
+                    <td> {{ $pessoa->funcao_nome }}</td>
                     <td>   </td>
                 </tr>
             @endforeach

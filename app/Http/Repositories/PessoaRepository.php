@@ -95,9 +95,12 @@ class PessoaRepository
     }
 
     public function findBySalaIdAndSituacao(int $salaId, int $situacao = 1) : ?Collection {
-        return PessoaSala::join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+        return PessoaSala::select('pessoas.id as pessoa_id','pessoas.nome as pessoa_nome', 'funcaos.nome as funcao_nome', 'funcaos.id as funcao_id')
+                    ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                    ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
                     ->where('pessoa_salas.sala_id', $salaId)
                     ->where('pessoas.situacao', $situacao)
+                    ->orderBy('pessoas.nome')
                     ->groupBy('pessoa_salas.pessoa_id')
                     ->get();
     }

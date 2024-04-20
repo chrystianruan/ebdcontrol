@@ -24,10 +24,11 @@ class Pessoa extends Model
         return $this->belongsToMany(Funcao::class, 'pessoa_salas', 'pessoa_id', 'funcao_id');
     }
 
-    public function funcao($id) : ?PessoaSala {
+    public function funcao($pessoaId) : ?PessoaSala {
         return PessoaSala::select('funcaos.nome as funcao_nome')
             ->join('funcaos', 'funcao.id', '=', 'pessoa_salas.funcao_id')
-            ->findOrFail($id);
+            ->where('pessoa_salas.pessoa_id', $pessoaId)
+            ->first();
     }
 
 }

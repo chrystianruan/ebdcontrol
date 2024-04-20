@@ -904,12 +904,8 @@ class AdminController extends Controller
     public function generatePdfToChamadasNotRealized($idClasse, $dateRequest) {
         $classeSelected = Sala::select('nome')->findOrFail($idClasse);
         $date = $dateRequest;
-        $pessoas = Pessoa::select("pessoas.nome as nome_pessoa", "funcaos.nome as nome_funcao")
-            ->whereJsonContains('id_sala', $idClasse)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-            ->orderBy('pessoas.nome')
-            ->get();
+
+        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($idClasse);
 
 
         return Pdf::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
