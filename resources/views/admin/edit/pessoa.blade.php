@@ -108,7 +108,7 @@
                             <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{ $pessoa->telefone }}">
                         </div>
                         <div class="div-add-sala" >
-                            <span style="font-weight: bold">Classes</span>
+                            <span style="font-weight: bold">Classes  (<span style="color: blue; font-weight: bolder">A classe <span style="color: red">não</span> pode ser repetida</span>;  <span style="color: blue; font-weight: bolder">As funções <span style="color: green">Professor, Aluno e Secretário/Classe</span> <span style="color: red">não</span> podem ser repetidas</span>) </span>
                             <hr style="margin: 5px">
                             <table style="width: 100%" id="table-add-unidade">
                                 <thead>

@@ -169,13 +169,28 @@ class PessoaService
     private function updatePessoaInSala(int $pessoaId, array $salas) : void {
         try {
             $this->clearPessoaSala($pessoaId);
+            $funcoesUnicas = [FuncaoEnum::ALUNO->value, FuncaoEnum::PROFESSOR->value, FuncaoEnum::SECRETARIO_CLASSE->value];
             foreach ($salas as $sala) {
-                $pessoaSala = new PessoaSala();
-                $pessoaSala->pessoa_id = $pessoaId;
-                $pessoaSala->sala_id = $sala['sala_id'];
-                $pessoaSala->funcao_id = $sala['funcao_id'];
-                $pessoaSala->active = true;
-                $pessoaSala->save();
+                $permission = true;
+                $funcaoPessoa = (int) $sala["funcao_id"];
+                if(in_array($funcaoPessoa, $funcoesUnicas)) {
+                    if ($this->checkFuncaoExists($pessoaId, (int) $sala['funcao_id'])) {
+                        $permission = false;
+                        Log::info("Funcão única repetida. Cadastro de pessoa_sala ignorado");
+                    }
+                }
+                if ($this->checkSalaExists($pessoaId, (int) $sala['sala_id'])) {
+                    $permission = false;
+                    Log::info("Sala repetida. Cadastro de pessoa_sala ignorado");
+                }
+                if ($permission) {
+                    $pessoaSala = new PessoaSala();
+                    $pessoaSala->pessoa_id = $pessoaId;
+                    $pessoaSala->sala_id = $sala['sala_id'];
+                    $pessoaSala->funcao_id = $sala['funcao_id'];
+                    $pessoaSala->active = true;
+                    $pessoaSala->save();
+                }
              }
         } catch (\Exception $e) {
             throw $e;
@@ -205,5 +220,24 @@ class PessoaService
         }
 
         return $array;
+    }
+
+    public function checkFuncaoExists($pessoaId, $funcaoId) : bool {
+        foreach ($this->pessoaRepository->getSalasOfPessoa($pessoaId) as $pessoaSala) {
+            if ($pessoaSala->funcao_id == $funcaoId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function checkSalaExists($pessoaId, $salaId) : bool {
+        foreach ($this->pessoaRepository->getSalasOfPessoa($pessoaId) as $pessoaSala) {
+            if ($pessoaSala->sala_id == $salaId) {
+                return true;
+            }
+        }
+        return false;
     }
 }
