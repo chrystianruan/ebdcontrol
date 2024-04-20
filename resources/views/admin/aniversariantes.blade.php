@@ -95,7 +95,7 @@
 
   <tbody>
       @foreach($pessoas as $p)
-        <tr @if (in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::SECRETARIO_ADMIN->value, array_column($p->funcoes->toArray(), 'id'))) style="background-color: #d95eff" @endif>
+        <tr @if (in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR_SUBSTITUTO->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::AUXILIAR_SALA->value, array_column($p->funcoes->toArray(), 'id'))) style="background-color: #d95eff" @endif>
             <td>{{$p -> nome}}</td>
             <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>{{date('d/m', strtotime($p -> data_nasc))}}</td>
             <td><ul>@foreach($p->salas as $key=>$sala) <li> {{ $sala->nome }} ({{ $p->funcoes[$key]['nome'] }})</li> @endforeach</ul></td>
