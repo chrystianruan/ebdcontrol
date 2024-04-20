@@ -10,18 +10,9 @@
 	@if($pessoa->responsavel != null)
 	<span class="pro2"> Menor de idade</span>
 	@endif
-	<img class="round"
-	src="@if($pessoa -> id_funcao == 1) /img/student.png
-	@elseif($pessoa -> id_funcao == 2) /img/teacher.png
-	@elseif($pessoa -> id_funcao == 3) /img/consultant.png
-	@elseif($pessoa -> id_funcao == 4) /img/secretary.png
-	@else /img/manager.png
 
-
-	@endif" alt="user" />
 	<h3>{{$pessoa -> nome}}	</h3>
-	<h4>{{$findSala -> nome}}</h4>
-	<h6 style="color: yellow">@if($pessoa->id_funcao == 1) Aluno @elseif($pessoa->id_funcao == 2) Professor @elseif($pessoa->id_funcao == 3) Secretário/Classe @elseif($pessoa->id_funcao == 4) Secretário/Adm @elseif($pessoa->id_funcao == 5) Superintendente @else Erro @endif</h6>
+	<h4>@foreach($pessoa->salas as $key=>$sala)@if($sala->id == auth()->user()->id_nivel) {{ $sala->nome }} ({{ $pessoa->funcoes[$key]['nome'] }}) @endif   @endforeach</h4>
 	<p> Idade: <span style="color: yellow">
 		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano

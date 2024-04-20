@@ -4,16 +4,18 @@
 
 @section('content')
     <link rel="stylesheet" href="/css/cadastroClasse.css">
+    <input type="hidden" value="{{ base64_encode(auth()->user()->congregacao_id) }}" id="congregacao">
+    <input type="hidden" value="{{ url('/') }}" id="url">
     <div class="row" style="margin: 2%">
         <div class="col-75">
             <div class="container">
-                <h2>Formulário de cadastro</h2>
+                <h2>Formulário de edição</h2>
                 <hr>
                 <form action="/admin/update/pessoa/{{$pessoa -> id}}" method="POST">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" id="list-salas" name="list_salas" value="{{ $salasOfPessoa }}">
                     <div class="col-50">
-
                         <h3>Informações Pessoais</h3>
                         @if ($errors->any())
                             <div class="alert">
@@ -34,15 +36,6 @@
                             <option @if($pessoa -> situacao == 1) selected @endif value="1">Ativo</option>
                             <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
                         </select>
-                        <label for="id_label_single">
-                            Classe
-
-                            <select class="select-classe" name="id_sala[]" multiple="multiple">
-                                @foreach($salas as $sala)
-                                    <option value="{{ $sala->id }}" @foreach($pessoa->id_sala as $ids) @if($ids == $sala->id) selected="selected" @endif @endforeach> {{ $sala->nome }}</option>
-                                @endforeach
-                            </select>
-                        </label>
 
                         <div class="input-field">
                             <label>Função <font style="color:red;font-weight: bold">*</font></label>
@@ -113,6 +106,41 @@
                         <div id="numero_pessoa">
                             <label for="fname"><i class="fa fa-phone"></i>N° de Telefone (com DDD) <span style="color: blue"></span> </label>
                             <input type="text" id="field" name="telefone" minlength=11 maxlength=11 pattern="([0-9]{11})" placeholder="Digite o n° de telefone" value="{{ $pessoa->telefone }}">
+                        </div>
+                        <div class="div-add-sala" >
+                            <span style="font-weight: bold">Classes  (<span style="color: blue; font-weight: bolder">A classe <span style="color: red">não</span> pode ser repetida</span>;  <span style="color: blue; font-weight: bolder">As funções <span style="color: green">Professor, Aluno e Secretário/Classe</span> <span style="color: red">não</span> podem ser repetidas</span>) </span>
+                            <hr style="margin: 5px">
+                            <table style="width: 100%" id="table-add-unidade">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Classe</th>
+                                        <th>Função</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody-add-classe">
+                                @foreach($salasOfPessoa as $sp)
+                                    <tr class="tr-tbody-add-classe" id="tr-{{ $sp->id }}">
+                                        <td><button class="btn-tr-tbody-delete-classe" type="button" id="{{ $sp->id }}"><i class="bx bx-trash" style="font-size: 1.6em"> </i></button></td>
+                                        <td>
+                                            <select id="select-classe-{{ $sp->id }}" class="select-classe">
+                                                @foreach($salas as $sala)
+                                                    <option value="{{ $sala->id }}" @if($sala->id == $sp->sala_id) selected @endif> {{ $sala->nome }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select id="select-funcao-{{ $sp->id }}" class="select-funcao">
+                                                @foreach($functions as $function)
+                                                    <option @if($sp->funcao_id == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
+                                                @endforeach
+                                            </select>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                            <button class="btn-adicionar-classe" id="btn-adicionar-classe" type="button">Adicionar classe</button>
                         </div>
                     </div>
 
@@ -194,12 +222,6 @@
         integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
         crossorigin="anonymous">
     </script>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
-    <script>
-
-    $(document).ready(function() {
-        $('.select-classe').select2();
-    });
-    </script>
+    <script src="/js/editPessoa.js"></script>
+    <script src="/js/updatePessoa.js"></script>
 @endsection

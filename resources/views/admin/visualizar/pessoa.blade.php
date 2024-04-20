@@ -16,17 +16,17 @@
 	@if($pessoa->responsavel != null)
 	<span class="pro2"> Menor de idade</span>
 	@endif
-	<img class="round"
-	src="@if($pessoa -> id_funcao == 1) /img/student.png
-	@elseif($pessoa -> id_funcao == 2) /img/teacher.png
-	@elseif($pessoa -> id_funcao == 3) /img/consultant.png
-	@elseif($pessoa -> id_funcao == 4) /img/secretary.png
-	@else /img/manager.png
 
-
-	@endif" alt="user" />
 	<h3>{{$pessoa -> nome}}	</h3>
-	<h4>@foreach($salas as $sala)@foreach($pessoa->id_sala as $ids) @if($sala->id == $ids) {{$sala->nome}}@if(count($pessoa->id_sala) > 1 && $pessoa->id_sala[0]),@endif  @endif @endforeach @endforeach</h4>
+
+    <hr>
+	<h4>
+
+        @foreach($pessoa->salas as $key=>$sala)
+            <p style="text-align: center">* {{ $sala->nome }} <span style="color: blue"> ({{ $pessoa->funcoes[$key]['nome'] }}) </span></p>
+        @endforeach
+
+    </h4>
 	<h6 style="color: yellow">{{ $pessoa->funcao_nome }}</h6>
 	<p> Idade: <span class="marker">
 		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
