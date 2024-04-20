@@ -34,7 +34,7 @@
         @foreach($pessoas as $p)
         <tr @if($p->id_funcao == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
         <td>{{ $p -> nome}}</td>
-        <td>{{ $p->funcao_nome }}</td>
+        <td>{{ $p->nome_funcao }}</td>
         <td>
             <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
                 <option selected value="0" style="background-color: red">Não</option>
