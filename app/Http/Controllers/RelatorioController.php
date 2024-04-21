@@ -52,6 +52,7 @@ class RelatorioController extends Controller {
         $dataArray = json_decode($request->data, true);
         $dataFormated = [];
         $funcoes = Funcao::all();
+        $funcao = "Secretário/Classe";
         foreach ($dataArray as $data) {
             foreach ($funcoes as $func) {
                 if ($func->id == $data['id_funcao']) {

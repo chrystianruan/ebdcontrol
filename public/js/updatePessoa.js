@@ -36,15 +36,17 @@ $(document).on("change", ".select-funcao", function() {
 $(document).on("click", ".btn-tr-tbody-delete-classe", function() {
     var check = confirm("Tem certeza que deseja excluir essa classe? ");
     if (check) {
-        if (classes.length > 1) {
+        if (classes.length == 1 && this.id == classes[0].id) {
+            alert("Deve existir pelo menos um registro de classe")
+        } else {
             $("#tr-"+this.id).remove();
             let index = classes.findIndex(obj => obj.id == this.id);
-            classes.splice(index, 1)
-            $('#list-salas').val(JSON.stringify(classes));
-        } else {
-            alert("Deve existir pelo menos um registro de classe")
+            if (index != -1) {
+                classes.splice(index, 1)
+                $('#list-salas').val(JSON.stringify(classes));
+            }
         }
-
+        console.log(classes)
     }
 });
 
