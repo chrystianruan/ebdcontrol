@@ -37,15 +37,6 @@
                             <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
                         </select>
 
-                        <div class="input-field">
-                            <label>Função <font style="color:red;font-weight: bold">*</font></label>
-                            <select name="id_funcao" required>
-                                <option disabled value="">Selecionar</option>
-                                @foreach($functions as $function)
-                                    <option @if($pessoa->id_funcao == $function->id) selected @endif value="{{ $function->id}}">{{ $function->nome }}</option>
-                                @endforeach
-                            </select>
-                        </div>
 
                         <label for="nome"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{$pessoa->nome}}">
@@ -216,12 +207,9 @@
 
         </div>
     </div>
-
-    <script
-        src="https://code.jquery.com/jquery-3.6.0.js"
-        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-        crossorigin="anonymous">
-    </script>
+    @push('script-edit-pessoa')
+        <script src="/js/cadastroPessoa.js"></script>
     <script src="/js/editPessoa.js"></script>
     <script src="/js/updatePessoa.js"></script>
+    @endpush
 @endsection

@@ -167,6 +167,7 @@
   </script>
   @stack('scripts-relatorio-presenca')
   @stack('scripts-cadastro')
+  @stack('script-edit-pessoa')
 
 </body>
 </html>
