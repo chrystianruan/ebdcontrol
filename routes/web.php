@@ -74,7 +74,7 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::post('/master/filtro/classe', [MasterController::class, 'searchSalaMaster']);
     Route::get('/master/edit/classe/{id}', [MasterController::class, 'editSalaMaster']);
     Route::put('/master/update/classe/{id}', [MasterController::class, 'updateSalaMaster']);
-    Route::delete('/master/filtro/classe/{id}', [MasterController::class, 'destroySalaMaster']);
+//    Route::delete('/master/filtro/classe/{id}', [MasterController::class, 'destroySalaMaster']);
 
     Route::post('/master/liberar-chamada', [ChamadaController::class, 'liberarChamada']);
     Route::post('/master/liberar-cadastro', [PessoaController::class, 'liberarLinkCadastroGeral']);
@@ -98,7 +98,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);
     Route::get('/admin/edit/pessoa/{id}', [AdminController::class, 'editPessoa']);
     Route::put('/admin/update/pessoa/{id}', [PessoaController::class, 'update']);
-    Route::delete('/admin/filtro/pessoa/{id}', [AdminController::class, 'destroyPessoa']);
+//    Route::delete('/admin/filtro/pessoa/{id}', [AdminController::class, 'destroyPessoa']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);
     Route::get('/admin/financeiro/filtro', [AdminController::class, 'searchFinanceiro']);

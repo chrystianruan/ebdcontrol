@@ -80,14 +80,10 @@ class MasterController extends Controller
             ->orderBy('nome')
             ->get();
         }
-        $pessoas = Pessoa::selectRaw('id_sala as ids, count(id) as quantidade')
-                            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                            ->groupBy('id_sala')
-                            ->get();
         $classes = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy("nome")
             ->get();
-        return view('/master/filtro/classe',['salas' => $salas, 'pessoas' => $pessoas, 'salap' => $salap, 'classes' => $classes]);
+        return view('/master/filtro/classe',['salas' => $salas, 'salap' => $salap, 'classes' => $classes]);
     }
 
     public function editSalaMaster($id) {
