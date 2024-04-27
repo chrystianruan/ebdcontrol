@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\FuncaoEnum;
+use App\Http\Enums\TipoDelete;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
@@ -151,6 +152,19 @@ class PessoaService
         }
     }
 
+    public function delete(int $id) {
+        try {
+            $this->clearPessoaSala($id, TipoDelete::SOFT->value);
+            $pessoa = Pessoa::findOrFail($id);
+            $pessoa->delete();
+
+            return redirect()->back()->with('msg', 'Pessoa foi removida com sucesso');
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            throw $e;
+        }
+    }
+
 
     private function storePessoaInSala(int $pessoaId, int $salaId) : void {
         try {
@@ -168,7 +182,7 @@ class PessoaService
 
     private function updatePessoaInSala(int $pessoaId, array $salas) : void {
         try {
-            $this->clearPessoaSala($pessoaId);
+            $this->clearPessoaSala($pessoaId, TipoDelete::FORCE->value);
             $funcoesUnicas = [FuncaoEnum::ALUNO->value, FuncaoEnum::PROFESSOR->value, FuncaoEnum::SECRETARIO_CLASSE->value];
             foreach ($salas as $sala) {
                 $permission = true;
@@ -197,12 +211,16 @@ class PessoaService
         }
     }
 
-    private function clearPessoaSala(int $pessoaId) : void {
+    private function clearPessoaSala(int $pessoaId, int $tipoDelete) : void {
         try {
             $salasPessoa = $this->pessoaRepository->getSalasOfPessoa($pessoaId);
             foreach ($salasPessoa as $sp) {
                 $pessoaSala = PessoaSala::findOrFail($sp->id);
-                $pessoaSala->delete();
+                if ($tipoDelete == TipoDelete::FORCE->value) {
+                    $pessoaSala->forceDelete();
+                } else {
+                    $pessoaSala->delete();
+                }
             }
         } catch (\Exception $exception) {
             throw $exception;
