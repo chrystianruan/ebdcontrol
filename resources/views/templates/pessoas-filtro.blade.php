@@ -5,6 +5,7 @@
 
     <form action="/filter-pessoa" method="POST">
         @csrf
+        <input type="hidden" value="{{ $view }}" name="view">
         <div class="fields">
             <div class="itens">
                 <legend class="title">Filtrar por: </legend>
