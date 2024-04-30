@@ -3,9 +3,8 @@
 
 <div style="margin: 15px">
 
-    <form action="filter-pessoa" method="POST">
+    <form action="/filter-pessoa" method="POST">
         @csrf
-        <input type="hidden" value="{{ $view }}" name="view">
         <div class="fields">
             <div class="itens">
                 <legend class="title">Filtrar por: </legend>
@@ -192,18 +191,22 @@
                                     @endforeach
                                 </ul>
                             </div>
-                        </div></td>
+                        </div>
+                    </td>
 
 
-                    <td style="min-width:170px;"><div style="text-align: center">
+                    <td style="min-width:100px;"><div style="text-align: center">
                             <a href="/admin/visualizar/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
                             <a href="/admin/edit/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
 
-                            {{--            <form action="/admin/filtro/pessoa/{{$pessoa -> id}}" style="float:left; " method="POST">--}}
-                            {{--            @csrf--}}
-                            {{--            @method('DELETE')--}}
-                            {{--            <button type="submit" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>--}}
-                            {{--            </form> --}}
+                            @if(auth()->user()->id_nivel == 1)
+                            <form action="/delete-pessoa/{{$pessoa -> id}}" id="form-{{ $pessoa->id }}" style="float:left; " method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" value="{{ $view }}" name="view">
+                                <button class="btn-del-pessoa" type="button" id="btn-{{ $pessoa->id }}" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>
+                            </form>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -216,3 +219,6 @@
             <p ><i class='bx bx-stop'></i>Não há pessoas cadastradas para os filtros escolhidos!</p>
         </div>
     @endif
+    @push('pessoa-filtro')
+    <script src="/js/pessoa-filtro.js"></script>
+    @endpush

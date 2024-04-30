@@ -120,6 +120,20 @@ class MasterController extends Controller
 
     }
 
+    public function indexConfiguracoesPessoas()
+    {
+        $pessoas = Pessoa::orderBy('nome')
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->get();
+        $salas = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')
+            ->get();
+        $dataAtual = date('Y-m-d');
+        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+        return view('/master/configuracoes/pessoas', ['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
+    }
+
 
 
 }

@@ -90,10 +90,6 @@ class PessoaController extends Controller
             'route' => $route]);
     }
 
-    public function indexConfiguracoesPessoas()
-    {
-        return view('/master/configuracoes/pessoas');
-    }
 
     public function store(StorePessoaRequest $request) {
         return $this->pessoaService->store($request);
@@ -103,8 +99,8 @@ class PessoaController extends Controller
         return $this->pessoaService->update($request);
     }
 
-    public function delete(int $id) {
-        return $this->pessoaService->delete($id);
+    public function delete(int $id, Request $request) {
+        return $this->pessoaService->delete($id, $request);
     }
 
     public function search(Request $request) {
