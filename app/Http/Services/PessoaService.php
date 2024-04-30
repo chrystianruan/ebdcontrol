@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Http\Controllers\Controller;
 use App\Http\Enums\FuncaoEnum;
+use App\Http\Enums\TipoDelete;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
@@ -151,6 +152,29 @@ class PessoaService
         }
     }
 
+    public function delete(int $id, Request $request) {
+        try {
+            $this->clearPessoaSala($id, TipoDelete::SOFT->value);
+            $pessoa = Pessoa::findOrFail($id);
+            $pessoa->delete();
+
+            $pessoas = Pessoa::orderBy('nome')
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->get();
+            $salas = Sala::where('id', '>', 2)
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('nome')
+                ->get();
+            $dataAtual = date('Y-m-d');
+            $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+            return view($request->view, ['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual])->with('msg', 'Pessoa foi removida com sucesso', );
+        } catch (\Exception $e) {
+            Log::info($e->getMessage());
+            throw $e;
+        }
+    }
+
 
     private function storePessoaInSala(int $pessoaId, int $salaId) : void {
         try {
@@ -168,7 +192,7 @@ class PessoaService
 
     private function updatePessoaInSala(int $pessoaId, array $salas) : void {
         try {
-            $this->clearPessoaSala($pessoaId);
+            $this->clearPessoaSala($pessoaId, TipoDelete::FORCE->value);
             $funcoesUnicas = [FuncaoEnum::ALUNO->value, FuncaoEnum::PROFESSOR->value, FuncaoEnum::SECRETARIO_CLASSE->value];
             foreach ($salas as $sala) {
                 $permission = true;
@@ -197,12 +221,16 @@ class PessoaService
         }
     }
 
-    private function clearPessoaSala(int $pessoaId) : void {
+    private function clearPessoaSala(int $pessoaId, int $tipoDelete) : void {
         try {
             $salasPessoa = $this->pessoaRepository->getSalasOfPessoa($pessoaId);
             foreach ($salasPessoa as $sp) {
                 $pessoaSala = PessoaSala::findOrFail($sp->id);
-                $pessoaSala->delete();
+                if ($tipoDelete == TipoDelete::FORCE->value) {
+                    $pessoaSala->forceDelete();
+                } else {
+                    $pessoaSala->delete();
+                }
             }
         } catch (\Exception $exception) {
             throw $exception;

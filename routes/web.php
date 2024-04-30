@@ -81,6 +81,9 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::delete('/master/apagar-dia-chamada/{id}', [ChamadaController::class, 'apagarChamadaDia']);
     Route::get('/master/chamadas-dia', [ChamadaController::class, 'chamadasLiberadaMes']);
 
+    Route::get('/master/configuracoes/pessoas', [MasterController::class, 'indexConfiguracoesPessoas']);
+    Route::delete('/delete-pessoa/{id}', [PessoaController::class, 'delete']);
+
 
 });
 
@@ -94,11 +97,10 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/cadastro/pessoa', [PessoaController::class, 'indexCadastroAdmin']);
     Route::post('/admin/cadastro/pessoa', [PessoaController::class, 'store'])->name('cadastro.pessoa.admin');
     Route::get('/admin/filtro/pessoa', [AdminController::class, 'showFilterPessoa']);
-    Route::post('/admin/filtro/pessoa', [AdminController::class, 'searchPessoa']);
+    Route::post('/filter-pessoa', [PessoaController::class, 'search']);
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);
     Route::get('/admin/edit/pessoa/{id}', [AdminController::class, 'editPessoa']);
     Route::put('/admin/update/pessoa/{id}', [PessoaController::class, 'update']);
-//    Route::delete('/admin/filtro/pessoa/{id}', [AdminController::class, 'destroyPessoa']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);
     Route::get('/admin/financeiro/filtro', [AdminController::class, 'searchFinanceiro']);

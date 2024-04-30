@@ -20,9 +20,10 @@
     <canvas id="myChart2" width="500" height="500"></canvas>
 </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+@push('master')
 <script src="/js/master.js"></script>
+@endpush
+@push('graphs')
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {
@@ -97,4 +98,5 @@
     });
 
 </script>
+@endpush
 @endsection

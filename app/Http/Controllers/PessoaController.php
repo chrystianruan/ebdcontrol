@@ -90,6 +90,7 @@ class PessoaController extends Controller
             'route' => $route]);
     }
 
+
     public function store(StorePessoaRequest $request) {
         return $this->pessoaService->store($request);
     }
@@ -98,7 +99,11 @@ class PessoaController extends Controller
         return $this->pessoaService->update($request);
     }
 
-    public function searchPessoa(Request $request) {
+    public function delete(int $id, Request $request) {
+        return $this->pessoaService->delete($id, $request);
+    }
+
+    public function search(Request $request) {
         $nome = request('nome');
         $sexo = request('sexo');
         $paternidade_maternidade = request('paternidade_maternidade');
@@ -113,7 +118,7 @@ class PessoaController extends Controller
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        $pessoas = Pessoa::select('pessoas.*');
+        $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
 
         if ($request->nome) {
             $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
@@ -128,11 +133,11 @@ class PessoaController extends Controller
         }
 
         if ($request->sala) {
-            $pessoas = $pessoas->whereJsonContains('id_sala', $request->sala);
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
         }
 
         if($request->id_funcao) {
-            $pessoas = $pessoas->where('id_funcao', $request->id_funcao);
+            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
         }
 
         if($request->interesse) {
@@ -149,10 +154,11 @@ class PessoaController extends Controller
         }
 
         $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')
+            ->orderBy('pessoas.nome')
+            ->groupBy('pessoa_id')
             ->get();
 
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
+        return view($request->view, ['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
             'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
             'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao, 'sala1' => $sala1,
             'dataAtual' => $dataAtual]);

@@ -42,8 +42,13 @@ html {
   font-size: 17px;
 }
 
-i {
+.fa {
   margin: 3px;
+    color: #fff;
+}
+
+.dropdown-content a i {
+    color: black;
 }
 
 .topnav a.active {

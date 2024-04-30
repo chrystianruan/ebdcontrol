@@ -128,66 +128,66 @@ class AdminController extends Controller
         return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
     }
 
-    public function searchPessoa(Request $request) {
-        $nome = request('nome');
-        $sexo = request('sexo');
-        $paternidade_maternidade = request('paternidade_maternidade');
-        $sala1 = request('sala');
-        $interesse = request('interesse');
-        $id_funcao = request('id_funcao');
-        $situacao = request('situacao');
-        $niver = request('niver');
-        $salas = Sala::where('id', '>', 2)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')->get();
-        $dataAtual = date('Y-m-d');
-        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-        $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
-
-        if ($request->nome) {
-            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
-        }
-
-        if ($request->sexo) {
-            $pessoas = $pessoas->where('sexo', $request->sexo);
-        }
-
-        if ($request->paternidade_maternidade) {
-            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
-        }
-
-        if ($request->sala) {
-            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
-        }
-
-        if($request->id_funcao) {
-            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
-        }
-
-        if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse)
-            ->where('id_funcao', '<>', 2);
-        }
-
-        if ($request->situacao) {
-            $pessoas = $pessoas->where('situacao', $request->situacao);
-        }
-
-        if ($request->niver) {
-            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
-        }
-
-        $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('pessoas.nome')
-            ->groupBy('pessoa_id')
-            ->get();
-
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
-            'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
-            'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao, 'sala1' => $sala1,
-            'dataAtual' => $dataAtual]);
-    }
+//    public function searchPessoa(Request $request) {
+//        $nome = request('nome');
+//        $sexo = request('sexo');
+//        $paternidade_maternidade = request('paternidade_maternidade');
+//        $sala1 = request('sala');
+//        $interesse = request('interesse');
+//        $id_funcao = request('id_funcao');
+//        $situacao = request('situacao');
+//        $niver = request('niver');
+//        $salas = Sala::where('id', '>', 2)
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->orderBy('nome')->get();
+//        $dataAtual = date('Y-m-d');
+//        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+//
+//        $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
+//
+//        if ($request->nome) {
+//            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
+//        }
+//
+//        if ($request->sexo) {
+//            $pessoas = $pessoas->where('sexo', $request->sexo);
+//        }
+//
+//        if ($request->paternidade_maternidade) {
+//            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
+//        }
+//
+//        if ($request->sala) {
+//            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
+//        }
+//
+//        if($request->id_funcao) {
+//            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
+//        }
+//
+//        if($request->interesse) {
+//            $pessoas = $pessoas->where('interesse', $request->interesse)
+//            ->where('id_funcao', '<>', 2);
+//        }
+//
+//        if ($request->situacao) {
+//            $pessoas = $pessoas->where('situacao', $request->situacao);
+//        }
+//
+//        if ($request->niver) {
+//            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
+//        }
+//
+//        $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->orderBy('pessoas.nome')
+//            ->groupBy('pessoa_id')
+//            ->get();
+//
+//        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
+//            'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
+//            'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao, 'sala1' => $sala1,
+//            'dataAtual' => $dataAtual]);
+//    }
 
 
 
@@ -218,12 +218,6 @@ class AdminController extends Controller
         $formations = Formation::all();
         $salasOfPessoa = $this->pessoaRepository->getSalasOfPessoa($id);
         return view('/admin/edit/pessoa', ['pessoa' => $pessoa, 'functions' => $functions, 'ufs' => $ufs, 'dataAtual' => $dataAtual, 'salas' => $salas, 'publicos' => $publicos, 'formations' => $formations, 'salasOfPessoa' => $salasOfPessoa]);
-
-    }
-
-    public function destroyPessoa($id) {
-        Pessoa::findOrFail($id)->delete();
-        return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa deletado com sucesso');
 
     }
 
