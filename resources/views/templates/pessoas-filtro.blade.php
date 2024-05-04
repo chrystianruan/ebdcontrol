@@ -199,15 +199,6 @@
                     <td style="min-width:100px;"><div style="text-align: center">
                             <a href="/admin/visualizar/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
                             <a href="/admin/edit/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-
-                            @if(auth()->user()->id_nivel == 1)
-                            <form action="/delete-pessoa/{{$pessoa -> id}}" id="form-{{ $pessoa->id }}" style="float:left; " method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <input type="hidden" value="{{ $view }}" name="view">
-                                <button class="btn-del-pessoa" type="button" id="btn-{{ $pessoa->id }}" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>
-                            </form>
-                            @endif
                         </div>
                     </td>
                 </tr>

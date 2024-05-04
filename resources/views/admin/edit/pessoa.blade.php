@@ -16,7 +16,7 @@
                     @method('PUT')
                     <input type="hidden" id="list-salas" name="list_salas" value="{{ $salasOfPessoa }}">
                     <div class="col-50">
-                        <h3>Informações Pessoais</h3>
+
                         @if ($errors->any())
                             <div class="alert">
                                 <ul>
@@ -27,16 +27,21 @@
                             </div>
                         @endif
 
+                        <h3>Operações com o usuário</h3>
+                            <div>
+                                <label>Situação (Ativo/Inativo) </label>
+                                <select name="situacao" required>
+                                    <option @if($pessoa -> situacao == 1) selected @endif value="1">Ativo</option>
+                                    <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
+                                </select>
+                            </div>
+<hr>
+                            <h3>Informações Pessoais</h3>
+
+
                         <label style="padding: 5px; background-color: #C3E6CB; border-radius: 10px; border: 1px solid #ccc">
                             <input type="checkbox"  id="scales" @if($pessoa->responsavel) checked @endif name="scales"> Menor de idade
                         </label>
-
-                        <label>Situação</label>
-                        <select name="situacao" required>
-                            <option @if($pessoa -> situacao == 1) selected @endif value="1">Ativo</option>
-                            <option @if($pessoa -> situacao == 2) selected @endif value="2">Inativo</option>
-                        </select>
-
 
                         <label for="nome"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{$pessoa->nome}}">
@@ -134,7 +139,7 @@
                             <button class="btn-adicionar-classe" id="btn-adicionar-classe" type="button">Adicionar classe</button>
                         </div>
                     </div>
-
+<hr>
                     <div class="col-50">
                         <h3>Informações Gerais</h3>
 
@@ -158,7 +163,7 @@
                         </select>
                     </div>
 
-
+<hr>
 
                     <div class="col-50" id="registerp" @if($pessoa->interesse == 2) style="display:none" @endif>
                         <h3>Informações necessárias para interessado(a) em ser <span style="color: blue">possível</span> professor</h3>
@@ -200,6 +205,29 @@
                             @endforeach
                         </select>
                     </div>
+                    @if(auth()->user()->id_nivel == 1)
+                    <hr>
+                    <div>
+                        <h3 style="color: red">Apagar pessoa do sistema</h3>
+
+                        <p style="margin: 3px 0">Essa função só deve ser usada dentro do sistema se houver a real necessidade de exclusão definitiva, como por exemplo:</p>
+                        <ul style="margin-left: 20px; font-weight: bold">
+                            <li>Duplicação de cadastro</li>
+                            <li>Saída definitiva da pessoa da congregação</li>
+                        </ul>
+                        <p style="margin: 3px 0">Só clique no botão abaixo se tiver a real certeza de que há necessidade de apagar esta pessoa</p>
+
+{{--                        <form action="/delete-pessoa/{{$pessoa -> id}}" id="form-{{ $pessoa->id }}" style="float:left; " method="POST">--}}
+{{--                            @csrf--}}
+{{--                            @method('DELETE')--}}
+{{--                            <input type="hidden" value="{{ $view }}" name="view">--}}
+{{--                            <button class="btn-del-pessoa" type="button" id="btn-{{ $pessoa->id }}" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>--}}
+{{--                        </form>--}}
+                            <div style="margin: 9px 0">
+                                <button type=button style="background-color: red; padding: 10px; border-radius: 5px; border: 1px solid #ccc; color:white; font-weight: bolder; cursor: pointer">Apagar pessoa</button>
+                            </div>
+                    </div>
+                    @endif
                     <input type="submit" value="Atualizar" class="btn">
                 </form>
             </div>
