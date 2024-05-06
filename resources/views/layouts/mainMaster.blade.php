@@ -85,7 +85,6 @@ function myFunction() {
 </script>
 @stack('master')
 @stack('graphs')
-@stack('pessoa-filtro')
 
 </body>
 </html>

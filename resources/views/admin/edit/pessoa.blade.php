@@ -205,7 +205,9 @@
                             @endforeach
                         </select>
                     </div>
-                    @if(auth()->user()->id_nivel == 1)
+                    <input type="submit" value="Atualizar" class="btn">
+                </form>
+                @if(auth()->user()->id_nivel == 1)
                     <hr>
                     <div>
                         <h3 style="color: red">Apagar pessoa do sistema</h3>
@@ -217,19 +219,16 @@
                         </ul>
                         <p style="margin: 3px 0">Só clique no botão abaixo se tiver a real certeza de que há necessidade de apagar esta pessoa</p>
 
-{{--                        <form action="/delete-pessoa/{{$pessoa -> id}}" id="form-{{ $pessoa->id }}" style="float:left; " method="POST">--}}
-{{--                            @csrf--}}
-{{--                            @method('DELETE')--}}
-{{--                            <input type="hidden" value="{{ $view }}" name="view">--}}
-{{--                            <button class="btn-del-pessoa" type="button" id="btn-{{ $pessoa->id }}" style="border: none; font-size: 1em; background: none"><i style="font-size: 1.8em; margin: 1px; cursor:pointer; margin: 5px; float: left" class='bx bx-trash-alt icon'></i> </button>--}}
-{{--                        </form>--}}
+                        <form action="/delete-pessoa/{{$pessoa -> id}}" id="form-{{ $pessoa->id }}" method="POST">
+                            @csrf
+                            @method('DELETE')
                             <div style="margin: 9px 0">
-                                <button type=button style="background-color: red; padding: 10px; border-radius: 5px; border: 1px solid #ccc; color:white; font-weight: bolder; cursor: pointer">Apagar pessoa</button>
+                                <button type=button class="btn-del-pessoa"  id="btn-{{ $pessoa->id }}" style="background-color: red; padding: 10px; border-radius: 5px; border: 1px solid #ccc; color:white; font-weight: bolder; cursor: pointer">Apagar pessoa <i style="margin: 1px; cursor:pointer; margin: 5px;" class='bx bx-trash-alt icon'></i></button>
                             </div>
+                        </form>
+
                     </div>
-                    @endif
-                    <input type="submit" value="Atualizar" class="btn">
-                </form>
+                @endif
             </div>
 
 
@@ -239,5 +238,6 @@
         <script src="/js/cadastroPessoa.js"></script>
     <script src="/js/editPessoa.js"></script>
     <script src="/js/updatePessoa.js"></script>
+        <script src="/js/deletePessoa.js"></script>
     @endpush
 @endsection

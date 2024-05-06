@@ -152,23 +152,13 @@ class PessoaService
         }
     }
 
-    public function delete(int $id, Request $request) {
+    public function delete(int $id) {
         try {
             $this->clearPessoaSala($id, TipoDelete::SOFT->value);
             $pessoa = Pessoa::findOrFail($id);
             $pessoa->delete();
 
-            $pessoas = Pessoa::orderBy('nome')
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->get();
-            $salas = Sala::where('id', '>', 2)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->orderBy('nome')
-                ->get();
-            $dataAtual = date('Y-m-d');
-            $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-            return view($request->view, ['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual])->with('msg', 'Pessoa foi removida com sucesso', );
+            return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi deletada com sucesso');
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             throw $e;

@@ -211,6 +211,3 @@
             <p ><i class='bx bx-stop'></i>Não há pessoas cadastradas para os filtros escolhidos!</p>
         </div>
     @endif
-    @push('pessoa-filtro')
-    <script src="/js/pessoa-filtro.js"></script>
-    @endpush
