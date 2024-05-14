@@ -38,4 +38,9 @@ class ChamadaController extends Controller
             'response' => 'Dia de chamada apagado com sucesso'
         ], 201);
     }
+
+    public function marcarPresencas(Request $request){
+        $presencas = $request->presencas;
+
+    }
 }
