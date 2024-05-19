@@ -39,8 +39,4 @@ class ChamadaController extends Controller
         ], 201);
     }
 
-    public function marcarPresencas(Request $request){
-        $presencas = $request->presencas;
-
-    }
 }

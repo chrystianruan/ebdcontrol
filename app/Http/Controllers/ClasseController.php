@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\TipoPresenca;
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Http\Services\PessoaService;
+use App\Http\Services\PresencaPessoaService;
 use App\Models\ChamadaDiaCongregacao;
 use Illuminate\Http\Request;
 use App\Models\Formation;
@@ -21,6 +23,7 @@ use Carbon\Carbon;
 use App\Http\Services\RelatorioService;
 use DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class ClasseController extends Controller
 {
@@ -31,13 +34,16 @@ class ClasseController extends Controller
     protected $pessoaService;
     protected $chamadaDiaCongregacaoRepository;
     protected $pessoaRepository;
+    protected $presencaPessoaService;
 
-    public function __construct(GeneralController $generalController,
-                                RelatorioService $relatorioService,
-    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
-    ChamadaService $chamadaService,
-    PessoaService $pessoaService,
-    PessoaRepository $pessoaRepository,
+    public function __construct(
+        GeneralController $generalController,
+        RelatorioService $relatorioService,
+        ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+        ChamadaService $chamadaService,
+        PessoaService $pessoaService,
+        PessoaRepository $pessoaRepository,
+        PresencaPessoaService $presencaPessoaService,
     )
     {
         $this->generalController = $generalController;
@@ -46,6 +52,7 @@ class ClasseController extends Controller
         $this->chamadaService = $chamadaService;
         $this->pessoaService = $pessoaService;
         $this->pessoaRepository = $pessoaRepository;
+        $this->presencaPessoaService = $presencaPessoaService;
     }
 
     public function indexClasse()
@@ -208,15 +215,9 @@ class ClasseController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
 
-        if ($chamadas->count() == 1) {
+        if ($chamadas->count() > 0) {
             return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
         }
-//        $pessoas = DB::table('pessoas')
-//            ->select('nome', 'data_nasc', 'id_funcao')
-//            ->whereJsonContains('id_sala', '' . $sala)
-//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-//            ->where('situacao', '=', 1)
-//            ->orderBy('nome')->get();
 
         $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
 
@@ -225,6 +226,9 @@ class ClasseController extends Controller
         if ($validateRequest) {
             return redirect()->back()->with('msg2', $validateRequest);
         }
+
+        try {
+        $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
 
         $chamada = new Chamada;
         $chamada->id_sala = $sala;
@@ -244,6 +248,11 @@ class ClasseController extends Controller
         $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
 
         return redirect('/classe/todas-chamadas')->with('msg', $result);
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
+        }
 
     }
 
