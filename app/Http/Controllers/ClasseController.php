@@ -6,7 +6,10 @@ use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Http\Services\PessoaService;
+use App\Mail\ChamadaRealizadaMail;
+use App\Mail\PessoaCadastradaMail;
 use App\Models\ChamadaDiaCongregacao;
+use App\Models\Congregacao;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -21,6 +24,7 @@ use Carbon\Carbon;
 use App\Http\Services\RelatorioService;
 use DB;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Mail;
 
 class ClasseController extends Controller
 {
@@ -242,6 +246,12 @@ class ClasseController extends Controller
         $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
 
         $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
+        $salaNome = Sala::findOrFail((int) $chamada->id_sala)->nome;
+        $congregacaoNome = Congregacao::findOrFail((int) $chamada->congregacao_id)->nome;
+
+        $email = new ChamadaRealizadaMail($salaNome, $congregacaoNome);
+        Mail::to('chrystianr37@gmail.com')
+            ->send($email);
 
         return redirect('/classe/todas-chamadas')->with('msg', $result);
 
