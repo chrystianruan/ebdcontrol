@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    background-color: #2D2747;
+    border: 1px solid #ccc;
+    color: white;
+    padding: 20px;
+
+}
+.ebd-control-logo {
+    width: 70px;
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    flex-direction: column;
+}

@@ -166,6 +166,10 @@ Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
     Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
 });
 
+Route::get('/teste-email', function() {
+    return view('emails.pessoaCadastrada', ['pessoaNome' => 'Chrystian', 'congregacaoNome' => 'Tempolo Sede']);
+});
+
 
 
 

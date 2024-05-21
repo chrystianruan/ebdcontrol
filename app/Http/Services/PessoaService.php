@@ -9,6 +9,9 @@ use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
 use App\Http\Requests\UpdatePessoaRequest;
+use App\Mail\EmailToAdminSistema;
+use App\Mail\PessoaCadastradaMail;
+use App\Models\Congregacao;
 use App\Models\Formation;
 use App\Models\Funcao;
 use App\Models\LinkCadastroGeral;
@@ -22,6 +25,7 @@ use FontLib\TrueType\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules\Enum;
 
 class PessoaService
@@ -103,6 +107,11 @@ class PessoaService
 
             $pessoaCadastrada->hash = null;
             $pessoaCadastrada->save();
+
+            $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
+            $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
+            Mail::to('chrystianr37@gmail.com')
+                ->send($email);
 
             return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
         } catch (\Exception $exception) {
