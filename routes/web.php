@@ -47,7 +47,7 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::post('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::get('/classe/visualizar-pessoa/{id}', [ClasseController::class, 'showPessoaClasse']);
     Route::get('/classe/chamada-dia', [ClasseController::class, 'indexChamadaClasse']);
-    Route::post('/classe/chamada-dia', [ClasseController::class, 'storeChamadaClasse']);
+    Route::post('/classe/chamada-dia', [ChamadaController::class, 'realizarChamada']);
     Route::get('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
     Route::post('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
     Route::get('/classe/visualizar-chamada/{id}', [ClasseController::class, 'showChamadaClasse']);

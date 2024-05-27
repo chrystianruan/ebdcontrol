@@ -21,7 +21,7 @@ class PresencaPessoaRepository
     }
 
     public function filterPresencas(int $salaId, int $month, int $year, string $createdAt, int $tipoPresenca, int $funcaoId, bool $presente) :  ?Collection {
-        $presencas = DB::table("presenca_pessoas");
+        $presencas = PresencaPessoa::select('presenca_pessoas.*');
         if ($salaId) {
             $presencas = $presencas->where('sala_id', $salaId);
         }
@@ -45,4 +45,6 @@ class PresencaPessoaRepository
         return $presencas->get();
 
     }
+
+
 }

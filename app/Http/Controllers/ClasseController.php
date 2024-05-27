@@ -89,9 +89,16 @@ class ClasseController extends Controller
         $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->id_nivel);
         $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->id_nivel);
 
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
         return view('/classe/dashboard', ['niverMes' => $niverMes, 'alunosInativos' => $alunosInativos,
             'chamadaDia' => $chamadaDia, 'interesseProf' => $interesseProf, 'idadesPessoas' => $idadesPessoas, 'formacoes' => $formacoes,
-            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes]);
+            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes, 'dateChamadaDia' => $dateChamadaDia]);
     }
 
     public function indexCadastroClasse()
@@ -208,53 +215,53 @@ class ClasseController extends Controller
             'dateChamadaDia' => $dateChamadaDia]);
     }
 
-    public function storeChamadaClasse(Request $request) {
-        $sala = auth()->user()->id_nivel;
-        $chamadas = Chamada::where('id_sala', '=', $sala)
-            ->whereDate('created_at', Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-
-        if ($chamadas->count() > 0) {
-            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
-        }
-
-        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
-
-        $dataToInt = $this->chamadaService->convertToInt($request);
-        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
-        if ($validateRequest) {
-            return redirect()->back()->with('msg2', $validateRequest);
-        }
-
-        try {
-        $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
-
-        $chamada = new Chamada;
-        $chamada->id_sala = $sala;
-        $chamada->nomes = $request->pessoas_presencas;
-        $chamada->matriculados = $pessoas->count();
-        $chamada->presentes = $dataToInt['presentes'];
-        $chamada->visitantes = $dataToInt['visitantes'];
-        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
-        $chamada->biblias = $dataToInt['biblias'];
-        $chamada->revistas = $dataToInt['revistas'];
-        $chamada->observacoes = $request->observacoes;
-        $chamada->congregacao_id = auth()->user()->congregacao_id;
-        $chamada->save();
-
-        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
-
-        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
-
-        return redirect('/classe/todas-chamadas')->with('msg', $result);
-
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
-        }
-
-    }
+//    public function storeChamadaClasse(Request $request) {
+//        $sala = auth()->user()->id_nivel;
+//        $chamadas = Chamada::where('id_sala', '=', $sala)
+//            ->whereDate('created_at', Carbon::today())
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->get();
+//
+//        if ($chamadas->count() > 0) {
+//            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
+//        }
+//
+//        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
+//
+//        $dataToInt = $this->chamadaService->convertToInt($request);
+//        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
+//        if ($validateRequest) {
+//            return redirect()->back()->with('msg2', $validateRequest);
+//        }
+//
+//        try {
+//        $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
+//
+//        $chamada = new Chamada;
+//        $chamada->id_sala = $sala;
+//        $chamada->nomes = $request->pessoas_presencas;
+//        $chamada->matriculados = $pessoas->count();
+//        $chamada->presentes = $dataToInt['presentes'];
+//        $chamada->visitantes = $dataToInt['visitantes'];
+//        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
+//        $chamada->biblias = $dataToInt['biblias'];
+//        $chamada->revistas = $dataToInt['revistas'];
+//        $chamada->observacoes = $request->observacoes;
+//        $chamada->congregacao_id = auth()->user()->congregacao_id;
+//        $chamada->save();
+//
+//        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
+//
+//        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
+//
+//        return redirect('/classe/todas-chamadas')->with('msg', $result);
+//
+//        } catch (\Exception $e) {
+//            Log::error($e->getMessage());
+//            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
+//        }
+//
+//    }
 
     public function searchChamadaClasse(Request $request)
     {

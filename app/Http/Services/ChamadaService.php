@@ -3,21 +3,28 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
+use App\Http\Repositories\ChamadaRepository;
 use App\Http\Repositories\PresencaPessoaRepository;
+use App\Models\Chamada;
 use App\Models\ChamadaDiaCongregacao;
 use App\Models\PresencaPessoa;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class ChamadaService
 {
     protected $chamadaDiaCongregacaoRepository;
     protected $presencaPessoaRepository;
-    public function __construct(ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository, PresencaPessoaRepository $presencaRepository)
+    protected $chamadaRepository;
+    public function __construct(ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+                                PresencaPessoaRepository $presencaRepository,
+                                ChamadaRepository $chamadaRepository)
     {
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
         $this->presencaPessoaRepository = $presencaRepository;
+        $this->chamadaRepository = $chamadaRepository;
     }
 
     public function classesNotSendChamada(Collection $salas, Collection $chamadas) : array {
@@ -46,7 +53,6 @@ class ChamadaService
         $values = [
             "presentes" => intval($request->presentes),
             "visitantes" => intval($request->visitantes),
-            "assistenciaTotal" => intval($request->presentes+$request->visitantes),
             "revistas" => intval($request->revistas),
             "biblias" => intval($request->biblias)
         ];
@@ -96,6 +102,35 @@ class ChamadaService
 
     public function chamadasLiberadasMesAtual(int $congregacaoId, int $month) {
         return $this->chamadaDiaCongregacaoRepository->findChamadasLiberadasByCongregacaoAndMonth($congregacaoId, $month);
+    }
+
+    public function findByCongregacaoAndMonthAndYear(int $congregacaoId, int $month, int $year) {
+        return $this->chamadaRepository->findByCongregacaoAndMonthAndYearAndGroupByCreatedAt($congregacaoId, $month, $year);
+    }
+
+    public function criarRegistroChamadaPresencaIndividual(int $salaId, int $congregacaoId) : void {
+       try {
+           $chamada = new Chamada;
+           $chamada->presentes = 1;
+           $chamada->id_sala = $salaId;
+           $chamada->congregacao_id = $congregacaoId;
+           $chamada->save();
+       } catch (\Exception $e) {
+           Log::error($e->getMessage());
+       }
+
+    }
+
+    public function existsChamadaToday(int $salaId) : bool {
+        $chamada = Chamada::where('id_sala', '=', $salaId)
+            ->whereDate('created_at', Carbon::today())
+            ->first();
+
+        if ($chamada) {
+            return true;
+        }
+
+        return false;
     }
 
 

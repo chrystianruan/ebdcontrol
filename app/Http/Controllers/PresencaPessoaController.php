@@ -15,16 +15,6 @@ class PresencaPessoaController extends Controller
         $this->presencaPessoaService = $presencaPessoaService;
     }
 
-    public function marcarPresencasLote(Request $request){
-        $presencas = $request->presencas;
-        $response = $this->presencaPessoaService->marcarPresencasLote($presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
-        if ($response->getStatusCode() != 201) {
-            return view('/')->with('msg2', $response->getContent());
-        }
-        return view('/')->with('msg', 'Chamada realizada com sucesso');
-    }
-
-
     public function show(int $id) {
 
     }
