@@ -22,22 +22,22 @@
     </tr>
   </thead>
 
-  @foreach($relatorio -> salas as $sala)
+  @foreach($chamadas as $c)
 
   <tbody>
     <tr> <!-- <tr class="disabled">  -->
-     
-      <td style="font-weight: bold; color: yellow">{{$sala['nome']}}
-      <td style="text-align:center">{{$sala['matriculados']}}
-      <td style="text-align:center">{{$sala['presentes']}}
-      <td style="text-align:center">{{$sala['visitantes']}}
-      <td style="text-align:center">{{$sala['assist_total']}}
-      <td style="text-align:center">{{$sala['biblias']}}
-      <td style="text-align:center">{{$sala['revistas']}}
-      <td style="text-align:center"><a href="/admin/visualizar/chamada/{{$sala['id']}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
-   
+
+      <td style="font-weight: bold; color: yellow">{{ $c->sala->nome }}
+      <td style="text-align:center">{{ $c->matriculados }}
+      <td style="text-align:center">{{ $c->presentes }}
+      <td style="text-align:center">{{ $c->visitantes }}
+      <td style="text-align:center">{{ $c->presentes+$c->visitantes }}
+      <td style="text-align:center">{{ $c->biblias }}
+      <td style="text-align:center">{{ $c->revistas }}
+      <td style="text-align:center"><a href="/admin/visualizar/chamada/{{ $c->id }}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
+
     </tr>
-      
+
   </tbody>
   @endforeach
 
@@ -48,7 +48,7 @@
         <td style="text-align:center">{{$relatorio -> matriculados}}</td>
         <td style="text-align:center">{{$relatorio -> presentes}}</td>
         <td style="text-align:center">{{$relatorio -> visitantes}}</td>
-        <td style="text-align:center">{{$relatorio -> assist_total}}</td>
+        <td style="text-align:center">{{ $relatorio->presentes + $relatorio->visitantes }}</td>
         <td style="text-align:center">{{$relatorio -> biblias}}</td>
         <td style="text-align:center">{{$relatorio -> revistas}}</td>
         <td></td>

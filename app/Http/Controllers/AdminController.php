@@ -765,61 +765,61 @@ class AdminController extends Controller
 
     }
 
-    public function searchRelatorios(Request $request) {
-        $mes = request('mes');
-        $ano = request('ano');
-        $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-
-        $chamadas = Chamada::whereDate('created_at',  Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-        $salas = Sala::where('id', '>', 2)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-
-        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);
-
-        //mes
-        if(isset($request -> mes) && empty($request -> ano)) {
-            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->orderBy('created_at', 'DESC')
-                ->get();
-        }
-        //ano
-        elseif(empty($request -> mes) && isset($request -> ano)) {
-            $relatorios = Relatorio::whereYear('created_at', '=', $request -> ano)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->orderBy('created_at', 'DESC')
-                ->get();
-        }
-        //mes e ano
-        elseif(isset($request -> mes) && isset($request -> ano)) {
-            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
-            ->whereYear('created_at', '=', $request -> ano)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('created_at', 'DESC')
-            ->get();
-        //nada
-        } else {
-            $relatorios = Relatorio::whereDate('created_at', '=', Carbon::today())
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->orderBy('created_at', 'DESC')->get();
-        }
-
-        return view('/admin/relatorios/todos', ['relatorios' => $relatorios,
-            'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano,
-            'chamadas' => $chamadas, 'salas' => $salas, 'classesFaltantes' => $classesFaltantes]);
-
-    }
-
-    public function showRelatorio($id) {
-        $relatorio = Relatorio::findOrFail($id);
-        $salas = Sala::where('id', '>', 2)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-        return view('/admin/visualizar/relatorio', ['relatorio' => $relatorio, 'salas' => $salas]);
-    }
+//    public function searchRelatorios(Request $request) {
+//        $mes = request('mes');
+//        $ano = request('ano');
+//
+//
+//        $chamadas = Chamada::whereDate('created_at',  Carbon::today())
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->get();
+//        $salas = Sala::where('id', '>', 2)
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->get();
+//
+//        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);
+//
+//        //mes
+//        if(isset($request -> mes) && empty($request -> ano)) {
+//            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
+//                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//                ->orderBy('created_at', 'DESC')
+//                ->get();
+//        }
+//        //ano
+//        elseif(empty($request -> mes) && isset($request -> ano)) {
+//            $relatorios = Relatorio::whereYear('created_at', '=', $request -> ano)
+//                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//                ->orderBy('created_at', 'DESC')
+//                ->get();
+//        }
+//        //mes e ano
+//        elseif(isset($request -> mes) && isset($request -> ano)) {
+//            $relatorios = Relatorio::whereMonth('created_at', '=', $request -> mes)
+//            ->whereYear('created_at', '=', $request -> ano)
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->orderBy('created_at', 'DESC')
+//            ->get();
+//        //nada
+//        } else {
+//            $relatorios = Relatorio::whereDate('created_at', '=', Carbon::today())
+//                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//                ->orderBy('created_at', 'DESC')->get();
+//        }
+//
+//        return view('/admin/relatorios/todos', ['relatorios' => $relatorios,
+//            'meses_abv' => $meses_abv, 'mes' => $mes, 'ano' => $ano,
+//            'chamadas' => $chamadas, 'salas' => $salas, 'classesFaltantes' => $classesFaltantes]);
+//
+//    }
+//
+//    public function showRelatorio($id) {
+//        $relatorio = Relatorio::findOrFail($id);
+//        $salas = Sala::where('id', '>', 2)
+//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+//            ->get();
+//        return view('/admin/visualizar/relatorio', ['relatorio' => $relatorio, 'salas' => $salas]);
+//    }
 
     public function searchAniversariantes(Request $request) {
         $mes = request('mes');

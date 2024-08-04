@@ -123,19 +123,17 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::delete('/admin/filtro/aviso/{id}', [AdminController::class, 'destroyAviso']);
 
 
-
-
     Route::get('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::post('/admin/chamadas', [AdminController::class, 'searchChamadas']);
-    Route::get('/admin/visualizar/chamada/{id}', [AdminController::class, 'showChamada']);
+    Route::get('/admin/visualizar/chamada/{id}', [ChamadaController::class, 'showChamada']);
     Route::get('/admin/visualizar/pdf-chamada/{id}', [AdminController::class, 'generatePdfToChamadas']);
     Route::get('/admin/visualizar/pdf-folha-frequencia/{id}/{date}', [AdminController::class, 'generatePdfToChamadasNotRealized']);
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
-    Route::get('/admin/relatorios/todos', [AdminController::class, 'searchRelatorios']);
-    Route::post('/admin/relatorios/todos', [AdminController::class, 'searchRelatorios']);
-    Route::get('/admin/visualizar/relatorio/{id}', [AdminController::class, 'showRelatorio']);
-    Route::get('/admin/visualizar/pdf-relatorio/{id}', [AdminController::class, 'generatePdfToRelatorios']);
+    Route::get('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
+    Route::post('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
+    Route::get('/admin/visualizar/relatorio/{date}', [RelatorioController::class, 'show']);
+    Route::get('/admin/visualizar/pdf-relatorio/{id}', [RelatorioController::class, 'generatePdfToRelatorios']);
 
     Route::get('/admin/relatorios/presenca-classe', function () {
         $classes = \App\Models\Sala::where('congregacao_id', auth()->user()->congregacao_id)

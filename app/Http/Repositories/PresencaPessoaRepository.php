@@ -46,5 +46,11 @@ class PresencaPessoaRepository
 
     }
 
+    public function findByDateAndSala(string $date, int $salaId) :  ?\Illuminate\Database\Eloquent\Collection {
+        return PresencaPessoa::whereDate('created_at', $date)
+            ->where('sala_id', $salaId)
+            ->get();
+    }
+
 
 }

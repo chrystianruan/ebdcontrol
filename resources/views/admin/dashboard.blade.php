@@ -24,19 +24,19 @@
         <h3>Bíblias e revistas</h3>
 
         <li>Bíblias: <span style="font-weight: bold; color:
-            @if( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 80) chartreuse
-                @elseif( ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') >= 50
-                && ($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total') < 80) yellow
+            @if( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 80) chartreuse
+                @elseif( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50
+                && ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) < 80) yellow
                 @else red
                 @endif
-                ">{{number_format((($chamadaDia -> sum('biblias') * 100) / $chamadaDia -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+                ">{{number_format((($chamadaDia -> sum('biblias') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes')) ), 1, ',')}}%</span> trouxeram</li>
         <li>Revistas: <span style="font-weight: bold; color:
-            @if( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') > 80) chartreuse
-                @elseif( ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') >= 50
-                && ($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total') < 80) yellow
+            @if( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) > 80) chartreuse
+                @elseif( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50
+                && ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) < 80) yellow
                 @else red
                 @endif
-                ">{{number_format((($chamadaDia -> sum('revistas') * 100) / $chamadaDia -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+                ">{{number_format((($chamadaDia -> sum('revistas') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
     @else
     <li>Nenhum Relatório</li>
     @endif
@@ -60,19 +60,19 @@
         <h3>Bíblias e revistas</h3>
 
         <li>Bíblias: <span style="font-weight: bold; color:
-            @if( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 80) chartreuse
-                @elseif( ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') >= 50
-                && ($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total') < 80) yellow
+            @if( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 80) chartreuse
+                @elseif( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50
+                && ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) < 80) yellow
                 @else red
                 @endif
-                ">{{number_format((($chamadasMes -> sum('biblias') * 100) / $chamadasMes -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+                ">{{number_format((($chamadasMes -> sum('biblias') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
         <li>Revistas: <span style="font-weight: bold; color:
-            @if( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') > 80) chartreuse
-                @elseif( ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') >= 50
-                && ($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total') < 80) yellow
+            @if( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) > 80) chartreuse
+                @elseif( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50
+                && ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) < 80) yellow
                 @else red
                 @endif
-                ">{{number_format((($chamadasMes -> sum('revistas') * 100) / $chamadasMes -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+                ">{{number_format((($chamadasMes -> sum('revistas') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
     @else
     <li>Nenhum Relatório</li>
     @endif
@@ -96,19 +96,19 @@
 <h3>Bíblias e revistas</h3>
 
 <li>Bíblias: <span style="font-weight: bold; color:
-    @if( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 80) chartreuse
-        @elseif( ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') >= 50
-        && ($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total') < 80) yellow
+    @if( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 80) chartreuse
+        @elseif( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50
+        && ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) < 80) yellow
         @else red
         @endif
-        ">{{number_format((($chamadasAno -> sum('biblias') * 100) / $chamadasAno -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+        ">{{number_format((($chamadasAno -> sum('biblias') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
 <li>Revistas: <span style="font-weight: bold; color:
-    @if( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') > 80) chartreuse
-        @elseif( ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') >= 50
-        && ($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total') < 80) yellow
+    @if( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) > 80) chartreuse
+        @elseif( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50
+        && ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) < 80) yellow
         @else red
         @endif
-        ">{{number_format((($chamadasAno -> sum('revistas') * 100) / $chamadasAno -> sum('assist_total')), 1, ',')}}%</span> trouxeram</li>
+        ">{{number_format((($chamadasAno -> sum('revistas') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
     @else
     <li>Nenhum Relatório</li>
     @endif
