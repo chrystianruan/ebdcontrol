@@ -29,13 +29,13 @@ function generateDataToRelatorio(baixar) {
         },
         })
         .done(function(data){
-                let dataJson = JSON.parse(data);
-                let uniqueIds = getUniqueIds(dataJson);
-                let dataIndex = getData(uniqueIds, dataJson);
+                // let dataJson = JSON.parse(data);
+                // let uniqueIds = getUniqueIds(dataJson);
+                // let dataIndex = getData(uniqueIds, dataJson);
                 if (baixar == 1) {
-                    baixarPDF(dataIndex);
+                    baixarPDF(JSON.parse(data));
                 } else {
-                    formatData(dataIndex);
+                    formatData(JSON.parse(data));
                 }
 
             })
@@ -100,8 +100,8 @@ function formatData(data) {
             $(dataFormated).each(function(i, data) {
                 rows += "<tr>"
                 rows += "<td>" + data.nome + "</td>"
-                rows += "<td>" + data.id_funcao + "</td>"
-                rows += "<td>" + data.data_nasc + "</td>"
+                rows += "<td>" + data.funcao_id + "</td>"
+                // rows += "<td>" + data.data_nasc + "</td>"
                 rows += "<td>" + data.presencas + "</td>"
                 rows += "</tr>"
             })

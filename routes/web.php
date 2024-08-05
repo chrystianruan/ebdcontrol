@@ -135,13 +135,8 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/relatorio/{date}', [RelatorioController::class, 'show']);
     Route::get('/admin/visualizar/pdf-relatorio/{id}', [RelatorioController::class, 'generatePdfToRelatorios']);
 
-    Route::get('/admin/relatorios/presenca-classe', function () {
-        $classes = \App\Models\Sala::where('congregacao_id', auth()->user()->congregacao_id)
-            ->where('id', '>', 2)
-            ->orderBy('nome')
-            ->get();
-        return view('/admin/relatorios/presenca-classe', compact('classes'));
-    });
+    Route::get('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'showRelatorioPresenca'])->name('relatorios.presenca-classe');
+    Route::post('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
 
 
 

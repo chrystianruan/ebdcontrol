@@ -2,8 +2,9 @@
 
 namespace App\Http\Repositories;
 
+use App\Http\DTOs\PresencaPessoaDTO;
 use App\Models\PresencaPessoa;
-use FontLib\TrueType\Collection;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 
@@ -20,29 +21,23 @@ class PresencaPessoaRepository
             ->get();
     }
 
-    public function filterPresencas(int $salaId, int $month, int $year, string $createdAt, int $tipoPresenca, int $funcaoId, bool $presente) :  ?Collection {
-        $presencas = PresencaPessoa::select('presenca_pessoas.*');
-        if ($salaId) {
-            $presencas = $presencas->where('sala_id', $salaId);
-        }
-        if ($createdAt) {
-            $presencas = $presencas->whereDate('created_at', $createdAt);
-        }
-        if ($tipoPresenca) {
-            $presencas = $presencas->where('tipo_presenca', $tipoPresenca);
-        }
-        if ($month && $year) {
-            $presencas = $presencas->whereMonth('created_at', $month)
-                ->whereYear('created_at', $year);
-        }
-        if ($funcaoId) {
-            $presencas = $presencas->where('funcao_id', $funcaoId);
-        }
-        if ($presente) {
-            $presencas = $presencas->where('presente', $presente);
-        }
+    public function findByMonthAndYearAndSalaId(string $dataInicio, string $dataFim, int $salaId, array $orderBy) {
+         $presencaPessoa = PresencaPessoa::select('pessoas.nome as pessoa_nome', 'funcaos.nome as funcao_nome', DB::raw('sum(presente) as presencas'))
+             ->join('pessoas', 'pessoas.id', '=', 'presenca_pessoas.pessoa_id')
+             ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id');
 
-        return $presencas->get();
+         if ($dataInicio && $dataFim) {
+             $presencaPessoa = $presencaPessoa->whereBetween('presenca_pessoas.created_at',  [$dataInicio, $dataFim]);
+         }
+         if ($salaId) {
+             $presencaPessoa = $presencaPessoa->where('sala_id', $salaId);
+         }
+
+         $presencaPessoa = $presencaPessoa->orderBy($orderBy['column'], $orderBy['type'])
+             ->groupBy('presenca_pessoas.pessoa_id')
+             ->get();
+
+         return $presencaPessoa;
 
     }
 
