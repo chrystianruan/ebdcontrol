@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Chamada;
 use App\Models\Congregacao;
 use App\Models\Pessoa;
 use App\Models\Setor;
@@ -27,5 +28,15 @@ class ApiController extends Controller
             ->where('setor_id', '=', $setor_id)
             ->get();
         return $congregacoes;
+    }
+
+    public function getChamadas(string $periodoInicial, string $periodoFinal) {
+        $chamadas = Chamada::select('*');
+
+        if ($periodoInicial && $periodoFinal) {
+            $chamadas->whereBetween('created_at', [$periodoInicial, $periodoFinal." 23:59:59"]);
+        }
+
+        return $chamadas->get();
     }
 }
