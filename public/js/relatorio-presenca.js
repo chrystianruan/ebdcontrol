@@ -29,15 +29,15 @@ function generateDataToRelatorio(baixar) {
         },
         })
         .done(function(data){
-                // let dataJson = JSON.parse(data);
-                // let uniqueIds = getUniqueIds(dataJson);
-                // let dataIndex = getData(uniqueIds, dataJson);
+            if (data == "[]") {
+                alert("Dados inexistentes para o período escolhido!")
+            } else {
                 if (baixar == 1) {
-                    baixarPDF(JSON.parse(data));
+                    baixarPDF(data);
                 } else {
-                    formatData(JSON.parse(data));
+                    formatData(data);
                 }
-
+            }
             })
                 .fail(function(jqXHR, textStatus, msg){
                     alert(msg);
@@ -50,88 +50,33 @@ function generateDataToRelatorio(baixar) {
     }
 
 }
+function formatData(brutalData) {
+    let objectData = JSON.parse(brutalData)
+    var rows;
+    $('#tbody-data').empty();
+    $('#container-table').css("display", "block");
+    $('#loader').css("display", "none");
 
-function getUniqueIds(dataJson) {
-    let uniqueIds = [];
-    for(i = 0; i< dataJson.length; i++){
-        if(uniqueIds.indexOf(dataJson[i].id) === -1){
-            uniqueIds.push(dataJson[i].id);
-        }
-    }
-    return uniqueIds;
-}
-function getData(uniqueIds, dataJson) {
-    let dataFormated = [];
-    for (let i = 0; i < uniqueIds.length; i++) {
-        if(dataFormated.indexOf(uniqueIds[i].id) === -1){
-            let presencasOfPerson = dataJson.filter((d) => d.id == uniqueIds[i]).map((d) => d.presenca);
-            let pessoa = dataJson.find(({ id }) => id === uniqueIds[i]);
-            let object = {
-                id: pessoa.id,
-                nome: pessoa.nome,
-                data_nasc: pessoa.data_nasc,
-                id_funcao: pessoa.id_funcao,
-                presencas: presencasOfPerson,
-            }
-            dataFormated.push(object);
-        }
-    }
-
-    return dataFormated;
-}
-function formatData(data) {
-    let jsonData = JSON.stringify(data)
-    $.ajax({
-        url : $("#url-get-format-data").val(),
-        type : 'POST',
-        data : {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            data: jsonData,
-        },
+    $(objectData).each(function(i, data) {
+        rows += "<tr>"
+        rows += "<td>" + data.pessoa_nome + "</td>"
+        rows += "<td>" + data.funcao_nome + "</td>"
+        rows += "<td>" + data.data_nascimento + "</td>"
+        rows += "<td>" + data.presencas + "</td>"
+        rows += "</tr>"
     })
-        .done(function(dataFormated){
-            console.log(dataFormated);
-            $('#tbody-data').empty();
-            $('#container-table').css("display", "block");
-            $('#loader').css("display", "none");
-
-            // periodo.append(`Período: ${initialDateSelected.value.split('-').reverse().join('/')} a ${finalDateSelected.value.split('-').reverse().join('/')}`)
-            var rows;
-            $(dataFormated).each(function(i, data) {
-                rows += "<tr>"
-                rows += "<td>" + data.nome + "</td>"
-                rows += "<td>" + data.funcao_id + "</td>"
-                // rows += "<td>" + data.data_nasc + "</td>"
-                rows += "<td>" + data.presencas + "</td>"
-                rows += "</tr>"
-            })
-            $('#tbody-data').append(rows);
-
-        })
-        .fail(function(jqXHR, textStatus, msg){
-            alert(msg);
-        });
+    $('#tbody-data').append(rows);
 }
 
-function baixarPDF(data) {
-    let jsonData = JSON.stringify(data)
-    $.ajax({
-        url: $("#url-get-format-data").val(),
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content'),
-            data: jsonData,
-        },
-    })
-        .done(function (dataFormated) {
-            console.log(dataFormated);
+function baixarPDF(brutalData) {
+    let objectData = JSON.parse(brutalData)
             var rows;
             $('#hidden-tbody-data').empty();
-            $(dataFormated).each(function (i, data) {
+            $(objectData).each(function (i, data) {
                 rows += "<tr>"
-                rows += "<td>" + data.nome + "</td>"
-                rows += "<td>" + data.id_funcao + "</td>"
-                rows += "<td>" + data.data_nasc + "</td>"
+                rows += "<td>" + data.pessoa_nome + "</td>"
+                rows += "<td>" + data.funcao_nome + "</td>"
+                rows += "<td>" + data.data_nascimento + "</td>"
                 rows += "<td>" + data.presencas + "</td>"
                 rows += "</tr>"
             })
@@ -142,9 +87,4 @@ function baixarPDF(data) {
             doc.autoTable({html: '#hidden-table'})
             doc.save("relatorio-frequencia.pdf");
 
-
-        })
-        .fail(function (jqXHR, textStatus, msg) {
-            alert(msg);
-        });
 }

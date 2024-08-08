@@ -21,8 +21,8 @@ class PresencaPessoaRepository
             ->get();
     }
 
-    public function findByMonthAndYearAndSalaId(string $dataInicio, string $dataFim, int $salaId, array $orderBy) {
-         $presencaPessoa = PresencaPessoa::select('pessoas.nome as pessoa_nome', 'funcaos.nome as funcao_nome', DB::raw('sum(presente) as presencas'))
+    public function findByMonthAndYearAndSalaId(string $dataInicio, string $dataFim, int $salaId, array $orderBy) : ?Collection {
+         $presencaPessoa = PresencaPessoa::select('pessoas.nome as pessoa_nome', 'funcaos.nome as funcao_nome', DB::raw('sum(presente) as presencas'), 'pessoas.data_nasc as data_nascimento')
              ->join('pessoas', 'pessoas.id', '=', 'presenca_pessoas.pessoa_id')
              ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id');
 

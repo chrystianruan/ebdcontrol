@@ -46,7 +46,7 @@ class PresencaPessoaController extends Controller
 
     }
 
-    public function getPresencasOfClasse(Request $request) : ?Collection {
+    public function getPresencasOfClasse(Request $request) : ?string {
         $presencaPessoaDTO = new PresencaPessoaDTO();
         $presencaPessoaDTO->setSalaId((int) base64_decode($request->classeId));
         $presencaPessoaDTO->setDataInicio($request->initialDate);
@@ -59,7 +59,7 @@ class PresencaPessoaController extends Controller
 
         $presencas = $this->presencaPessoaService->filter($presencaPessoaDTO);
 
-        return $presencas;
+        return $presencas->toJson();
 
     }
 }
