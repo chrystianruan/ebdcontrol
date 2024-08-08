@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChamadaController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\api\ApiController;
@@ -22,3 +23,5 @@ Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
 Route::get('/salas/congregacao/{congregacaoId}', [SalaController::class, 'getSalasByCongregacao']);
 Route::get('/funcaos', [FuncaoController::class, 'getFuncaos']);
+
+Route::get('/getChamadas/{periodoInicial}/{periodoFinal}', [ApiController::class, 'getChamadas']);
