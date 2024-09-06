@@ -12,6 +12,8 @@ use App\Http\Services\PresencaPessoaService;
 use App\Models\Chamada;
 use App\Models\ChamadaDiaCongregacao;
 use App\Models\PresencaPessoa;
+use App\Models\Sala;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -67,12 +69,26 @@ class ChamadaController extends Controller
         ], 201);
     }
 
-    public function showChamada(int $id) : ?View {
+    public function showChamada(int $id) : ?View{
         $chamada = Chamada::findOrFail($id);
+        if ($chamada->sala->congregacao->id != auth()->user()->congregacao_id) {
+            return abort(403);
+        }
         $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
         $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
 
         return view('/admin/visualizar/chamada', compact(['presencas', 'salas', 'chamada']));
+    }
+
+    public function showChamadaClasse(int $id) {
+        $chamada = Chamada::findOrFail($id);
+        if ($chamada->sala->id != auth()->user()->id_nivel) {
+            return abort(403);
+        }
+        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
+
+        return view('/classe/visualizar-chamada', compact(['chamada', 'presencas', 'findSala']));
     }
 
     public function realizarChamada(Request $request) {
@@ -126,6 +142,33 @@ class ChamadaController extends Controller
             return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
         }
     }
+
+    public function generatePdfToChamadasToAdmin($id) {
+
+        $chamada = Chamada::findOrFail($id);
+        if ($chamada->sala->congregacao->id != auth()->user()->congregacao_id) {
+            return abort(403);
+        }
+        $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
+        $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
+
+        return Pdf::loadView('/admin/visualizar/pdf-chamada', compact(['chamada', 'presencas', 'salas']))
+            ->stream('frequencia-finalizada.pdf');
+    }
+
+    public function generatePdfToChamadasToClasse($id)
+    {
+        $chamada = Chamada::findOrFail($id);
+        if ($chamada->sala->id != auth()->user()->id_nivel) {
+            return abort(403);
+        }
+        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
+
+        return PDF::loadView('/classe/pdf-chamada', compact(['chamada', 'findSala', 'presencas']))
+            ->stream('frequencia.pdf');
+    }
+
 
 
 }

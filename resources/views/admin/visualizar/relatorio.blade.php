@@ -48,7 +48,7 @@
         <td style="text-align:center">{{$relatorio -> matriculados}}</td>
         <td style="text-align:center">{{$relatorio -> presentes}}</td>
         <td style="text-align:center">{{$relatorio -> visitantes}}</td>
-        <td style="text-align:center">{{ $relatorio->presentes + $relatorio->visitantes }}</td>
+        <td style="text-align:center">{{$relatorio->presentes + $relatorio->visitantes }}</td>
         <td style="text-align:center">{{$relatorio -> biblias}}</td>
         <td style="text-align:center">{{$relatorio -> revistas}}</td>
         <td></td>

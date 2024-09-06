@@ -50,10 +50,10 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::post('/classe/chamada-dia', [ChamadaController::class, 'realizarChamada']);
     Route::get('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
     Route::post('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
-    Route::get('/classe/visualizar-chamada/{id}', [ClasseController::class, 'showChamadaClasse']);
+    Route::get('/classe/visualizar-chamada/{id}', [ChamadaController::class, 'showChamadaClasse']);
     Route::get('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
     Route::post('/classe/aniversariantes', [ClasseController::class, 'searchAniversariantes']);
-    Route::get('/classe/pdf-chamada/{id}', [ClasseController::class, 'generatePdfToChamadas']);
+    Route::get('/classe/pdf-chamada/{id}', [ChamadaController::class, 'generatePdfToChamadasToClasse']);
 
 });
 
@@ -126,14 +126,14 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::post('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::get('/admin/visualizar/chamada/{id}', [ChamadaController::class, 'showChamada']);
-    Route::get('/admin/visualizar/pdf-chamada/{id}', [AdminController::class, 'generatePdfToChamadas']);
+    Route::get('/admin/visualizar/pdf-chamada/{id}', [ChamadaController::class, 'generatePdfToChamadasToAdmin']);
     Route::get('/admin/visualizar/pdf-folha-frequencia/{id}/{date}', [AdminController::class, 'generatePdfToChamadasNotRealized']);
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
     Route::get('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
     Route::post('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
     Route::get('/admin/visualizar/relatorio/{date}', [RelatorioController::class, 'show']);
-    Route::get('/admin/visualizar/pdf-relatorio/{id}', [RelatorioController::class, 'generatePdfToRelatorios']);
+    Route::get('/admin/visualizar/pdf-relatorio/{date}', [RelatorioController::class, 'generatePdfRelatorioChamada']);
 
     Route::get('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'showRelatorioPresenca'])->name('relatorios.presenca-classe');
     Route::post('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');

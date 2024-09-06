@@ -117,7 +117,7 @@
             <td style="text-align:center">{{ $r->presentes + $r->visitantes }}
             <td style="text-align:center">{{$r -> biblias}}
             <td style="text-align:center">{{$r -> revistas}}
-             <td><a href="/admin/visualizar/relatorio/{{ date('Y-m-d', strtotime($r->created_at)) }}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a> <a href="/admin/visualizar/pdf-relatorio/{{$r->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
+             <td><a href="/admin/visualizar/relatorio/{{ date('Y-m-d', strtotime($r->created_at)) }}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a> <a href="/admin/visualizar/pdf-relatorio/{{ date('Y-m-d', strtotime($r->created_at)) }}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
           </tr>
 
         </tbody>

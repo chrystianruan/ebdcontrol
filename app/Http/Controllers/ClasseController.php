@@ -306,19 +306,6 @@ class ClasseController extends Controller
 
     }
 
-
-    public function showChamadaClasse($id)
-    {
-        $nivel = auth()->user()->id_nivel;
-        $findSala = Sala::findOrFail($nivel);
-        $chamada = Chamada::findOrFail($id);
-        if ($nivel != $chamada->id_sala) {
-            return redirect('/classe')->with('msg2', 'Seu usuário não permissão para ver esta chamada');
-        }
-        return view('/classe/visualizar-chamada', ['chamada' => $chamada, 'findSala' => $findSala]);
-
-    }
-
     public function searchAniversariantes(Request $request)
     {
         $nivel = auth()->user()->id_nivel;
@@ -347,15 +334,6 @@ class ClasseController extends Controller
 
         return view('/classe/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
             'meses_abv' => $meses_abv, 'mes' => $mes]);
-    }
-
-    public function generatePdfToChamadas($id)
-    {
-
-        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
-
-        return PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
-            ->stream('frequencia.pdf');
     }
 
     public function generateRelatorioPerDate(Request $request)
