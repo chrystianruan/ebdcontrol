@@ -20,15 +20,12 @@
 
         <tbody>
 
-            @foreach(json_decode($chamada->nomes, true) as $cn)
+        @foreach($presencas as $p)
             <tr>
-            <td>{{ explode(' ', $cn['nome'])[0] }} {{explode(' ', $cn['nome'])[ count(explode(' ', $cn['nome'])) - 1] }}</td>
-            <td> @if($cn['presenca'] == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
+                <td>{{ explode(' ', $p->pessoa->nome)[0] }} {{explode(' ',$p->pessoa->nome)[ count(explode(' ', $p->pessoa->nome)) - 1] }}</td>
+                <td> @if($p->presente == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
             </tr>
-            @endforeach
-
-
-
+        @endforeach
         </tbody>
       </table>
     </div>
@@ -54,7 +51,7 @@
 
         <div class="inputs-extras">
             <label>Assist. Total</label>
-            <input name="assist_total" style="color: red; font-weight: bolder" type="number" min="0" id="assist_total" value="{{$chamada -> assist_total}}" disabled>
+            <input name="assist_total" style="color: red; font-weight: bolder" type="number" min="0" id="assist_total" value="{{ $chamada->presentes + $chamada->visitantes }}" disabled>
         </div>
 
         <div class="inputs-extras">

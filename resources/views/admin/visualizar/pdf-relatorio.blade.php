@@ -90,23 +90,23 @@
     }
 
     #assist_total {
-        color: @if(100 * $relatorio->assist_total / $relatorio->matriculados <= 50) red
-        @elseif(100 * $relatorio->assist_total / $relatorio->matriculados > 50 && 100 * $relatorio->assist_total / $relatorio->matriculados <= 75) orange
-        @elseif(100 * $relatorio->assist_total / $relatorio->matriculados > 75 && 100 * $relatorio->assist_total / $relatorio->matriculados <= 100) green
+        color: @if(100 * $relatorio->presentes+$relatorio->visitantes / $relatorio->matriculados <= 50) red
+        @elseif(100 * $relatorio->presentes+$relatorio->visitantes / $relatorio->matriculados > 50 && 100 * $relatorio->presentes+$relatorio->visitantes / $relatorio->matriculados <= 75) orange
+        @elseif(100 * $relatorio->presentes+$relatorio->visitantes / $relatorio->matriculados > 75 && 100 * $relatorio->presentes+$relatorio->visitantes / $relatorio->matriculados <= 100) green
         @else blue @endif
     }
 
     #biblias {
-        color: @if(100 * $relatorio->biblias / $relatorio->assist_total <= 50) red
-        @elseif(100 * $relatorio->biblias / $relatorio->assist_total > 50 && 100 * $relatorio->biblias / $relatorio->assist_total <= 75) orange
-        @elseif(100 * $relatorio->biblias / $relatorio->assist_total > 75 && 100 * $relatorio->biblias / $relatorio->assist_total <= 100) green
+        color: @if(100 * $relatorio->biblias / $relatorio->presentes+$relatorio->visitantes <= 50) red
+        @elseif(100 * $relatorio->biblias / $relatorio->presentes+$relatorio->visitantes > 50 && 100 * $relatorio->biblias / $relatorio->presentes+$relatorio->visitantes <= 75) orange
+        @elseif(100 * $relatorio->biblias / $relatorio->presentes+$relatorio->visitantes > 75 && 100 * $relatorio->biblias / $relatorio->presentes+$relatorio->visitantes <= 100) green
         @else blue @endif
     }
 
     #revistas {
-        color: @if(100 * $relatorio->revistas / $relatorio->assist_total <= 50) red
-        @elseif(100 * $relatorio->revistas / $relatorio->assist_total > 50 && 100 * $relatorio->revistas / $relatorio->assist_total <= 75) orange
-        @elseif(100 * $relatorio->revistas / $relatorio->assist_total > 75 && 100 * $relatorio->revistas / $relatorio->assist_total <= 100) green
+        color: @if(100 * $relatorio->revistas / $relatorio->presentes+$relatorio->visitantes <= 50) red
+        @elseif(100 * $relatorio->revistas / $relatorio->presentes+$relatorio->visitantes > 50 && 100 * $relatorio->revistas / $relatorio->presentes+$relatorio->visitantes <= 75) orange
+        @elseif(100 * $relatorio->revistas / $relatorio->presentes+$relatorio->visitantes > 75 && 100 * $relatorio->revistas / $relatorio->presentes+$relatorio->visitantes <= 100) green
         @else blue @endif
     }
 
@@ -160,16 +160,16 @@
 
                 <tbody>
 
-                    @foreach($relatorio->salas as $sala)
+                    @foreach($chamadas as $chamada)
                     <tr>
-                        <td>{{ $sala['nome'] }}</td>
-                        <td>{{ $sala['matriculados'] }}</td>
-                        <td>{{ $sala['presentes'] }}</td>
-                        <td>{{ $sala['visitantes'] }}</td>
-                        <td>{{ $sala['assist_total'] }}</td>
-                        <td>{{ $sala['biblias'] }}</td>
-                        <td>{{ $sala['revistas'] }}</td>
-                        <td>{{ date('H:i:s', strtotime($sala['created_at'])) }}</td>
+                        <td>{{ $chamada->sala->nome }}</td>
+                        <td>{{ $chamada->matriculados }}</td>
+                        <td>{{ $chamada->presentes }}</td>
+                        <td>{{ $chamada->visitantes }}</td>
+                        <td>{{ $chamada->presentes+$chamada->visitantes }}</td>
+                        <td>{{ $chamada->biblias }}</td>
+                        <td>{{ $chamada->revistas }}</td>
+                        <td>{{ date('H:i:s', strtotime($chamada->created_at)) }}</td>
                     </tr>
                     @endforeach
                     <tr>
@@ -177,7 +177,7 @@
                         <td>{{ $relatorio->matriculados }}</td>
                         <td>{{ $relatorio->presentes }}</td>
                         <td>{{ $relatorio->visitantes }}</td>
-                        <td>{{ $relatorio->assist_total }}</td>
+                        <td>{{ $relatorio->presentes+$relatorio->visitantes }}</td>
                         <td>{{ $relatorio->biblias }}</td>
                         <td>{{ $relatorio->revistas }}</td>
                         <td>*</td>

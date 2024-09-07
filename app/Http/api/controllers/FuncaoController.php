@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\api\controllers;
 
 use App\Http\Repositories\FuncaoRepository;
-use App\Models\Funcao;
 use Illuminate\Database\Eloquent\Collection;
 
 class FuncaoController
