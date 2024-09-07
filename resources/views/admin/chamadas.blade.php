@@ -122,7 +122,7 @@
       <td style="text-align:center">{{$c -> matriculados}}
       <td style="text-align:center">{{$c -> presentes}}
       <td style="text-align:center">{{$c -> visitantes}}
-      <td style="text-align:center">{{$c -> assist_total}}
+      <td style="text-align:center">{{ $c->presentes + $c->visitantes }}
       <td style="text-align:center">{{$c -> biblias}}
       <td style="text-align:center">{{$c -> revistas}}
         <td style="text-align:center"> @if($c->observacoes)<i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i> @endif </td>

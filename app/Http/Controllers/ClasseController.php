@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\TipoPresenca;
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Http\Services\PessoaService;
 use App\Mail\ChamadaRealizadaMail;
 use App\Mail\PessoaCadastradaMail;
+use App\Http\Services\PresencaPessoaService;
 use App\Models\ChamadaDiaCongregacao;
 use App\Models\Congregacao;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ use App\Http\Services\RelatorioService;
 use DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class ClasseController extends Controller
 {
@@ -35,13 +38,16 @@ class ClasseController extends Controller
     protected $pessoaService;
     protected $chamadaDiaCongregacaoRepository;
     protected $pessoaRepository;
+    protected $presencaPessoaService;
 
-    public function __construct(GeneralController $generalController,
-                                RelatorioService $relatorioService,
-    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
-    ChamadaService $chamadaService,
-    PessoaService $pessoaService,
-    PessoaRepository $pessoaRepository,
+    public function __construct(
+        GeneralController $generalController,
+        RelatorioService $relatorioService,
+        ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+        ChamadaService $chamadaService,
+        PessoaService $pessoaService,
+        PessoaRepository $pessoaRepository,
+        PresencaPessoaService $presencaPessoaService,
     )
     {
         $this->generalController = $generalController;
@@ -50,6 +56,7 @@ class ClasseController extends Controller
         $this->chamadaService = $chamadaService;
         $this->pessoaService = $pessoaService;
         $this->pessoaRepository = $pessoaRepository;
+        $this->presencaPessoaService = $presencaPessoaService;
     }
 
     public function indexClasse()
@@ -86,9 +93,16 @@ class ClasseController extends Controller
         $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->id_nivel);
         $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->id_nivel);
 
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
         return view('/classe/dashboard', ['niverMes' => $niverMes, 'alunosInativos' => $alunosInativos,
             'chamadaDia' => $chamadaDia, 'interesseProf' => $interesseProf, 'idadesPessoas' => $idadesPessoas, 'formacoes' => $formacoes,
-            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes]);
+            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes, 'dateChamadaDia' => $dateChamadaDia]);
     }
 
     public function indexCadastroClasse()
@@ -205,57 +219,53 @@ class ClasseController extends Controller
             'dateChamadaDia' => $dateChamadaDia]);
     }
 
-    public function storeChamadaClasse(Request $request) {
-        $sala = auth()->user()->id_nivel;
-        $chamadas = Chamada::where('id_sala', '=', $sala)
-            ->whereDate('created_at', Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-
-        if ($chamadas->count() == 1) {
-            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
-        }
-//        $pessoas = DB::table('pessoas')
-//            ->select('nome', 'data_nasc', 'id_funcao')
-//            ->whereJsonContains('id_sala', '' . $sala)
+//    public function storeChamadaClasse(Request $request) {
+//        $sala = auth()->user()->id_nivel;
+//        $chamadas = Chamada::where('id_sala', '=', $sala)
+//            ->whereDate('created_at', Carbon::today())
 //            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-//            ->where('situacao', '=', 1)
-//            ->orderBy('nome')->get();
-
-        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
-
-        $dataToInt = $this->chamadaService->convertToInt($request);
-        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
-        if ($validateRequest) {
-            return redirect()->back()->with('msg2', $validateRequest);
-        }
-
-        $chamada = new Chamada;
-        $chamada->id_sala = $sala;
-        $chamada->nomes = $request->pessoas_presencas;
-        $chamada->matriculados = $pessoas->count();
-        $chamada->presentes = $dataToInt['presentes'];
-        $chamada->visitantes = $dataToInt['visitantes'];
-        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
-        $chamada->biblias = $dataToInt['biblias'];
-        $chamada->revistas = $dataToInt['revistas'];
-        $chamada->observacoes = $request->observacoes;
-        $chamada->congregacao_id = auth()->user()->congregacao_id;
-        $chamada->save();
-
-        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
-
-        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
-        $salaNome = Sala::findOrFail((int) $chamada->id_sala)->nome;
-        $congregacaoNome = Congregacao::findOrFail((int) $chamada->congregacao_id)->nome;
-
-        $email = new ChamadaRealizadaMail($salaNome, $congregacaoNome);
-        Mail::to('chrystianr37@gmail.com')
-            ->send($email);
-
-        return redirect('/classe/todas-chamadas')->with('msg', $result);
-
-    }
+//            ->get();
+//
+//        if ($chamadas->count() > 0) {
+//            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
+//        }
+//
+//        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
+//
+//        $dataToInt = $this->chamadaService->convertToInt($request);
+//        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
+//        if ($validateRequest) {
+//            return redirect()->back()->with('msg2', $validateRequest);
+//        }
+//
+//        try {
+//        $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
+//
+//        $chamada = new Chamada;
+//        $chamada->id_sala = $sala;
+//        $chamada->nomes = $request->pessoas_presencas;
+//        $chamada->matriculados = $pessoas->count();
+//        $chamada->presentes = $dataToInt['presentes'];
+//        $chamada->visitantes = $dataToInt['visitantes'];
+//        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
+//        $chamada->biblias = $dataToInt['biblias'];
+//        $chamada->revistas = $dataToInt['revistas'];
+//        $chamada->observacoes = $request->observacoes;
+//        $chamada->congregacao_id = auth()->user()->congregacao_id;
+//        $chamada->save();
+//
+//        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
+//
+//        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
+//
+//        return redirect('/classe/todas-chamadas')->with('msg', $result);
+//
+//        } catch (\Exception $e) {
+//            Log::error($e->getMessage());
+//            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
+//        }
+//
+//    }
 
     public function searchChamadaClasse(Request $request)
     {
@@ -300,19 +310,6 @@ class ClasseController extends Controller
 
     }
 
-
-    public function showChamadaClasse($id)
-    {
-        $nivel = auth()->user()->id_nivel;
-        $findSala = Sala::findOrFail($nivel);
-        $chamada = Chamada::findOrFail($id);
-        if ($nivel != $chamada->id_sala) {
-            return redirect('/classe')->with('msg2', 'Seu usuário não permissão para ver esta chamada');
-        }
-        return view('/classe/visualizar-chamada', ['chamada' => $chamada, 'findSala' => $findSala]);
-
-    }
-
     public function searchAniversariantes(Request $request)
     {
         $nivel = auth()->user()->id_nivel;
@@ -341,15 +338,6 @@ class ClasseController extends Controller
 
         return view('/classe/aniversariantes', ['pessoas' => $pessoas, 'salas' => $salas,
             'meses_abv' => $meses_abv, 'mes' => $mes]);
-    }
-
-    public function generatePdfToChamadas($id)
-    {
-
-        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
-
-        return PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
-            ->stream('frequencia.pdf');
     }
 
     public function generateRelatorioPerDate(Request $request)

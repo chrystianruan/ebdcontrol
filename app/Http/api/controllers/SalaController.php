@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\api\controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Repositories\SalaRepository;

@@ -96,23 +96,23 @@
     }
 
     #assist_total {
-        color: @if(100 * $chamada->assist_total / $chamada->matriculados <= 50) red
-        @elseif(100 * $chamada->assist_total / $chamada->matriculados > 50 && 100 * $chamada->assist_total / $chamada->matriculados <= 75) orange
-        @elseif(100 * $chamada->assist_total / $chamada->matriculados > 75 && 100 * $chamada->assist_total / $chamada->matriculados <= 100) green
+        color: @if(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 50) red
+        @elseif(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados > 50 && 100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 75) orange
+        @elseif(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados > 75 && 100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 100) green
         @else blue @endif
     }
 
     #biblias {
-        color: @if(100 * $chamada->biblias / $chamada->assist_total <= 50) red
-        @elseif(100 * $chamada->biblias / $chamada->assist_total > 50 && 100 * $chamada->biblias / $chamada->assist_total <= 75) orange
-        @elseif(100 * $chamada->biblias / $chamada->assist_total > 75 && 100 * $chamada->biblias / $chamada->assist_total <= 100) green
+        color: @if(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 50) red
+        @elseif(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes > 50 && 100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 75) orange
+        @elseif(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes > 75 && 100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 100) green
         @else blue @endif
     }
 
     #revistas {
-        color: @if(100 * $chamada->revistas / $chamada->assist_total <= 50) red
-        @elseif(100 * $chamada->revistas / $chamada->assist_total > 50 && 100 * $chamada->revistas / $chamada->assist_total <= 75) orange
-        @elseif(100 * $chamada->revistas / $chamada->assist_total > 75 && 100 * $chamada->revistas / $chamada->assist_total <= 100) green
+        color: @if(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 50) red
+        @elseif(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes > 50 && 100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 75) orange
+        @elseif(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes > 75 && 100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 100) green
         @else blue @endif
     }
 
@@ -170,9 +170,9 @@
                 <td style="text-align: center"><span class="result">{{ $chamada->matriculados }}</span> </td>
                 <td style="text-align: center"><span class="result">{{ $chamada->presentes }}</span> <span class="color" id="presentes">({{  number_format(100 * $chamada->presentes / $chamada->matriculados, 1, ',', '.') }}%)</span> </td>
                 <td style="text-align: center"><span class="result">{{ $chamada->visitantes }}</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->assist_total }}</span> <span class="color" id="assist_total">({{  number_format(100 * $chamada->assist_total / $chamada->matriculados, 1, ',', '.') }}%)</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{  number_format(100 * $chamada->biblias / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format(100 * $chamada->revistas / $chamada->assist_total, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->presentes+$chamada->visitantes }}</span> <span class="color" id="assist_total">({{  number_format(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{  number_format(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes, 1, ',', '.') }}%)</span></td>
 
             </tr>
             </tbody>
@@ -202,12 +202,12 @@
 
             <tbody>
 
-            @foreach(json_decode($chamada->nomes, true) as $cn)
+            @foreach($presencas as $p)
                 <tr>
-                    <td>{{ $cn['nome'] }}</td>
-                    <td>{{ date('d/m', strtotime($cn['data_nasc'])) }}</td>
-                    <td>@if($cn['id_funcao'] == 1) Aluno @elseif($cn['id_funcao'] == 2) Professor @elseif($cn['id_funcao'] == 3) Secretário/Classe @elseif($cn['id_funcao'] == 4) Secretário/Adm @elseif($cn['id_funcao'] == 5) Superintendente @else Erro @endif</td>
-                    <td> @if($cn['presenca'] == 1) <span style="color: rgb(12, 223, 12)" class="bx bx-check">Sim</span> @else <span style="color: red" class="bx bx-x">Não</i> @endif</td>
+                    <td>{{ $p->pessoa->nome }}</td>
+                    <td>{{ date('d/m', strtotime($p->pessoa->data_nasc)) }}</td>
+                    <td>{{ $p->funcao->nome }}</td>
+                    <td> @if($p->presente == 1) <span style="color: rgb(12, 223, 12)" class="bx bx-check">Sim</span> @else <span style="color: red" class="bx bx-x">Não</i> @endif</td>
                 </tr>
             @endforeach
 

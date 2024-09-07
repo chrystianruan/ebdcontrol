@@ -1,12 +1,9 @@
 <?php
 
-use App\Http\Controllers\ChamadaController;
-use Illuminate\Http\Request;
+use App\Http\api\controllers\ApiController;
+use App\Http\api\controllers\FuncaoController;
+use App\Http\api\controllers\SalaController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\ApiController;
-use App\Http\Controllers\api\SalaController;
-use App\Http\Controllers\api\FuncaoController;
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
