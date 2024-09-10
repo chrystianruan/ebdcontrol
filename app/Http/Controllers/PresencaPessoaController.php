@@ -7,6 +7,7 @@ use App\Http\Enums\orderBy;
 use App\Http\Enums\TipoPresenca;
 use App\Http\Repositories\SalaRepository;
 use App\Http\Services\PresencaPessoaService;
+use App\Models\Sala;
 use Cassandra\Column;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
@@ -47,6 +48,14 @@ class PresencaPessoaController extends Controller
     }
 
     public function getPresencasOfClasse(Request $request) : ?string {
+        if (Sala::findOrFail((int) base64_decode($request->classeId))->congregacao_id != auth()->user()->congregacao_id) {
+            return response()->json(['error' => "Não autorizado"], 403);
+        }
+        if ((int) auth()->user()->id_nivel > 2) {
+            if ((int) auth()->user()->id_nivel != (int) base64_decode($request->classeId)) {
+                return response()->json(['error' => "Não autorizado"], 403);
+            }
+        }
         $presencaPessoaDTO = new PresencaPessoaDTO();
         $presencaPessoaDTO->setSalaId((int) base64_decode($request->classeId));
         $presencaPessoaDTO->setDataInicio($request->initialDate);

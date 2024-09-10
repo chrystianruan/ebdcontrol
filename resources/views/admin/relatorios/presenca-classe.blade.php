@@ -6,7 +6,6 @@
 <link rel="stylesheet" href="/css/filtros.css">
 <link rel="stylesheet" href="/css/relatorio-presenca.css">
 <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
-<input type="hidden" id="url-get-format-data" value="{{ route('format.data.relatorio') }}">
 <div style="margin: 15px">
 <div class="fields">
     <div class="itens">
