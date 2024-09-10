@@ -80,6 +80,7 @@ class AdminController extends Controller
         $funcoes = $this->getArrayQuantidadePessoasPerFuncao();
         $chamadasMesTotal = Chamada::select(DB::raw('date_format(created_at, "%d/%m/%Y") as data, sum(matriculados) as mat, sum(presentes) as pre, sum(visitantes) as vis'))
         ->whereMonth('created_at', '=', Carbon::now())
+            ->whereYear('created_at', '=', Carbon::now())
         ->where('congregacao_id', '=', auth()->user()->congregacao_id)
         ->groupBy(DB::raw('date_format(created_at, "%d/%m/%Y")'))->get();
         $chamadaDia = Chamada::whereDate('created_at','=', Carbon::today())

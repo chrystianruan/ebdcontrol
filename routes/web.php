@@ -34,9 +34,7 @@ Route::post('/cadastro-geral', [PessoaController::class, 'store'])->name('cadast
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
     Route::get('/sobre', function () { return view('/about'); });
-    Route::post('/format/data/relatorio', [RelatorioController::class, 'formatData'])->name('format.data.relatorio');
-    Route::post('/get/relatorios/presenca-classe/', [RelatorioController::class, 'generateRelatorioPerDate'])->name('relatorio.per.date');
-    Route::post('/baixar-relatorio', [RelatorioController::class, 'generatePdfToRelatorioPresenca'])->name('baixar.relatorio.presenca');
+    Route::post('/baixar-relatorio-presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
 });
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
@@ -136,7 +134,6 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/pdf-relatorio/{date}', [RelatorioController::class, 'generatePdfRelatorioChamada']);
 
     Route::get('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'showRelatorioPresenca'])->name('relatorios.presenca-classe');
-    Route::post('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
 
 
 

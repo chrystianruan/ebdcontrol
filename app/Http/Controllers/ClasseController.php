@@ -9,6 +9,7 @@ use App\Http\Services\ChamadaService;
 use App\Http\Services\PessoaService;
 use App\Http\Services\PresencaPessoaService;
 use App\Models\ChamadaDiaCongregacao;
+use App\Models\PessoaSala;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Funcao;
@@ -81,6 +82,7 @@ class ClasseController extends Controller
         $chamadasMes = Chamada::where('id_sala', '=', $nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereMonth('created_at', Carbon::now())
+            ->whereYear('created_at', '=', Carbon::now())
             ->get();
         $chamadasAno = Chamada::where('id_sala', '=', $nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -215,54 +217,6 @@ class ClasseController extends Controller
             'dateChamadaDia' => $dateChamadaDia]);
     }
 
-//    public function storeChamadaClasse(Request $request) {
-//        $sala = auth()->user()->id_nivel;
-//        $chamadas = Chamada::where('id_sala', '=', $sala)
-//            ->whereDate('created_at', Carbon::today())
-//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-//            ->get();
-//
-//        if ($chamadas->count() > 0) {
-//            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
-//        }
-//
-//        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
-//
-//        $dataToInt = $this->chamadaService->convertToInt($request);
-//        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
-//        if ($validateRequest) {
-//            return redirect()->back()->with('msg2', $validateRequest);
-//        }
-//
-//        try {
-//        $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
-//
-//        $chamada = new Chamada;
-//        $chamada->id_sala = $sala;
-//        $chamada->nomes = $request->pessoas_presencas;
-//        $chamada->matriculados = $pessoas->count();
-//        $chamada->presentes = $dataToInt['presentes'];
-//        $chamada->visitantes = $dataToInt['visitantes'];
-//        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
-//        $chamada->biblias = $dataToInt['biblias'];
-//        $chamada->revistas = $dataToInt['revistas'];
-//        $chamada->observacoes = $request->observacoes;
-//        $chamada->congregacao_id = auth()->user()->congregacao_id;
-//        $chamada->save();
-//
-//        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
-//
-//        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
-//
-//        return redirect('/classe/todas-chamadas')->with('msg', $result);
-//
-//        } catch (\Exception $e) {
-//            Log::error($e->getMessage());
-//            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
-//        }
-//
-//    }
-
     public function searchChamadaClasse(Request $request)
     {
         $mes = request('mes');
@@ -316,19 +270,19 @@ class ClasseController extends Controller
         $meses_abv = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         //mes
         if (isset($request->mes)) {
-            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-                ->whereJsonContains('id_sala', '' . $nivel)
-                ->whereMonth('data_nasc', '=', $request->mes)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            $pessoas = PessoaSala::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+                ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                ->where('sala_id', $nivel)
+                ->whereMonth('pessoas.data_nasc', '=', $request->mes)
                 ->get();
 
         } else {
-            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-                ->whereJsonContains('id_sala', '' . $nivel)
-                ->whereMonth('data_nasc', '=', Carbon::now())
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            $pessoas = PessoaSala::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+                ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                ->where('sala_id', $nivel)
+                ->whereMonth('pessoas.data_nasc', '=', Carbon::now())
                 ->get();
         }
 
@@ -336,20 +290,20 @@ class ClasseController extends Controller
             'meses_abv' => $meses_abv, 'mes' => $mes]);
     }
 
-    public function generateRelatorioPerDate(Request $request)
-    {
-
-        $presencas = $this->returnData($request->initialDate, $request->finalDate, $request->congregacaoId, $request->classeId);
-
-        return $presencas;
-    }
-
-    public function returnData($initial_date, $final_date, $congregacao_id, $classe_id)
-    {
-        $chamadas = $this->generalController->getChamadas($initial_date, $final_date, $congregacao_id, $classe_id);
-        $duplicatesNamesAndPresencas = $this->generalController->getListWithNameAndPresencasDuplicates($chamadas);
-
-        return $duplicatesNamesAndPresencas;
-    }
+//    public function generateRelatorioPerDate(Request $request)
+//    {
+//
+//        $presencas = $this->returnData($request->initialDate, $request->finalDate, $request->congregacaoId, $request->classeId);
+//
+//        return $presencas;
+//    }
+//
+//    public function returnData($initial_date, $final_date, $congregacao_id, $classe_id)
+//    {
+//        $chamadas = $this->generalController->getChamadas($initial_date, $final_date, $congregacao_id, $classe_id);
+//        $duplicatesNamesAndPresencas = $this->generalController->getListWithNameAndPresencasDuplicates($chamadas);
+//
+//        return $duplicatesNamesAndPresencas;
+//    }
 }
 
