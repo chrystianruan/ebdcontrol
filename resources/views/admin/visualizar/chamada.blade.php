@@ -24,12 +24,12 @@
 
         <tbody>
 
-            @foreach(json_decode($chamada->nomes, true) as $cn)
+            @foreach($presencas as $p)
                 <tr>
-                    <td>{{ explode(' ', $cn['nome'])[0] }} {{explode(' ', $cn['nome'])[ count(explode(' ', $cn['nome'])) - 1] }}</td>
-                    <td>{{ date('d/m', strtotime($cn['data_nasc'])) }}</td>
-                    <td>@if($cn['id_funcao'] == 1) Aluno @elseif($cn['id_funcao'] == 2) Professor @elseif($cn['id_funcao'] == 3) Secretário/Classe @elseif($cn['id_funcao'] == 4) Secretário/Adm @elseif($cn['id_funcao'] == 5) Superintendente @else Erro @endif</td>
-                    <td> @if($cn['presenca'] == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
+                    <td>{{ explode(' ', $p->pessoa->nome)[0] }} {{explode(' ',$p->pessoa->nome)[ count(explode(' ', $p->pessoa->nome)) - 1] }}</td>
+                    <td>{{ date('d/m', strtotime($p->pessoa->data_nasc)) }}</td>
+                    <td>{{ $p->funcao->nome }}</td>
+                    <td> @if($p->presente == 1) <i style="color: rgb(12, 223, 12)" class="bx bx-check"></i> @else <i style="color: red" class="bx bx-x"></i> @endif</td>
                 </tr>
             @endforeach
 

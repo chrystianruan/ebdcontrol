@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pessoa extends Model
@@ -31,6 +32,10 @@ class Pessoa extends Model
             ->join('funcaos', 'funcao.id', '=', 'pessoa_salas.funcao_id')
             ->where('pessoa_salas.pessoa_id', $pessoaId)
             ->first();
+    }
+
+    public function presencas() : HasMany {
+        return $this->hasMany(PresencaPessoa::class);
     }
 
 }

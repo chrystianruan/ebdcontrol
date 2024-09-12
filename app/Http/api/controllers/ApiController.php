@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\api\controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Chamada;
@@ -8,7 +8,6 @@ use App\Models\Congregacao;
 use App\Models\Pessoa;
 use App\Models\Setor;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class ApiController extends Controller
 {
