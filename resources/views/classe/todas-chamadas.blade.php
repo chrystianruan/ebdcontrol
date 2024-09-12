@@ -97,9 +97,9 @@
         <td>{{ $c->matriculados }}</td>
         <td>{{ $c->presentes }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->presentes / $c->matriculados, 1, ',', '.') }}%) </span></td>
         <td>{{ $c->visitantes }} </td>
-        <td>{{ $c->assist_total }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->assist_total / $c->matriculados, 1, ',', '.') }}%) </span></td>
-        <td>{{ $c->biblias }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->biblias / $c->assist_total, 1, ',', '.') }}%) </span></td>
-        <td>{{ $c->revistas }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->revistas / $c->assist_total, 1, ',', '.') }}%)</span></td>
+        <td>{{ $c->presentes + $c->visitantes }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * ($c->presentes + $c->visitantes) / $c->matriculados, 1, ',', '.') }}%) </span></td>
+        <td>{{ $c->biblias }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->biblias / ($c->presentes + $c->visitantes), 1, ',', '.') }}%) </span></td>
+        <td>{{ $c->revistas }} <span style="color: rgb(9, 150, 115); font-weight: bold">({{ number_format(100 * $c->revistas / ($c->presentes + $c->visitantes), 1, ',', '.') }}%)</span></td>
         <td>@if($c->observacoes)<i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i> @endif</td>
         <td><a href="/classe/visualizar-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left; color: #7B4EA5" class='bx bx-show icon'></i> </a>
         <a href="/classe/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:#7B4EA5;float: left; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;float: left;" class='bx bxs-file-pdf'></i> </a> </td>

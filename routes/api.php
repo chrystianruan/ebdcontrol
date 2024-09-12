@@ -23,5 +23,3 @@ Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
 Route::get('/salas/congregacao/{congregacaoId}', [SalaController::class, 'getSalasByCongregacao']);
 Route::get('/funcaos', [FuncaoController::class, 'getFuncaos']);
-
-Route::get('/getChamadas/{periodoInicial}/{periodoFinal}', [ApiController::class, 'getChamadas']);

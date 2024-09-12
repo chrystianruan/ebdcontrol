@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\TipoPresenca;
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Http\Services\PessoaService;
+use App\Http\Services\PresencaPessoaService;
 use App\Mail\ChamadaRealizadaMail;
-use App\Mail\PessoaCadastradaMail;
 use App\Models\ChamadaDiaCongregacao;
+use App\Models\PessoaSala;
 use App\Models\Congregacao;
 use Illuminate\Http\Request;
 use App\Models\Formation;
@@ -25,6 +27,7 @@ use App\Http\Services\RelatorioService;
 use DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 
 class ClasseController extends Controller
 {
@@ -35,13 +38,16 @@ class ClasseController extends Controller
     protected $pessoaService;
     protected $chamadaDiaCongregacaoRepository;
     protected $pessoaRepository;
+    protected $presencaPessoaService;
 
-    public function __construct(GeneralController $generalController,
-                                RelatorioService $relatorioService,
-    ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
-    ChamadaService $chamadaService,
-    PessoaService $pessoaService,
-    PessoaRepository $pessoaRepository,
+    public function __construct(
+        GeneralController $generalController,
+        RelatorioService $relatorioService,
+        ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+        ChamadaService $chamadaService,
+        PessoaService $pessoaService,
+        PessoaRepository $pessoaRepository,
+        PresencaPessoaService $presencaPessoaService,
     )
     {
         $this->generalController = $generalController;
@@ -50,6 +56,7 @@ class ClasseController extends Controller
         $this->chamadaService = $chamadaService;
         $this->pessoaService = $pessoaService;
         $this->pessoaRepository = $pessoaRepository;
+        $this->presencaPessoaService = $presencaPessoaService;
     }
 
     public function indexClasse()
@@ -78,6 +85,7 @@ class ClasseController extends Controller
         $chamadasMes = Chamada::where('id_sala', '=', $nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereMonth('created_at', Carbon::now())
+            ->whereYear('created_at', '=', Carbon::now())
             ->get();
         $chamadasAno = Chamada::where('id_sala', '=', $nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -86,9 +94,16 @@ class ClasseController extends Controller
         $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->id_nivel);
         $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->id_nivel);
 
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
         return view('/classe/dashboard', ['niverMes' => $niverMes, 'alunosInativos' => $alunosInativos,
             'chamadaDia' => $chamadaDia, 'interesseProf' => $interesseProf, 'idadesPessoas' => $idadesPessoas, 'formacoes' => $formacoes,
-            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes]);
+            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes, 'dateChamadaDia' => $dateChamadaDia]);
     }
 
     public function indexCadastroClasse()
@@ -205,58 +220,6 @@ class ClasseController extends Controller
             'dateChamadaDia' => $dateChamadaDia]);
     }
 
-    public function storeChamadaClasse(Request $request) {
-        $sala = auth()->user()->id_nivel;
-        $chamadas = Chamada::where('id_sala', '=', $sala)
-            ->whereDate('created_at', Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-
-        if ($chamadas->count() == 1) {
-            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
-        }
-//        $pessoas = DB::table('pessoas')
-//            ->select('nome', 'data_nasc', 'id_funcao')
-//            ->whereJsonContains('id_sala', '' . $sala)
-//            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-//            ->where('situacao', '=', 1)
-//            ->orderBy('nome')->get();
-
-        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
-
-        $dataToInt = $this->chamadaService->convertToInt($request);
-        $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
-        if ($validateRequest) {
-            return redirect()->back()->with('msg2', $validateRequest);
-        }
-
-        $chamada = new Chamada;
-        $chamada->id_sala = $sala;
-        $chamada->nomes = $request->pessoas_presencas;
-        $chamada->matriculados = $pessoas->count();
-        $chamada->presentes = $dataToInt['presentes'];
-        $chamada->visitantes = $dataToInt['visitantes'];
-        $chamada->assist_total = $dataToInt['presentes'] + $dataToInt['visitantes'];
-        $chamada->biblias = $dataToInt['biblias'];
-        $chamada->revistas = $dataToInt['revistas'];
-        $chamada->observacoes = $request->observacoes;
-        $chamada->congregacao_id = auth()->user()->congregacao_id;
-        $chamada->save();
-
-        $chamadaRealizada = Chamada::where('congregacao_id', auth()->user()->congregacao_id)->latest()->first();
-
-        $result = $this->relatorioService->saveRelatorio($chamadaRealizada);
-        $salaNome = Sala::findOrFail((int) $chamada->id_sala)->nome;
-        $congregacaoNome = Congregacao::findOrFail((int) $chamada->congregacao_id)->nome;
-
-        $email = new ChamadaRealizadaMail($salaNome, $congregacaoNome);
-        Mail::to('chrystianr37@gmail.com')
-            ->send($email);
-
-        return redirect('/classe/todas-chamadas')->with('msg', $result);
-
-    }
-
     public function searchChamadaClasse(Request $request)
     {
         $mes = request('mes');
@@ -300,19 +263,6 @@ class ClasseController extends Controller
 
     }
 
-
-    public function showChamadaClasse($id)
-    {
-        $nivel = auth()->user()->id_nivel;
-        $findSala = Sala::findOrFail($nivel);
-        $chamada = Chamada::findOrFail($id);
-        if ($nivel != $chamada->id_sala) {
-            return redirect('/classe')->with('msg2', 'Seu usuário não permissão para ver esta chamada');
-        }
-        return view('/classe/visualizar-chamada', ['chamada' => $chamada, 'findSala' => $findSala]);
-
-    }
-
     public function searchAniversariantes(Request $request)
     {
         $nivel = auth()->user()->id_nivel;
@@ -323,19 +273,19 @@ class ClasseController extends Controller
         $meses_abv = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
         //mes
         if (isset($request->mes)) {
-            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-                ->whereJsonContains('id_sala', '' . $nivel)
-                ->whereMonth('data_nasc', '=', $request->mes)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            $pessoas = PessoaSala::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+                ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                ->where('sala_id', $nivel)
+                ->whereMonth('pessoas.data_nasc', '=', $request->mes)
                 ->get();
 
         } else {
-            $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
-                ->join('funcaos', 'funcaos.id', '=', 'pessoas.id_funcao')
-                ->whereJsonContains('id_sala', '' . $nivel)
-                ->whereMonth('data_nasc', '=', Carbon::now())
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            $pessoas = PessoaSala::select('pessoas.*', 'funcaos.nome as nome_funcao')
+                ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+                ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+                ->where('sala_id', $nivel)
+                ->whereMonth('pessoas.data_nasc', '=', Carbon::now())
                 ->get();
         }
 
@@ -343,29 +293,20 @@ class ClasseController extends Controller
             'meses_abv' => $meses_abv, 'mes' => $mes]);
     }
 
-    public function generatePdfToChamadas($id)
-    {
-
-        $chamada = Chamada::select('chamadas.*', 'salas.nome')->join('salas', 'chamadas.id_sala', '=', 'salas.id')->findOrFail($id);
-
-        return PDF::loadView('/classe/pdf-chamada', compact(['chamada']))
-            ->stream('frequencia.pdf');
-    }
-
-    public function generateRelatorioPerDate(Request $request)
-    {
-
-        $presencas = $this->returnData($request->initialDate, $request->finalDate, $request->congregacaoId, $request->classeId);
-
-        return $presencas;
-    }
-
-    public function returnData($initial_date, $final_date, $congregacao_id, $classe_id)
-    {
-        $chamadas = $this->generalController->getChamadas($initial_date, $final_date, $congregacao_id, $classe_id);
-        $duplicatesNamesAndPresencas = $this->generalController->getListWithNameAndPresencasDuplicates($chamadas);
-
-        return $duplicatesNamesAndPresencas;
-    }
+//    public function generateRelatorioPerDate(Request $request)
+//    {
+//
+//        $presencas = $this->returnData($request->initialDate, $request->finalDate, $request->congregacaoId, $request->classeId);
+//
+//        return $presencas;
+//    }
+//
+//    public function returnData($initial_date, $final_date, $congregacao_id, $classe_id)
+//    {
+//        $chamadas = $this->generalController->getChamadas($initial_date, $final_date, $congregacao_id, $classe_id);
+//        $duplicatesNamesAndPresencas = $this->generalController->getListWithNameAndPresencasDuplicates($chamadas);
+//
+//        return $duplicatesNamesAndPresencas;
+//    }
 }
 
