@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\api\controllers\ApiController;
-use App\Http\api\controllers\FuncaoController;
-use App\Http\api\controllers\SalaController;
 use Illuminate\Support\Facades\Route;
+use App\Http\api\controllers\ApiController;
+use App\Http\api\controllers\SalaController;
+use App\Http\api\controllers\FuncaoController;
+use App\Http\api\controllers\PessoaController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,5 +22,6 @@ Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
 Route::get('/salas/congregacao/{congregacaoId}', [SalaController::class, 'getSalasByCongregacao']);
 Route::get('/funcaos', [FuncaoController::class, 'getFuncaos']);
+Route::get('/pessoas_sala/{sala_id}', [PessoaController::class, 'getPessoasBySalaWithPresencas']);
 
 Route::get('/getChamadas/{periodoInicial}/{periodoFinal}', [ApiController::class, 'getChamadas']);

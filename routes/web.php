@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChamadaAdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -35,6 +36,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
     Route::get('/sobre', function () { return view('/about'); });
     Route::post('/baixar-relatorio-presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
+    Route::post('/realizar-chamada', [ChamadaController::class, 'realizarChamada']);
 });
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
@@ -45,7 +47,6 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::post('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::get('/classe/visualizar-pessoa/{id}', [ClasseController::class, 'showPessoaClasse']);
     Route::get('/classe/chamada-dia', [ClasseController::class, 'indexChamadaClasse']);
-    Route::post('/classe/chamada-dia', [ChamadaController::class, 'realizarChamada']);
     Route::get('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
     Route::post('/classe/todas-chamadas', [ClasseController::class, 'searchChamadaClasse']);
     Route::get('/classe/visualizar-chamada/{id}', [ChamadaController::class, 'showChamadaClasse']);
@@ -120,12 +121,12 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::put('/admin/update/aviso/{id}', [AdminController::class, 'updateAviso']);
     Route::delete('/admin/filtro/aviso/{id}', [AdminController::class, 'destroyAviso']);
 
-
+    Route::get('/admin/realizar-chamadas', [ChamadaAdminController::class, 'indexRealizarChamadas']);
     Route::get('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::post('/admin/chamadas', [AdminController::class, 'searchChamadas']);
     Route::get('/admin/visualizar/chamada/{id}', [ChamadaController::class, 'showChamada']);
-    Route::get('/admin/visualizar/pdf-chamada/{id}', [ChamadaController::class, 'generatePdfToChamadasToAdmin']);
-    Route::get('/admin/visualizar/pdf-folha-frequencia/{id}/{date}', [AdminController::class, 'generatePdfToChamadasNotRealized']);
+    Route::get('/admin/visualizar/pdf-chamada/{id}', [ChamadaAdminController::class, 'generatePdfToChamadasToAdmin']);
+    Route::get('/admin/visualizar/pdf-folha-frequencia/{id}/{date}', [ChamadaAdminController::class, 'printFolhaFrequencia']);
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
     Route::get('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);

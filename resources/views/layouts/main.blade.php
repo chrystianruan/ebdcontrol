@@ -73,16 +73,20 @@
           <li><a href="/admin/financeiro/saida">Saída</a></li>
         </ul>
       </li>
-
-      <li>
-        <a href="/admin/chamadas">
-          <i class="bx bx-list-ul"></i>
-          <span class="link_name">Chamadas</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/admin/chamadas">Chamadas</a></li>
-        </ul>
-      </li>
+        <li>
+            <div class="iocn-link">
+                <a href="#">
+                    <i class='bx bx-list-ul' ></i>
+                    <span class="link_name">Chamadas</span>
+                </a>
+                <i class='bx bxs-chevron-down arrow' ></i>
+            </div>
+            <ul class="sub-menu">
+                <li><a class="link_name" href="#">Chamadas</a></li>
+                <li><a href="/admin/realizar-chamadas">Realizar Chamada</a></li>
+                <li><a href="/admin/chamadas">Filtrar Chamadas</a></li>
+            </ul>
+        </li>
       <li>
         <div class="iocn-link">
           <a href="#">
@@ -93,7 +97,6 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Relatórios</a></li>
-{{--          <li><a href="/admin/relatorios/cadastro">Cadastro (Relatório do dia) </a></li>--}}
           <li><a href="/admin/relatorios/todos">De chamadas</a></li>
             <li><a href="/admin/relatorios/presenca-classe">De presenças</a></li>
 

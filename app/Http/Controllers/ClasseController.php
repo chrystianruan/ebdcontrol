@@ -196,15 +196,7 @@ class ClasseController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereDate('created_at', Carbon::today())
             ->get();
-        $pessoas = Pessoa::select('pessoas.id', 'pessoas.nome', 'data_nasc', DB::raw("0 as presenca"), 'funcaos.id as id_funcao', 'funcaos.nome as nome_funcao')
-            ->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
-            ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
-            ->where('pessoas.situacao', '=', 1)
-            ->where('pessoa_salas.sala_id', $sala)
-            ->where('pessoas.congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('pessoas.nome')
-            ->groupBy('pessoa_salas.pessoa_id')
-            ->get();
+        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacaoWithPresenca($sala);
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();

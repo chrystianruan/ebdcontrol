@@ -92,26 +92,23 @@ class ChamadaController extends Controller
     }
 
     public function realizarChamada(Request $request) {
-        $sala = auth()->user()->id_nivel;
-
-
-        if ($this->chamadaRepository->getChamadaToday($sala)) {
-            return redirect('/classe/chamada-dia')->with('msg2', 'A chamada não pode ser realizada.');
+        if ($this->chamadaRepository->getChamadaToday($request->sala)) {
+            return redirect($request->route)->with('msg2', 'A chamada não pode ser realizada, pois já encontra concluída');
         }
 
-        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($sala);
+        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($request->sala);
 
         $dataToInt = $this->chamadaService->convertToInt($request);
         $validateRequest = $this->chamadaService->validateRequest($dataToInt, $pessoas->count());
         if ($validateRequest) {
-            return redirect()->back()->with('msg2', $validateRequest);
+            return redirect($request->route)->with('msg2', $validateRequest);
         }
-
+        DB::beginTransaction();
         try {
-            $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, auth()->user()->id_nivel, TipoPresenca::SISTEMA);
+            $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, $request->sala, TipoPresenca::SISTEMA);
 
-            if ($this->chamadaRepository->getChamadaToday($sala)) {
-                $chamada = Chamada::where('id_sala', '=', $sala)
+            if ($this->chamadaRepository->getChamadaToday($request->sala)) {
+                $chamada = Chamada::where('id_sala', '=', $request->sala)
                     ->whereDate('created_at', Carbon::today())
                     ->first();
                 $chamada->matriculados = $pessoas->count();
@@ -121,11 +118,12 @@ class ChamadaController extends Controller
                 $chamada->observacoes = $request->observacoes;
                 $chamada->save();
 
-                return redirect('/classe/todas-chamadas')->with('msg', 'Chamada realizada com sucesso!');
+                DB::commit();
+                return redirect($request->route)->with('msg', 'Chamada realizada com sucesso!');
             }
 
             $novaChamada = new Chamada;
-            $novaChamada->id_sala = $sala;
+            $novaChamada->id_sala = $request->sala;
             $novaChamada->matriculados = $pessoas->count();
             $novaChamada->visitantes = $dataToInt['visitantes'];
             $novaChamada->biblias = $dataToInt['biblias'];
@@ -134,27 +132,18 @@ class ChamadaController extends Controller
             $novaChamada->congregacao_id = auth()->user()->congregacao_id;
             $novaChamada->save();
 
-            return redirect('/classe/todas-chamadas')->with('msg', 'Chamada realizada com sucesso!');
+            DB::commit();
+
+            return redirect($request->route)->with('msg', 'Chamada realizada com sucesso!');
 
 
         } catch (\Exception $e) {
+            DB::rollback();
             Log::error($e->getMessage());
-            return redirect('/classe/todas-chamadas')->with('msg2', 'Erro ao preencher chamada');
+            return redirect($request->route)->with('msg2', 'Erro Desconhecido ao preencher chamada. Contate o administrador do sistema!');
         }
     }
 
-    public function generatePdfToChamadasToAdmin($id) {
-
-        $chamada = Chamada::findOrFail($id);
-        if ($chamada->sala->congregacao->id != auth()->user()->congregacao_id) {
-            return abort(403);
-        }
-        $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
-        $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
-
-        return Pdf::loadView('/admin/visualizar/pdf-chamada', compact(['chamada', 'presencas', 'salas']))
-            ->stream('frequencia-finalizada.pdf');
-    }
 
     public function generatePdfToChamadasToClasse($id)
     {
