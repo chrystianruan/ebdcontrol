@@ -16,9 +16,11 @@
         </ul>
     </div>
     @endif
-<form action="/classe/chamada-dia" method="POST">
+<form action="/realizar-chamada" method="POST">
     @csrf
     <input type="hidden" id="pessoas" name="pessoas_presencas" value="{{ $pessoas }}">
+    <input type="hidden" id="sala" name="sala" value="{{ auth()->user()->id_nivel }}">
+    <input type="hidden" name="route" value="{{ url('/classe/todas-chamadas') }}">
 <div style=" overflow-x: auto">
 <table style="margin: 3% 3% 0 3%;">
     <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->id_nivel) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
@@ -32,11 +34,11 @@
 
     <tbody>
         @foreach($pessoas as $p)
-        <tr @if($p->id_funcao == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
-        <td>{{ $p -> nome}}</td>
-        <td>{{ $p->nome_funcao }}</td>
+        <tr @if($p->funcao_id == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
+        <td>{{ $p->pessoa_nome}}</td>
+        <td>{{ $p->funcao_nome }}</td>
         <td>
-            <select name="presencas[]" id="presenca-{{ $p->id }}" class="presencas">
+            <select name="presencas[]" id="presenca-{{ $p->pessoa_id }}" class="presencas">
                 <option selected value="0" style="background-color: red">Não</option>
                 <option value="1" style="background-color: green">Sim</option>
             </select>
@@ -101,9 +103,4 @@
 @endif
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
  <script src="/js/chamada.js"></script>
-<script>
-
-
-
-  </script>
 @endsection
