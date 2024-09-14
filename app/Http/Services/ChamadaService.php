@@ -32,7 +32,10 @@ class ChamadaService
 
         foreach($salas as $sala) {
             if (!$this->isPresentInChamadas($chamadas, $sala->id)){
-                array_push($classes, $sala->nome);
+                $classes[] = [
+                    'id' => $sala->id,
+                    'nome' => $sala->nome,
+                ];
             }
         }
 

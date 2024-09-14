@@ -819,26 +819,4 @@ class AdminController extends Controller
         return view('/admin/sobre');
     }
 
-    public function generatePdfToRelatorios($id) {
-
-        $relatorio = Relatorio::findOrFail($id);
-        $classes = Sala::select('id', 'nome')
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
-
-        return Pdf::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'classes']))
-        ->setPaper('a4', 'landscape')
-        ->stream('relatorio.pdf');
-    }
-
-    public function generatePdfToChamadasNotRealized($idClasse, $dateRequest) {
-        $classeSelected = Sala::select('nome')->findOrFail($idClasse);
-        $date = $dateRequest;
-
-        $pessoas = $this->pessoaRepository->findBySalaIdAndSituacao($idClasse);
-
-
-        return Pdf::loadView('/admin/visualizar/pdf-folha-frequencia', compact(['pessoas', 'date', 'classeSelected']))
-        ->stream("frequencia.pdf");
-    }
 }

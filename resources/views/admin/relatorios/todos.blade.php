@@ -7,18 +7,17 @@
 <div style="margin: 15px">
 <form action="/admin/relatorios/todos" method="POST">
     @csrf
-    @if(date('w') == 0)
+    @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
         @if($chamadas->count() != $salas->count())
         <div class="orientation">
           <div class="aaa">
               @if($salas->count() - $chamadas->count() == $salas->count())
                 <p>Nenhuma classe enviou a chamada</p>
               @elseif($salas->count() - $chamadas->count() != $salas->count() && $salas->count() - $chamadas->count() != 0)
-                  <p>Classes que ainda não enviaram a chamada ({{ count($classesFaltantes) }}): @for($i = 0; $i < count($classesFaltantes); $i++) <span style="font-weight: bold">{{ $classesFaltantes[$i] }}@if($i+1 != count($classesFaltantes)),@endif </span> @endfor </p>
+                  <p>Classes que ainda não enviaram a chamada ({{ count($classesFaltantes) }}): @for($i = 0; $i < count($classesFaltantes); $i++) <span style="font-weight: bold">{{ $classesFaltantes[$i]['nome'] }}@if($i+1 != count($classesFaltantes)),@endif </span> @endfor </p>
               @else
                 <p>Todas as classes enviaram a chamada!</p>
               @endif
-{{--              {{ $salas->count() - $chamadas->count() }} classes ainda não enviaram as chamadas.--}}
           </div>
         </div>
         @endif
