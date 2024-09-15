@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\ChamadaController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\api\ApiController;
-use App\Http\Controllers\api\SalaController;
-use App\Http\Controllers\api\FuncaoController;
+use App\Http\api\controllers\ApiController;
+use App\Http\api\controllers\SalaController;
+use App\Http\api\controllers\FuncaoController;
+use App\Http\api\controllers\PessoaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,3 +22,4 @@ Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
 Route::get('/salas/congregacao/{congregacaoId}', [SalaController::class, 'getSalasByCongregacao']);
 Route::get('/funcaos', [FuncaoController::class, 'getFuncaos']);
+Route::get('/pessoas_sala/{sala_id}', [PessoaController::class, 'getPessoasBySalaWithPresencas']);

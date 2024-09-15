@@ -46,16 +46,16 @@ class PresencaPessoaService
 
     public function marcarPresencaIndividual(array $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
         try {
-            $pessoaPresenteToday = $this->presencaPessoaRepository->findByPessoaIdAndToday((int) $presenca['id']);
+            $pessoaPresenteToday = $this->presencaPessoaRepository->findByPessoaIdAndToday((int) $presenca['pessoa_id']);
 
             if ($pessoaPresenteToday) {
                return $this->verifyPresenca($pessoaPresenteToday, $presenca, $salaId, $tipoPresenca);
             }
 
             $presencaPessoa = new PresencaPessoa;
-            $presencaPessoa->pessoa_id = $presenca['id'];
+            $presencaPessoa->pessoa_id = $presenca['pessoa_id'];
             $presencaPessoa->sala_id = $salaId;
-            $presencaPessoa->funcao_id = $presenca['id_funcao'];
+            $presencaPessoa->funcao_id = $presenca['funcao_id'];
             $presencaPessoa->presente = $presenca['presenca'];
             $presencaPessoa->tipo_presenca_id = $tipoPresenca;
             $presencaPessoa->save();
