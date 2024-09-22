@@ -85,7 +85,7 @@ class PresencaPessoaService
         } else {
             if ((int) $presenca['presenca'] == 1) {
                 $pessoaPresenteToday->sala_id = $salaId;
-                $pessoaPresenteToday->funcao_id = $presenca['id_funcao'];
+                $pessoaPresenteToday->funcao_id = $presenca['funcao_id'];
                 $pessoaPresenteToday->tipo_presenca_id = $tipoPresenca;
                 $pessoaPresenteToday->presente = 1;
                 $pessoaPresenteToday->save();
