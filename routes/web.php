@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChamadaAdminController;
+use App\Http\Controllers\PreCadastroController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -42,7 +43,7 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);
     Route::get('/classe/cadastro-pessoa', [PessoaController::class, 'indexCadastroClasse']);
-    Route::post('/classe/cadastro-pessoa', [PessoaController::class, 'store'])->name('cadastro.pessoa.classe');
+    Route::post('/classe/cadastro-pessoa', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.classe');
     Route::get('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::post('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::get('/classe/visualizar-pessoa/{id}', [ClasseController::class, 'showPessoaClasse']);

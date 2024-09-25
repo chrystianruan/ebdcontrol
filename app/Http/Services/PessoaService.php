@@ -66,7 +66,7 @@ class PessoaService
     }
 
 
-    public function store(StorePessoaRequest $request) {
+    public function store(mixed $request) {
         try {
             $classeIdRequest = intval($request->get('classe'));
             $congregacaoIdRequest = intval($request->get('congregacao'));
