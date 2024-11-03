@@ -87,6 +87,7 @@ class AdminController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
         $chamadasMes = Chamada::whereMonth('created_at', '=', Carbon::now())
+            ->whereYear('created_at', '=', Carbon::now())
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
         $chamadasAno = Chamada::whereYear('created_at', '=', Carbon::now())
