@@ -125,9 +125,10 @@ class AdminController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')
             ->get();
+        $funcoes = Funcao::orderBy('nome')->get();
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
+        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual, 'funcoes' => $funcoes]);
     }
 
 //    public function searchPessoa(Request $request) {
