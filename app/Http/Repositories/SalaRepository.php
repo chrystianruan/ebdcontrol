@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Collection;
 class SalaRepository
 {
     public function findSalasByCongregacaoId(int $congregacaoId) : ?Collection{
-        return Sala::select('id', 'nome')
+        return Sala::select('id', 'nome', 'tipo')
             ->where('id', '>', 2)
             ->where('congregacao_id', $congregacaoId)
             ->get();

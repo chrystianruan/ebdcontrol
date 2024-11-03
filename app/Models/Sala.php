@@ -26,4 +26,8 @@ class Sala extends Model
     public function chamadas() : HasMany {
         return $this->hasMany(Chamada::class);
     }
+
+    public function preCadastros() : HasMany {
+        return $this->hasMany(PreCadastro::class);
+    }
 }

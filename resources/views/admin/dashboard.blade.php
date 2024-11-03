@@ -122,6 +122,16 @@
   <li>@if($interesseProf->count() < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf->count()}}</span> interessado(s) @endif</li>
   <h3>Inativos</h3>
   <li>@if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{ $alunosInativos->count() }}</span> inativo(s) @endif</li>
+    <h3>Pré-Cadastros</h3>
+    <li>
+        @if($preCadastros < 1)
+            Nenhum pré-cadastro
+        @else
+            <span style="font-weight: bold; color:chartreuse">
+                {{ $preCadastros }}
+            </span> registro(s)
+        @endif
+    </li>
 
 </div>
 

@@ -40,7 +40,6 @@
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Cadastro</a></li>
           <li><a href="/admin/cadastro/pessoa">Pessoa</a></li>
-          <li><a href="/admin/cadastro/aviso">Avisos</a></li>
         </ul>
       </li>
       <li>
@@ -53,26 +52,26 @@
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">Filtros</a></li>
-          <li><a href="/admin/filtro/pessoa">Pessoa</a></li>
-          <li><a href="/admin/filtro/aviso">Avisos</a></li>
+          <li><a href="/admin/filtro/pessoa">Pessoas</a></li>
+          <li><a href="/admin/filtro/pre-cadastros">Pré-Cadastros</a></li>
         </ul>
       </li>
-      <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-dollar' ></i>
-            <span class="link_name">Financeiro</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Financeiro</a></li>
-          <li><a href="/admin/financeiro/geral">Geral</a></li>
-          <li><a href="/admin/financeiro/filtro">Filtro</a></li>
-          <li><a href="/admin/financeiro/entrada">Entrada</a></li>
-          <li><a href="/admin/financeiro/saida">Saída</a></li>
-        </ul>
-      </li>
+{{--      <li>--}}
+{{--        <div class="iocn-link">--}}
+{{--          <a href="#">--}}
+{{--            <i class='bx bx-dollar' ></i>--}}
+{{--            <span class="link_name">Financeiro</span>--}}
+{{--          </a>--}}
+{{--          <i class='bx bxs-chevron-down arrow' ></i>--}}
+{{--        </div>--}}
+{{--        <ul class="sub-menu">--}}
+{{--          <li><a class="link_name" href="#">Financeiro</a></li>--}}
+{{--          <li><a href="/admin/financeiro/geral">Geral</a></li>--}}
+{{--          <li><a href="/admin/financeiro/filtro">Filtro</a></li>--}}
+{{--          <li><a href="/admin/financeiro/entrada">Entrada</a></li>--}}
+{{--          <li><a href="/admin/financeiro/saida">Saída</a></li>--}}
+{{--        </ul>--}}
+{{--      </li>--}}
         <li>
             <div class="iocn-link">
                 <a href="#">
