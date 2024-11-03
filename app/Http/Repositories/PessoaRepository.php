@@ -114,4 +114,20 @@ class PessoaRepository
             ->groupBy('pessoa_salas.pessoa_id')
             ->get();
     }
+
+
+    public function findByNome(string $nome, int $congregacaoId) : ?Collection {
+        return Pessoa::where('nome', 'like', '%' . $nome . '%')
+            ->where('congregacao_id', $congregacaoId)
+            ->get();
+    }
+
+    public function findByNomeOrDateBirthdayOrSexOrNumber(string $nome, string $dateBirthday, int $sexo, string $numberTelephone) : ?Collection {
+        return Pessoa::where('nome', 'like', '%' . $nome . '%')
+            ->where('congregacao_id', auth()->user()->congregacao_id)
+            ->orWhere('data_nasc', '=', $dateBirthday)
+            ->orWhere('sexo', '=', $sexo)
+            ->orWhere('telefone', '=', $numberTelephone)
+            ->get();
+    }
 }

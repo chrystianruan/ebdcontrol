@@ -31,7 +31,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::get('/cadastro/{congregacaoId}', [\App\Http\Controllers\PessoaController::class, 'indexCadastroGeral']);
-Route::post('/cadastro-geral', [PessoaController::class, 'store'])->name('cadastro.pessoa.geral');
+Route::post('/cadastro-geral', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.geral');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
@@ -101,6 +101,13 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);
     Route::get('/admin/edit/pessoa/{id}', [AdminController::class, 'editPessoa']);
     Route::put('/admin/update/pessoa/{id}', [PessoaController::class, 'update']);
+
+    Route::get('/admin/filtro/pre-cadastros', [PreCadastroController::class, 'list']);
+    Route::post('/admin/filtro/pre-cadastros', [PreCadastroController::class, 'list']);
+    Route::post('/admin/approve/pre-cadastro/{id}', [PreCadastroController::class, 'approve']);
+    Route::get('/admin/edit/pre-cadastro/{id}', [PreCadastroController::class, 'edit']);
+    Route::put('/admin/update/pre-cadastro/{id}', [PreCadastroController::class, 'update']);
+    Route::delete('/admin/remove/pre-cadastro/{id}', [PreCadastroController::class, 'destroy']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);
     Route::get('/admin/financeiro/filtro', [AdminController::class, 'searchFinanceiro']);
