@@ -7,7 +7,7 @@ use App\Http\Repositories\SalaRepository;
 use App\Models\Sala;
 use Illuminate\Database\Eloquent\Collection;
 
-class SalaController extends Controller
+class SalaRestController extends Controller
 {
     private $salaRepository;
     public function __construct(SalaRepository $salaRepository) {

@@ -4,9 +4,10 @@
 @endpush
 <div class="row" style="margin: 2%">
     <input type="hidden" id="url" value="{{ url('/api/pessoas') }}">
+    <input type="hidden" value="{{ route('api.pessoa.store.verify-duplicated') }}" id="url-verify">
     <div class="col-75">
         <div class="container">
-            <form action="{{route($route)}}" method="POST">
+            <form action="{{route($route)}}" method="POST" id="form-store">
                 @csrf
                 <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->congregacao_id }}">
                 @if ($route == "cadastro.pessoa.classe")
@@ -173,7 +174,7 @@
 
                 </div>
 
-                <input type="submit" value="Cadastrar" class="btn">
+                <input type="button" value="Cadastrar" class="btn" id="btn-store">
             </form>
         </div>
     </div>

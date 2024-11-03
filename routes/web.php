@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChamadaAdminController;
+use App\Http\Controllers\PreCadastroController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -30,7 +31,7 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::get('/forgot-password', [AuthController::class, 'forgotPassword']);
 
 Route::get('/cadastro/{congregacaoId}', [\App\Http\Controllers\PessoaController::class, 'indexCadastroGeral']);
-Route::post('/cadastro-geral', [PessoaController::class, 'store'])->name('cadastro.pessoa.geral');
+Route::post('/cadastro-geral', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.geral');
 
 Route::middleware(['auth'])->group(function() {
     Route::get('/inicio', [AuthController::class, 'inicio'])->name('inicio');
@@ -42,7 +43,7 @@ Route::middleware(['auth'])->group(function() {
 Route::middleware(['auth', 'classe', 'status'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);
     Route::get('/classe/cadastro-pessoa', [PessoaController::class, 'indexCadastroClasse']);
-    Route::post('/classe/cadastro-pessoa', [PessoaController::class, 'store'])->name('cadastro.pessoa.classe');
+    Route::post('/classe/cadastro-pessoa', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.classe');
     Route::get('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::post('/classe/pessoas', [ClasseController::class, 'searchPessoaClasse']);
     Route::get('/classe/visualizar-pessoa/{id}', [ClasseController::class, 'showPessoaClasse']);
@@ -100,6 +101,13 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin/visualizar/pessoa/{id}', [AdminController::class, 'showPessoa']);
     Route::get('/admin/edit/pessoa/{id}', [AdminController::class, 'editPessoa']);
     Route::put('/admin/update/pessoa/{id}', [PessoaController::class, 'update']);
+
+    Route::get('/admin/filtro/pre-cadastros', [PreCadastroController::class, 'list']);
+    Route::post('/admin/filtro/pre-cadastros', [PreCadastroController::class, 'list']);
+    Route::post('/admin/approve/pre-cadastro/{id}', [PreCadastroController::class, 'approve']);
+    Route::get('/admin/edit/pre-cadastro/{id}', [PreCadastroController::class, 'edit']);
+    Route::put('/admin/update/pre-cadastro/{id}', [PreCadastroController::class, 'update']);
+    Route::delete('/admin/remove/pre-cadastro/{id}', [PreCadastroController::class, 'destroy']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);
     Route::get('/admin/financeiro/filtro', [AdminController::class, 'searchFinanceiro']);

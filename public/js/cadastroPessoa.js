@@ -32,3 +32,28 @@ $(document).ready(function() {
         $("#telefone_responsavel").val(this.value.match(/[0-9]*/));
     });
 });
+
+
+$('#btn-store').click(function () {
+    $.ajax({
+        url: $('#url-verify').val(),
+        type: 'POST',
+        data: {
+            nome: $('#nome').val(),
+            congregacao: $('#congregacao').val(),
+            _token: $('meta[name="csrf-token"]').attr('content'),
+        }
+    }).done(function(data){
+        $('#form-store').submit();
+    }).fail(function(jqXHR, textStatus, msg){
+        if(jqXHR.status === 403) {
+            var check = confirm("[VALIDAÇÃO] Provavelmente está pessoa já está cadastrada no sistema. Tem certeza que deseja cadastrar mesmo assim?")
+            if (check) {
+                $('#form-store').submit();
+            }
+        } else {
+            alert(msg)
+        }
+    })
+})
+

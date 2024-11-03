@@ -2,10 +2,11 @@
 
 namespace App\Http\api\controllers;
 
+use App\Http\Controllers\Controller;
 use App\Http\Repositories\FuncaoRepository;
 use Illuminate\Database\Eloquent\Collection;
 
-class FuncaoController
+class FuncaoRestController extends Controller
 {
     private $funcaoRepository;
     public function __construct(FuncaoRepository $funcaoRepository) {
