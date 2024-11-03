@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\api\controllers\ApiController;
-use App\Http\api\controllers\SalaController;
-use App\Http\api\controllers\FuncaoController;
-use App\Http\api\controllers\PessoaController;
+use App\Http\api\controllers\SalaRestController;
+use App\Http\api\controllers\FuncaoRestController;
+use App\Http\api\controllers\PessoaRestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +20,7 @@ use App\Http\api\controllers\PessoaController;
 Route::post('/pessoas', [ApiController::class, 'getPessoas']);
 Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
-Route::get('/salas/congregacao/{congregacaoId}', [SalaController::class, 'getSalasByCongregacao']);
-Route::get('/funcaos', [FuncaoController::class, 'getFuncaos']);
-Route::get('/pessoas_sala/{sala_id}', [PessoaController::class, 'getPessoasBySalaWithPresencas']);
+Route::get('/salas/congregacao/{congregacaoId}', [SalaRestController::class, 'getSalasByCongregacao']);
+Route::get('/funcaos', [FuncaoRestController::class, 'getFuncaos']);
+Route::get('/pessoas_sala/{sala_id}', [PessoaRestController::class, 'getPessoasBySalaWithPresencas']);
+Route::post('/pessoa/store/verify-duplicated', [PessoaRestController::class, 'verifyDuplicated'])->name('api.pessoa.store.verify-duplicated');
