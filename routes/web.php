@@ -88,7 +88,7 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
 
 Route::middleware(['auth', 'admin', 'status'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
-    Route::get('/admin/aniversariantes', [AdminController::class, 'searchAniversariantes']);
+    Route::get('/admin/aniversariantes', [AdminController::class, 'indexAniversariantes']);
     Route::post('/admin/aniversariantes', [AdminController::class, 'searchAniversariantes']);
     Route::get('/admin/sobre', [AdminController::class, 'sobre']);
 

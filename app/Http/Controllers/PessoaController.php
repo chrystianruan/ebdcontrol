@@ -142,7 +142,7 @@ class PessoaController extends Controller
         }
 
         if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse);   
+            $pessoas = $pessoas->where('interesse', $request->interesse);
         }
 
         if ($request->situacao) {

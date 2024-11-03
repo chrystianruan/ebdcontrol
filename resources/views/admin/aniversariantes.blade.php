@@ -19,8 +19,6 @@
     <div class="itens">
 
 
-
-
     <select name="classe">
       <option selected disabled value="">Classe</option>
       @foreach($salas as $s)
@@ -35,6 +33,20 @@
       <option value="{{$val}}">{{$val}} - {{$nome}}</option>
       @endforeach
 
+    </select>
+
+    <select name="funcao">
+        <option selected disabled value="">Função</option>
+        @foreach($funcoes as $func)
+            <option value="{{ $func->id }}">{{ $func->nome }}</option>
+        @endforeach
+
+    </select>
+
+    <select name="orderBy">
+        <option selected disabled value="">Ordenar por</option>
+        <option value="1"> Nome </option>
+        <option value="2"> Dia de Nascimento </option>
     </select>
 
 
@@ -60,14 +72,33 @@
     <p class="tit">Buscando por:</p>
 
     @if(isset($classe))
-    <p class="it">Classe: <i class="result">@foreach($salas as $s) @if($s -> id == $classe) {{$s-> nome}}  @endif @endforeach</i></p>
+    <p class="it">
+        Classe:
+        <i class="result">
+            @foreach($salas as $s)
+                @if($s -> id == $classe) {{$s-> nome}}
+                @endif
+            @endforeach
+        </i>
+    </p>
     @endif
 
     @if(isset($mes))
     <p class="it">Mês: <i class="result"> @foreach($meses_abv as $val => $nome) @if($val == $mes) {{$val}} - {{$nome}} @endif @endforeach</i></p>
     @endif
 
-    @else
+    @if(isset($function))
+              <p class="it">
+                 Função:
+                  <i class="result">
+                      @foreach($funcoes as $f)
+                          @if($f->id == $function) {{ $f->nome }}
+                          @endif
+                      @endforeach
+                  </i>
+              </p>
+    @endif
+  @else
 
     <p class="it">Buscando por: <i class="result">Aniversariantes do mês atual ({{date('m')}})</i></p>
 
