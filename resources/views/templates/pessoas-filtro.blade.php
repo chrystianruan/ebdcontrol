@@ -48,11 +48,9 @@
 
                 <select name="id_funcao">
                     <option selected disabled value="">Função</option>
-                    <option value="1">Aluno</option>
-                    <option value="2">Professor</option>
-                    <option value="3">Secretário/Classe</option>
-                    <option value="4">Secretário/Adm</option>
-                    <option value="5">Superintendente</option>
+                    @foreach($funcoes as $func)
+                        <option value="{{ $func->id }}">{{ $func->nome }}</option>
+                    @endforeach
 
                 </select>
 
@@ -113,7 +111,15 @@
         @endif
 
         @if(isset($id_funcao) && empty($nome))
-            <li class="ponto">Função: <i class="result">@if($id_funcao == 1) Aluno @elseif($id_funcao == 2) Professor @elseif($id_funcao == 3) Secretário/Classe @elseif($id_funcao == 4) Secretário/Adm @elseif($id_funcao == 5) Superintendente @else Erro @endif</i></li>
+            <li class="ponto">Função:
+                <i class="result">
+                    @foreach($funcoes as $funcao)
+                        @if($funcao -> id == $id_funcao)
+                            {{$funcao -> nome}}
+                        @endif
+                    @endforeach
+                </i>
+            </li>
         @endif
 
         @if(isset($interesse) && empty($nome))

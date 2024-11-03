@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePessoaRequest;
 use App\Http\Services\PessoaService;
 use App\Models\Congregacao;
 use App\Models\Formation;
+use App\Models\Funcao;
 use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
 use App\Models\Publico;
@@ -141,8 +142,7 @@ class PessoaController extends Controller
         }
 
         if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse)
-                ->where('id_funcao', '<>', 2);
+            $pessoas = $pessoas->where('interesse', $request->interesse);
         }
 
         if ($request->situacao) {
@@ -158,10 +158,12 @@ class PessoaController extends Controller
             ->groupBy('pessoa_id')
             ->get();
 
+        $funcoes = Funcao::orderBy('nome')->get();
+
         return view($request->view, ['pessoas' => $pessoas, 'niver' => $niver, 'meses_abv' => $meses_abv,
             'salas' => $salas, 'nome' => $nome, 'sexo' => $sexo, 'paternidade_maternidade' => $paternidade_maternidade,
             'id_funcao' => $id_funcao, 'interesse' => $interesse, 'situacao' => $situacao, 'sala1' => $sala1,
-            'dataAtual' => $dataAtual]);
+            'dataAtual' => $dataAtual, 'funcoes' => $funcoes]);
     }
 
 
