@@ -19,11 +19,11 @@
 <form action="/realizar-chamada" method="POST">
     @csrf
     <input type="hidden" id="pessoas" name="pessoas_presencas" value="{{ $pessoas }}">
-    <input type="hidden" id="sala" name="sala" value="{{ auth()->user()->id_nivel }}">
+    <input type="hidden" id="sala" name="sala" value="{{ auth()->user()->sala_id }}">
     <input type="hidden" name="route" value="{{ url('/classe/todas-chamadas') }}">
 <div style=" overflow-x: auto">
 <table style="margin: 3% 3% 0 3%;">
-    <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->id_nivel) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
+    <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->sala_id) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
     <thead>
         <tr>
         <th>Nome</th>

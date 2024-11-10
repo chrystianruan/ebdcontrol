@@ -17,7 +17,7 @@ class SuperMaster
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-        if (auth()->check() AND !$user->super_master) {
+        if (auth()->check() AND !$user->permissao_id === 1) {
             return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
         }
         return $next($request);

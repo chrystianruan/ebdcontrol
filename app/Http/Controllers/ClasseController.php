@@ -61,7 +61,7 @@ class ClasseController extends Controller
 
     public function indexClasse()
     {
-        $nivel = auth()->user()->id_nivel;
+        $nivel = auth()->user()->sala_id;
         $idadesPessoas = DB::table('pessoa_salas')
             ->select(DB::raw('count(pessoas.id) as qtd, timestampdiff(YEAR, pessoas.data_nasc, current_timestamp()) as idades'))
             ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
@@ -76,8 +76,8 @@ class ClasseController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->groupBy('id_formation')
             ->get();
-        $funcoes = $this->pessoaService->getArrayQuantidadePessoasPerFuncao(auth()->user()->id_nivel);
-        $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoAndSalaCount(auth()->user()->id_nivel);
+        $funcoes = $this->pessoaService->getArrayQuantidadePessoasPerFuncao(auth()->user()->sala_id);
+        $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoAndSalaCount(auth()->user()->sala_id);
         $chamadaDia = Chamada::where('id_sala', '=', $nivel)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereDate('created_at', Carbon::today())
@@ -91,8 +91,8 @@ class ClasseController extends Controller
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereYear('created_at', Carbon::now())
             ->get();
-        $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->id_nivel);
-        $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->id_nivel);
+        $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->sala_id);
+        $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->sala_id);
 
         $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
         if ($chamadaDiaBD) {
@@ -122,7 +122,7 @@ class ClasseController extends Controller
 
     public function searchPessoaClasse(Request $request)
     {
-        $nivelUser = auth()->user()->id_nivel;
+        $nivelUser = auth()->user()->sala_id;
         $nome = request('nome');
         $sexo = request('sexo');
         $niver = request('niver');
@@ -173,7 +173,7 @@ class ClasseController extends Controller
 
     public function showPessoaClasse($id)
     {
-        $nivelUser = auth()->user()->id_nivel;
+        $nivelUser = auth()->user()->sala_id;
         $pessoa = Pessoa::findOrFail($id);
 
         if (in_array($nivelUser, array_column($pessoa->salas->toArray(), 'id'))) {
@@ -190,7 +190,7 @@ class ClasseController extends Controller
 
     public function indexChamadaClasse()
     {
-        $sala = auth()->user()->id_nivel;
+        $sala = auth()->user()->sala_id;
         $chamadas = Chamada::where('id_sala', '=', $sala)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereDate('created_at', Carbon::today())
@@ -216,7 +216,7 @@ class ClasseController extends Controller
     {
         $mes = request('mes');
         $ano = request('ano');
-        $sala = auth()->user()->id_nivel;
+        $sala = auth()->user()->sala_id;
         $findSala = Sala::findOrFail($sala);
         $meses_abv = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
 
@@ -257,7 +257,7 @@ class ClasseController extends Controller
 
     public function searchAniversariantes(Request $request)
     {
-        $nivel = auth()->user()->id_nivel;
+        $nivel = auth()->user()->sala_id;
         $mes = request('mes');
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)

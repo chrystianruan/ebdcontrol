@@ -12,7 +12,7 @@
 	@endif
 
 	<h3>{{$pessoa -> nome}}	</h3>
-	<h4>@foreach($pessoa->salas as $key=>$sala)@if($sala->id == auth()->user()->id_nivel) {{ $sala->nome }} ({{ $pessoa->funcoes[$key]['nome'] }}) @endif   @endforeach</h4>
+	<h4>@foreach($pessoa->salas as $key=>$sala)@if($sala->id == auth()->user()->sala_id) {{ $sala->nome }} ({{ $pessoa->funcoes[$key]['nome'] }}) @endif   @endforeach</h4>
 	<p> Idade: <span style="color: yellow">
 		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano

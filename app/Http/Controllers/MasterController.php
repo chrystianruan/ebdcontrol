@@ -22,19 +22,19 @@ class MasterController extends Controller
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
     }
     public function dashboardMaster() {
-        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
+        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
+        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
         ->where('status', false)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
-        ->groupBy('id_nivel')
+        ->groupBy('permissao_id')
         ->get();
-        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
+        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
+        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
         ->where('status', true)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
-        ->groupBy('id_nivel')
+        ->groupBy('permissao_id')
         ->get();
 
         $linkAtivo = $this->linkCadastroGeral->getLinkActive(auth()->user()->congregacao_id);

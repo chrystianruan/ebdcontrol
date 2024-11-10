@@ -51,8 +51,8 @@ class PresencaPessoaController extends Controller
         if (Sala::findOrFail((int) base64_decode($request->classeId))->congregacao_id != auth()->user()->congregacao_id) {
             return response()->json(['error' => "Não autorizado"], 403);
         }
-        if ((int) auth()->user()->id_nivel > 2) {
-            if ((int) auth()->user()->id_nivel != (int) base64_decode($request->classeId)) {
+        if ((int) auth()->user()->permissao_id == 4) {
+            if ((int) auth()->user()->sala_id != (int) base64_decode($request->classeId)) {
                 return response()->json(['error' => "Não autorizado"], 403);
             }
         }

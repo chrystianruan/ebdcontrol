@@ -82,10 +82,10 @@ class ChamadaController extends Controller
 
     public function showChamadaClasse(int $id) {
         $chamada = Chamada::findOrFail($id);
-        if ($chamada->sala->id != auth()->user()->id_nivel) {
+        if ($chamada->sala->id != auth()->user()->sala_id) {
             return abort(403);
         }
-        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $findSala = Sala::findOrFail(auth()->user()->sala_id);
         $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
 
         return view('/classe/visualizar-chamada', compact(['chamada', 'presencas', 'findSala']));
@@ -148,10 +148,10 @@ class ChamadaController extends Controller
     public function generatePdfToChamadasToClasse($id)
     {
         $chamada = Chamada::findOrFail($id);
-        if ($chamada->sala->id != auth()->user()->id_nivel) {
+        if ($chamada->sala->id != auth()->user()->sala_id) {
             return abort(403);
         }
-        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $findSala = Sala::findOrFail(auth()->user()->sala_id);
         $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
 
         return PDF::loadView('/classe/pdf-chamada', compact(['chamada', 'findSala', 'presencas']))
