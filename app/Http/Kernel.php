@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'master' => \App\Http\Middleware\Master::class,
         'status' => \App\Http\Middleware\Status::class,
         'supermaster' => \App\Http\Middleware\SuperMaster::class,
+        'comum' => \App\Http\Middleware\Comum::class,
     ];
 }

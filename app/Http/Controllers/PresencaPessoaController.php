@@ -71,4 +71,10 @@ class PresencaPessoaController extends Controller
         return $presencas->toJson();
 
     }
+
+    public function getPresencasOfPessoa() {
+
+    }
+
+
 }

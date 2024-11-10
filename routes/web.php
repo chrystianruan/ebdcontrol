@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ChamadaAdminController;
+use App\Http\Controllers\ComumController;
 use App\Http\Controllers\PreCadastroController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -163,6 +164,10 @@ Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
     Route::post('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
     Route::get('/super-master/edit/congregacao/{id}', [SuperMasterController::class, 'editCongregacao']);
     Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
+});
+
+Route::middleware(['auth', 'comum', 'status'])->group(function () {
+    Route::get('/comum', [ComumController::class, 'index']);
 });
 
 Route::get('/teste-email', function() {
