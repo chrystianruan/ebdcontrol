@@ -4,5 +4,5 @@
 
 @section('content')
 
-    <h3>Hello World!</h3>
+    <h4>Dashboard</h4>
 @endsection

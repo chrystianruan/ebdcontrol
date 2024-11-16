@@ -1,63 +1,84 @@
 <!doctype html>
-<html lang="pt-br" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>EBDControl - Dashboard</title>
+    <title>EBDControl</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/navbar-comum.css">
 </head>
-<body data-bs-theme="dark">
-<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom border-body" data-bs-theme="dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <img src="/img/logo_ebd.png" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
-            EBDControl
-        </a>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" aria-current="page" href="#">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Rank</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Minhas Presenças</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Classificação</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav me-right mb-2 mb-lg-0">
-                <li> <button class="btn btn-primary"> Marcar Presença! </button></li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        Usuário
+<body id="body-pd">
+    <header class="header" id="header">
+        <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
+        <div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div>
+    </header>
+    <div class="l-navbar" id="nav-bar">
+        <nav class="nav">
+            <div>
+                <a href="#" class="nav_logo">
+                    <span class="nav_logo-name">
+                        <img src="/img/logo_ebd.png" class="nav_icon_logo" width="30">
+                        <span class="nav_name">
+                            Menu
+                        </span>
+                    </span>
+                </a>
+                <div class="nav_list">
+                    <a href="#" class="nav_link active">
+                        <i class='bx bx-grid-alt nav_icon'></i>
+                        <span class="nav_name">
+                            Dashboard
+                        </span>
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a class="dropdown-item" href="#">Action</a></li>
-                        <li><a class="dropdown-item" href="#">Another action</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item bg-danger" href="#">Sair</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-user-check nav_icon'></i>
+                        <span class="nav_name">
+                            Marcar Presença
+                        </span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bxs-user-detail nav_icon'></i>
+                        <span class="nav_name">
+                            Minhas Presenças
+                        </span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bxs-comment-detail nav_icon'></i>
+                        <span class="nav_name">
+                            Avaliação
+                        </span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
+                        <span class="nav_name">
+                            Rank
+                        </span>
+                    </a>
+                    <a href="#" class="nav_link">
+                        <i class='bx bx-user nav_icon'></i>
+                        <span class="nav_name">
+                            Meus Dados
+                        </span>
+                    </a>
+                </div>
+            </div>
+            <a href="#" class="nav_link">
+                <i class='bx bx-log-out nav_icon'></i>
+                <span class="nav_name">
+                    Sair
+                </span>
+            </a>
+        </nav>
     </div>
-</nav>
-
-<div class="m-3">
-    @yield('content')
-</div>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <!--Container Main start-->
+    <div class="height-100 bg-light">
+        @yield('content')
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="/js/navbar-comum.js" ></script>
 </body>
 </html>
+
