@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Http\DTOs\PresencaIndividualDTO;
 use App\Http\DTOs\PresencaPessoaDTO;
 use App\Http\Repositories\PresencaPessoaRepository;
 use App\Models\Chamada;
@@ -29,7 +30,8 @@ class PresencaPessoaService
     public function marcarPresencasLote(string $presencas, $salaId, int $tipoPresenca) : JsonResponse {
         try {
             foreach(json_decode($presencas, true) as $presenca) {
-                $this->marcarPresencaIndividual($presenca, $salaId, $tipoPresenca);
+                $presencaIndividual = new PresencaIndividualDTO($presenca['pessoa_id'], $presenca['pessoa_nome'], $presenca['funcao_id'], $presenca['funcao_nome'], $presenca['presenca']);
+                $this->marcarPresencaIndividual($presencaIndividual, $salaId, $tipoPresenca);
             }
 
             return response()->json([
@@ -44,7 +46,7 @@ class PresencaPessoaService
 
     }
 
-    public function marcarPresencaIndividual(array $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
+    public function marcarPresencaIndividual(PresencaIndividualDTO $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
         try {
             $pessoaPresenteToday = $this->presencaPessoaRepository->findByPessoaIdAndToday((int) $presenca['pessoa_id']);
 
@@ -53,10 +55,10 @@ class PresencaPessoaService
             }
 
             $presencaPessoa = new PresencaPessoa;
-            $presencaPessoa->pessoa_id = $presenca['pessoa_id'];
+            $presencaPessoa->pessoa_id = $presenca->getPessoaId();
             $presencaPessoa->sala_id = $salaId;
-            $presencaPessoa->funcao_id = $presenca['funcao_id'];
-            $presencaPessoa->presente = $presenca['presenca'];
+            $presencaPessoa->funcao_id = $presenca->getFuncaoId();
+            $presencaPessoa->presente = $presenca->getPresenca();
             $presencaPessoa->tipo_presenca_id = $tipoPresenca;
             $presencaPessoa->save();
 

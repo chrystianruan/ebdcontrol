@@ -27,37 +27,37 @@
                     </span>
                 </a>
                 <div class="nav_list">
-                    <a href="#" class="nav_link active">
+                    <a href="/comum" class="nav_link @if ($view == 'dashboard') active @endif">
                         <i class='bx bx-grid-alt nav_icon'></i>
                         <span class="nav_name">
                             Dashboard
                         </span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="/comum/marcar-presenca" class="nav_link @if ($view == 'marcar-presenca') active @endif">
                         <i class='bx bx-user-check nav_icon'></i>
                         <span class="nav_name">
                             Marcar Presença
                         </span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="/comum/minhas-presencas" class="nav_link @if ($view == 'minhas-presencas') active @endif">
                         <i class='bx bxs-user-detail nav_icon'></i>
                         <span class="nav_name">
                             Minhas Presenças
                         </span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link @if ($view == 'avaliacao') active @endif">
                         <i class='bx bxs-comment-detail nav_icon'></i>
                         <span class="nav_name">
                             Avaliação
                         </span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link @if ($view == 'rank') active @endif">
                         <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
                         <span class="nav_name">
                             Rank
                         </span>
                     </a>
-                    <a href="#" class="nav_link">
+                    <a href="#" class="nav_link @if ($view == 'meus-dados') active @endif">
                         <i class='bx bx-user nav_icon'></i>
                         <span class="nav_name">
                             Meus Dados

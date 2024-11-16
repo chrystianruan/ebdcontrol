@@ -36,10 +36,6 @@ class PresencaPessoaController extends Controller
 
     }
 
-//    public function getPresencasOfPessoa(int $pessoaId) : View {
-//
-//    }
-
     public function showRelatorioPresenca() {
         $classes = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
 

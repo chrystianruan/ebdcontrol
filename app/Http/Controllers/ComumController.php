@@ -8,6 +8,7 @@ use Illuminate\View\View;
 class ComumController extends Controller
 {
     public function index() : View {
-        return view('comum.index');
+        $view = 'dashboard';
+        return view('comum.index', compact('view'));
     }
 }
