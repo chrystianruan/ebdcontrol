@@ -3,9 +3,8 @@
 @section('title', 'Início')
 
 @section('content')
-
-
     <h4>Marcar Presença</h4>
+    @if (!$presente)
     <div class="alert alert-primary">
         <i class="bx bxs-info-circle" style="font-size: 1.2em"></i>
         Para marcar a presença de forma individual, deve-se conceder permissão a localização e preencher o código da classe corretamente.
@@ -51,6 +50,11 @@
             </div>
         </div>
     </form>
-
     <script src="/js/getLocation.js"></script>
+    @else
+        <div class="alert alert-success">
+            <i class="bx bxs-check-circle" style="font-size: 1.2em"></i>
+            Presença do dia já foi marcada com sucesso!
+        </div>
+    @endif
 @endsection
