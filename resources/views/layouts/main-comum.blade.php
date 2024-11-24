@@ -74,11 +74,69 @@
         </nav>
     </div>
     <!--Container Main start-->
-    <div class="height-100 bg-light">
-        @yield('content')
+    <div class="height-100">
+        <div class="col-md-12 mt-3">
+            @if(session('msg_success'))
+                <div class="alert alert-success" id="msg_success" role="alert">
+                    <p>{{ session('msg_success') }}</p>
+                </div>
+            @endif
+            @if(session('msg_error'))
+               <div class="alert alert-danger" id="msg_error" role="alert">
+                   <p>{{ session('msg_error') }}</p>
+               </div>
+            @endif
+            @if(session('msg_validacao'))
+                <div class="alert alert-danger" id="msg_validacao" role="alert">
+                    <ul>
+                        @foreach(session('msg_validacao') as $msg)
+                            <li>{{ $msg }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if ($errors->any())
+                <div class="alert alert-danger" id="msg_erros_request" role="alert">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @yield('content')
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="/js/navbar-comum.js" ></script>
+
+    <script>
+        @if(session('msg_success') || session('msg_error') || session('msg_validacao') || $errors->any())
+        function hideMsgSuccess() {
+            let msgSuccess = document.getElementById("msg_success");
+            msgSuccess.style = "display:none";
+        }
+
+        function hideMsgError() {
+            let msgError = document.getElementById("msg_error");
+            msgError.style = "display:none";
+        }
+        function hideMsgValidacao() {
+            let msgValidacao = document.getElementById("msg_validacao");
+            msgValidacao.style = "display:none";
+        }
+
+        function hideMsgErrosRequest() {
+            let msgErrosRequest = document.getElementById("msg_erros_request");
+            msgErrosRequest.style = "display:none";
+        }
+
+        setTimeout(hideMsgSuccess, 4000);
+        setTimeout(hideMsgError, 6000);
+        setTimeout(hideMsgValidacao, 6000);
+        setTimeout(hideMsgErrosRequest, 6000);
+        @endif
+    </script>
 </body>
 </html>
 

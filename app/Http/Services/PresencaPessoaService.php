@@ -2,11 +2,13 @@
 
 namespace App\Http\Services;
 
+use App\Http\DTOs\PresencaIndividualDadosValidacaoDTO;
 use App\Http\DTOs\PresencaIndividualDTO;
 use App\Http\DTOs\PresencaPessoaDTO;
 use App\Http\Repositories\PresencaPessoaRepository;
 use App\Models\Chamada;
 use App\Models\PresencaPessoa;
+use App\Models\Sala;
 use Carbon\Carbon;
 use Faker\Extension\ColorExtension;
 use Illuminate\Database\Eloquent\Collection;
@@ -30,7 +32,7 @@ class PresencaPessoaService
     public function marcarPresencasLote(string $presencas, $salaId, int $tipoPresenca) : JsonResponse {
         try {
             foreach(json_decode($presencas, true) as $presenca) {
-                $presencaIndividual = new PresencaIndividualDTO($presenca['pessoa_id'], $presenca['pessoa_nome'], $presenca['funcao_id'], $presenca['funcao_nome'], $presenca['presenca']);
+                $presencaIndividual = new PresencaIndividualDTO($presenca['pessoa_id'], $presenca['funcao_id'], $presenca['presenca']);
                 $this->marcarPresencaIndividual($presencaIndividual, $salaId, $tipoPresenca);
             }
 
@@ -48,7 +50,7 @@ class PresencaPessoaService
 
     public function marcarPresencaIndividual(PresencaIndividualDTO $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
         try {
-            $pessoaPresenteToday = $this->presencaPessoaRepository->findByPessoaIdAndToday((int) $presenca['pessoa_id']);
+            $pessoaPresenteToday = $this->presencaPessoaRepository->findByPessoaIdAndToday($presenca->getPessoaId());
 
             if ($pessoaPresenteToday) {
                return $this->verifyPresenca($pessoaPresenteToday, $presenca, $salaId, $tipoPresenca);
@@ -62,7 +64,7 @@ class PresencaPessoaService
             $presencaPessoa->tipo_presenca_id = $tipoPresenca;
             $presencaPessoa->save();
 
-            if ((int) $presenca['presenca'] == 1) {
+            if ($presenca->getPresenca()) {
                 $this->adicionarPresencaInChamada($salaId, auth()->user()->congregacao_id);
             }
 
@@ -72,22 +74,20 @@ class PresencaPessoaService
 
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return response()->json([
-                'response' => 'Não foi possível marcar a presença'
-            ], 500);
+            throw new \Exception();
         }
 
     }
 
-    public function verifyPresenca(PresencaPessoa $pessoaPresenteToday, array $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
+    public function verifyPresenca(PresencaPessoa $pessoaPresenteToday, PresencaIndividualDTO $presenca, int $salaId, int $tipoPresenca) : JsonResponse {
         if ($pessoaPresenteToday->presente) {
             return response()->json([
                 'response' => 'A pessoa já se encontra como presente, portanto será inalterada'
             ], 403);
         } else {
-            if ((int) $presenca['presenca'] == 1) {
+            if ($presenca->getPresenca()) {
                 $pessoaPresenteToday->sala_id = $salaId;
-                $pessoaPresenteToday->funcao_id = $presenca['funcao_id'];
+                $pessoaPresenteToday->funcao_id = $presenca->getFuncaoId();
                 $pessoaPresenteToday->tipo_presenca_id = $tipoPresenca;
                 $pessoaPresenteToday->presente = 1;
                 $pessoaPresenteToday->save();
@@ -119,6 +119,49 @@ class PresencaPessoaService
 
     public function filter(PresencaPessoaDTO $presencaPessoa) : ?Collection {
         return $this->presencaPessoaRepository->findByMonthAndYearAndSalaId($presencaPessoa->getDataInicio(), $presencaPessoa->getDataFim(), $presencaPessoa->getSalaId(), $presencaPessoa->getOrderBy());
+    }
+
+    public function validatePresenca(int $salaId, PresencaIndividualDadosValidacaoDTO $dadosValidacao) : array {
+        try {
+            $response = [];
+            $response['response'] = true;
+
+            $codigoSala = Sala::findOrFail($salaId)->hash;
+
+            if ($codigoSala != $dadosValidacao->getCodigo() || !$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), -5.932785336998465, -35.29170830642453)) {
+                $response['response'] = false;
+                if ($codigoSala != $dadosValidacao->getCodigo()) {
+                    $response['erros'][0] = 'Código não corresponde a sala';
+                }
+                if (!$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), -5.932785336998465, -35.29170830642453)) {
+                    $response['erros'][1] = 'Localização inválida. Fora do limite de distância';
+                }
+            }
+
+            return $response;
+
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return [
+                'error' => 'Erro ao validar presença'
+            ];
+        }
+    }
+
+    function verificarLocalizacao($latitudeUsuario, $longitudeUsuario, $latitudeCongregacao, $longitudeCongregacao) : bool {
+        $latitudeUsuario = deg2rad($latitudeUsuario);
+        $longitudeUsuario = deg2rad($longitudeUsuario);
+        $latitudeCongregacao = deg2rad($latitudeCongregacao);
+        $longitudeCongregacao = deg2rad($longitudeCongregacao);
+
+        $distancia = (6371 * acos( cos( $latitudeUsuario ) * cos( $latitudeCongregacao ) * cos( $longitudeCongregacao - $longitudeUsuario ) + sin( $latitudeUsuario ) * sin($latitudeCongregacao) ) );
+        $distancia = number_format($distancia, 2, '.', '');
+
+        if ($distancia > 0.1) {
+            return false;
+        }
+
+        return true;
     }
 
 }

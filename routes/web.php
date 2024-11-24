@@ -3,6 +3,7 @@
 use App\Http\Controllers\ChamadaAdminController;
 use App\Http\Controllers\ComumController;
 use App\Http\Controllers\PreCadastroController;
+use App\Http\Controllers\PresencaPessoaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -168,6 +169,8 @@ Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
 
 Route::middleware(['auth', 'comum', 'status'])->group(function () {
     Route::get('/comum', [ComumController::class, 'index']);
+    Route::get('/comum/marcar-presenca', [ComumController::class, 'indexMarcarPresenca']);
+    Route::post('/comum/marcar-presenca', [PresencaPessoaController::class, 'marcarPresencaIndividualNivelComum']);
 });
 
 Route::get('/teste-email', function() {
