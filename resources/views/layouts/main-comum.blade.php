@@ -57,7 +57,7 @@
                             Rank
                         </span>
                     </a>
-                    <a href="/comum/meusdados" class="nav_link @if ($view == 'meus-dados') active @endif">
+                    <a href="/comum/meus-dados" class="nav_link @if ($view == 'meus-dados') active @endif">
                         <i class='bx bx-user nav_icon'></i>
                         <span class="nav_name">
                             Meus Dados

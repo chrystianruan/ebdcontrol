@@ -168,7 +168,7 @@ Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
 
 Route::middleware(['auth', 'comum', 'status'])->group(function () {
     Route::get('/comum', [ComumController::class, 'index']);
-    Route::get('/comum/meusdados', [ComumController::class, 'meusDados']);
+    Route::get('/comum/meus-dados', [ComumController::class, 'meusDados']);
 });
 
 Route::get('/teste-email', function() {
