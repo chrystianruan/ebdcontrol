@@ -84,6 +84,9 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::get('/master/chamadas-dia', [ChamadaController::class, 'chamadasLiberadaMes']);
 
     Route::get('/master/configuracoes/pessoas', [MasterController::class, 'indexConfiguracoesPessoas']);
+    Route::get('/master/configuracoes/congregacao', [MasterController::class, 'indexConfiguracoesCongregacao']);
+
+    Route::post('/congregacao/salvar-localizacao', [MasterController::class, 'salvarLocalizacao']);
     Route::delete('/delete-pessoa/{id}', [PessoaController::class, 'delete']);
 
 
