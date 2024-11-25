@@ -7,6 +7,7 @@ use App\Http\DTOs\PresencaIndividualDTO;
 use App\Http\DTOs\PresencaPessoaDTO;
 use App\Http\Repositories\PresencaPessoaRepository;
 use App\Models\Chamada;
+use App\Models\Congregacao;
 use App\Models\PresencaPessoa;
 use App\Models\Sala;
 use Carbon\Carbon;
@@ -127,13 +128,15 @@ class PresencaPessoaService
             $response['response'] = true;
 
             $codigoSala = Sala::findOrFail($salaId)->hash;
+            $latitudeCongregacao = Congregacao::findOrFail(auth()->user()->congregacao_id)->latitude;
+            $longitudeCongregacao = Congregacao::findOrFail(auth()->user()->congregacao_id)->longitude;
 
-            if ($codigoSala != $dadosValidacao->getCodigo() || !$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), -5.932785336998465, -35.29170830642453)) {
+            if ($codigoSala != $dadosValidacao->getCodigo() || !$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), $latitudeCongregacao, $longitudeCongregacao)) {
                 $response['response'] = false;
                 if ($codigoSala != $dadosValidacao->getCodigo()) {
                     $response['erros'][0] = 'Código não corresponde a sala';
                 }
-                if (!$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), -5.932785336998465, -35.29170830642453)) {
+                if (!$this->verificarLocalizacao($dadosValidacao->getLatitude(), $dadosValidacao->getLongitude(), $latitudeCongregacao, $longitudeCongregacao)) {
                     $response['erros'][1] = 'Localização inválida. Fora do limite de distância';
                 }
             }
