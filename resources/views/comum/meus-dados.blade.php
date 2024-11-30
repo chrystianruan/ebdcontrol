@@ -66,9 +66,43 @@
       </div>
     </div>
   </div>
+</form>
+
+<div class="col-12">
+  <button class="btn btn-primary" id="btn-form">Alterar Senha</button>
+</div>
+
+<hr>
+
+<form id="my_form" class="row g-3" style="display: none; margin: 15px 0">
+  <div class="col-md-4">
+    <label for="matricula" class="form-label">Matrícula</label>
+    <input type="text" class="form-control" id="matricula" value="" disabled>
+  </div>
+  <div class="col-md-4">
+    <label for="nova-senha" class="form-label">Nova Senha</label>
+    <input type="text" class="form-control" id="senha" value="" placeholder="Nova senha" >
+  </div>
+  <div class="col-md-4">
+    <label for="confirma-senha" class="form-label">Confirmar Senha</label>
+    <input type="text" class="form-control" id="confirma-senha" value="" placeholder="Confirmar senha">
+  </div>
   <div class="col-12">
-    <button type="submit" class="btn btn-primary">Alterar</button>
+    <button class="btn btn-danger">Salvar</button>
   </div>
 </form>
+
+<script>
+  var btn = document.getElementById('btn-form');
+  var form = document.getElementById('my_form');
+
+  btn.addEventListener('click', function() {
+    if (form.style.display === 'none') {
+      form.style.display = 'block';
+    } else {
+      form.style.display = 'none';
+    }
+  });
+</script>
 
 @endsection
