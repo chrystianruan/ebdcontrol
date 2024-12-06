@@ -113,6 +113,7 @@ class PresencaPessoaService
         if (!$chamada) {
             $this->chamadaService->criarRegistroChamadaPresencaIndividual($salaId, $congregacaoId);
         } else {
+            $chamada->matriculados = $chamada->matriculados + 1;
             $chamada->presentes = $chamada->presentes + 1;
             $chamada->save();
         }
@@ -152,13 +153,17 @@ class PresencaPessoaService
     }
 
     function verificarLocalizacao($latitudeUsuario, $longitudeUsuario, $latitudeCongregacao, $longitudeCongregacao) : bool {
-        $latitudeUsuario = deg2rad($latitudeUsuario);
-        $longitudeUsuario = deg2rad($longitudeUsuario);
-        $latitudeCongregacao = deg2rad($latitudeCongregacao);
-        $longitudeCongregacao = deg2rad($longitudeCongregacao);
+        $latFrom = deg2rad($latitudeCongregacao);
+        $lonFrom = deg2rad($longitudeCongregacao);
+        $latTo = deg2rad($latitudeUsuario);
+        $lonTo = deg2rad($longitudeUsuario);
 
-        $distancia = (6371 * acos( cos( $latitudeUsuario ) * cos( $latitudeCongregacao ) * cos( $longitudeCongregacao - $longitudeUsuario ) + sin( $latitudeUsuario ) * sin($latitudeCongregacao) ) );
-        $distancia = number_format($distancia, 2, '.', '');
+        $latDelta = $latTo - $latFrom;
+        $lonDelta = $lonTo - $lonFrom;
+
+        $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) +
+                cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
+        $distancia =  $angle * 6371;
 
         if ($distancia > 0.1) {
             return false;

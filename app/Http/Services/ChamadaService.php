@@ -114,6 +114,7 @@ class ChamadaService
     public function criarRegistroChamadaPresencaIndividual(int $salaId, int $congregacaoId) : void {
        try {
            $chamada = new Chamada;
+           $chamada->matriculados = 1;
            $chamada->presentes = 1;
            $chamada->id_sala = $salaId;
            $chamada->congregacao_id = $congregacaoId;
