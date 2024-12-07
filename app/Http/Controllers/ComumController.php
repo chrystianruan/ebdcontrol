@@ -24,7 +24,11 @@ class ComumController extends Controller
     }
     public function index() : View {
         $view = 'dashboard';
-        return view('comum.index', compact('view'));
+        $pessoaSalas = $this->pessoaRepository->getSalasOfPessoa(auth()->user()->pessoa_id);
+        $quantidadePresencasMes = $this->presencaPessoaRepository->findByMonthAndYearAndPessoa(date('m'), date('Y'), auth()->user()->pessoa_id)->count();
+        $quantidadePresencasAno = $this->presencaPessoaRepository->findByYearAndPessoa(date('Y'), auth()->user()->pessoa_id)->count();
+
+        return view('comum.index', compact(['view', 'pessoaSalas', 'quantidadePresencasMes', 'quantidadePresencasAno']));
     }
 
     public function indexMarcarPresenca() {
