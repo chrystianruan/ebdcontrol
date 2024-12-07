@@ -18,6 +18,12 @@ class ChamadaRepository
             ->get();
     }
 
+    public function getChamadaPadraoToday($salaId) : ?Chamada {
+        return Chamada::where('id_sala', '=', $salaId)
+            ->whereDate('created_at', Carbon::today())
+            ->where('chamada_padrao', '=', 1)
+            ->first();
+    }
     public function getChamadaToday($salaId) : ?Chamada {
         return Chamada::where('id_sala', '=', $salaId)
             ->whereDate('created_at', Carbon::today())

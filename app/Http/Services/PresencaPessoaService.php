@@ -5,6 +5,8 @@ namespace App\Http\Services;
 use App\Http\DTOs\PresencaIndividualDadosValidacaoDTO;
 use App\Http\DTOs\PresencaIndividualDTO;
 use App\Http\DTOs\PresencaPessoaDTO;
+use App\Http\Repositories\ChamadaRepository;
+use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PresencaPessoaRepository;
 use App\Models\Chamada;
 use App\Models\Congregacao;
@@ -21,14 +23,20 @@ class PresencaPessoaService
     protected $presencaPessoaRepository;
     protected $relatorioService;
     protected $chamadaService;
+    private $pessoaRepository;
+    private $chamadaRepository;
 
     public function __construct(PresencaPessoaRepository $presencaPessoaRepository,
                                 RelatorioService $relatorioService,
-                                ChamadaService $chamadaService
+                                ChamadaService $chamadaService,
+                                PessoaRepository $pessoaRepository,
+                                ChamadaRepository $chamadaRepository
                                 ) {
         $this->presencaPessoaRepository = $presencaPessoaRepository;
         $this->relatorioService = $relatorioService;
         $this->chamadaService = $chamadaService;
+        $this->chamadaRepository = $chamadaRepository;
+        $this->pessoaRepository = $pessoaRepository;
     }
     public function marcarPresencasLote(string $presencas, $salaId, int $tipoPresenca) : JsonResponse {
         try {
@@ -106,14 +114,12 @@ class PresencaPessoaService
     }
 
     public function adicionarPresencaInChamada(int $salaId, int $congregacaoId) : void {
-        $chamada = Chamada::where('id_sala', '=', $salaId)
-            ->whereDate('created_at', Carbon::today())
-            ->first();
+        $chamada = $this->chamadaRepository->getChamadaToday($salaId);
 
         if (!$chamada) {
             $this->chamadaService->criarRegistroChamadaPresencaIndividual($salaId, $congregacaoId);
         } else {
-            $chamada->matriculados = $chamada->matriculados + 1;
+            $chamada->matriculados = $this->pessoaRepository->findBySalaIdAndSituacao($salaId)->count();
             $chamada->presentes = $chamada->presentes + 1;
             $chamada->save();
         }

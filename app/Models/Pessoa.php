@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Http\Repositories\PresencaPessoaRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -42,6 +43,16 @@ class Pessoa extends Model
 
     public function user() : BelongsTo {
         return $this->belongsTo(User::class);
+    }
+
+    public function presente() : bool {
+        $presencaPessoaRepository = new PresencaPessoaRepository();
+        if ($presencaPessoaRepository->findByPessoaIdAndToday($this->id)) {
+            if ($presencaPessoaRepository->findByPessoaIdAndToday($this->id)->presente) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

@@ -4,7 +4,7 @@
 
 @section('content')
     <h4>Marcar Presença</h4>
-    @if (date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
+    @if (date('w') == 0 || date('Y-m-d') == $dateChamadaDia->date)
         @if(!$presente)
             <div class="alert alert-primary">
                 <i class="bx bxs-info-circle" style="font-size: 1.2em"></i>
