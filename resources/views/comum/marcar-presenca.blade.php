@@ -4,6 +4,7 @@
 
 @section('content')
     <h4>Marcar Presença</h4>
+    <hr>
     @if (date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
         @if(!$presente)
             <div class="alert alert-primary">

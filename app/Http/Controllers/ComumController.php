@@ -62,4 +62,19 @@ class ComumController extends Controller
         return view('comum.meus-dados', compact('view', 'pessoa'));
     }
 
+    public function minhasPresencas(Request $request) : View {
+        $month = date('m');
+        $year = date('Y');
+       if ($request->month && $request->year) {
+            $month = $request->month;
+            $year = $request->year;
+        }
+
+        $presencas = $this->presencaPessoaRepository->findByMonthAndYearAndPessoa($month, $year, auth()->user()->pessoa_id);
+        $view = 'minhas-presencas';
+        $mesesNome = [1 => 'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+        return view('comum.minhas-presencas', compact('view', 'presencas', 'mesesNome', 'month', 'year'));
+    }
+
+
 }

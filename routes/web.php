@@ -181,6 +181,8 @@ Route::middleware(['auth', 'comum', 'status', 'resetPassword'])->group(function 
     Route::get('/comum/marcar-presenca', [ComumController::class, 'indexMarcarPresenca']);
     Route::post('/comum/marcar-presenca', [PresencaPessoaController::class, 'marcarPresencaIndividualNivelComum']);
     Route::get('/comum/meus-dados', [ComumController::class, 'meusDados']);
+    Route::get('/comum/minhas-presencas', [ComumController::class, 'minhasPresencas']);
+    Route::post('/comum/minhas-presencas', [ComumController::class, 'minhasPresencas']);
 });
 
 Route::get('/teste-email', function() {
