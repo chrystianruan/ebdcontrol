@@ -65,7 +65,15 @@
             <li>Para qual público prefere dar aula? <span class="marker">{{$pessoa->nome_publico}}</span></li>
         </ul>
         @endif
+        @if (!empty($pessoa->user->matricula) && !empty($pessoa->user->password_temp))
+        <h6>Dados de Usuário</h6>
+        <ul>
+            <li>Matrícula: <span class="marker">{{ $pessoa->user->matricula }}</span></li>
+            <li>Senha temporária: <span class="marker">{{ $pessoa->user->password_temp}}</span></li>
+        </ul>
+        @endif
 	</div>
+
 
 
 

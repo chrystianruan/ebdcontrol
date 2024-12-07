@@ -41,8 +41,8 @@ class Pessoa extends Model
         return $this->hasMany(PresencaPessoa::class);
     }
 
-    public function user() : BelongsTo {
-        return $this->belongsTo(User::class);
+    public function user() : HasOne {
+        return $this->hasOne(User::class);
     }
 
     public function presente() : bool {
