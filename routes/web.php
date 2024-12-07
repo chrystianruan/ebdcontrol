@@ -4,6 +4,7 @@ use App\Http\Controllers\ChamadaAdminController;
 use App\Http\Controllers\ComumController;
 use App\Http\Controllers\PreCadastroController;
 use App\Http\Controllers\PresencaPessoaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -40,6 +41,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/sobre', function () { return view('/about'); });
     Route::post('/baixar-relatorio-presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
     Route::post('/realizar-chamada', [ChamadaController::class, 'realizarChamada']);
+    Route::post('/user/change-password', [UserController::class, 'changePassword']);
 });
 
 Route::middleware(['auth', 'classe', 'status'])->group(function () {

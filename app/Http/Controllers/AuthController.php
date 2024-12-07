@@ -59,43 +59,6 @@ class AuthController extends Controller
         return view('/master/cadastro/usuario', ['niveis' => $niveis, 'dataAtual' => $dataAtual]);
     }
 
-//    public function storeUsuarioMaster(Request $request) {
-//        $lastNivel = Permissao::orderBy('id', 'desc')
-//            ->first();
-//        $this->validate($request, [
-//            'name' => ['required'],
-//            'username' => ['required', 'min:6', 'unique:users,username'],
-//            'permissao_id' => ['required', 'integer', 'min:1', 'max:'.$lastNivel -> id],
-//            'password' => ['required', 'min:8', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-//            'status' => ['integer', 'min:0', 'max:0'],
-//        ], [
-//            'name.required' => 'Nome é obrigatório.',
-//            'username.required' =>  'Nome de usuário é obrigatório.',
-//            'username.min' => 'O nome de usuário precisa ter no mínimo 6 dígitos.',
-//            'username.unique' => 'Esse nome de usuário já está sendo usado.',
-//            'status.integer' => 'Status só pode ser cadastrado como ativo',
-//            'status.min' => 'Status só pode ser cadastrado como ativo',
-//            'status.max' => 'Status só pode ser cadastrado como ativo',
-//            'permissao_id.required' =>  'Nível é obrigatório.',
-//            'permissao_id.min' =>  'Esse nível não pode ser cadastrado MÍNIMO.',
-//            'permissao_id.max' =>  'Esse nível não pode ser cadastrado MÁXIMO',
-//            'password.required' => 'A senha é obrigatória.',
-//            'password.min' => 'A senha precisa ter no mínimo 8 dígitos.',
-//            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-//        ]);
-//
-//        $user = new User;
-//        $user -> name = $request->name;
-//        $user -> username = $request->username;
-//        $user -> password = bcrypt($request->password);
-//        $user -> id_nivel = $request->id_nivel;
-//        $user -> congregacao_id = auth()->user()->congregacao_id;
-//        $user -> status = 0;
-//        $user -> save();
-//
-//        return redirect('/master/cadastro/usuario')->with('msg', 'Usuário cadastrado com sucesso');
-//    }
-
     public function searchUserMaster(Request $request) {
         $nome = request('nome');
         $nivel = request('nivel');
@@ -222,48 +185,6 @@ class AuthController extends Controller
             return redirect()->back();
         }
     }
-
-//    public function storeUsuarioSuperMaster(Request $request) {
-//        $lastCongregacao = Congregacao::orderBy('id', 'desc')->first();
-//        $this->validate($request, [
-//            'name' => ['required'],
-//            'username' => ['required', 'min:6', 'unique:users,username'],
-//            'password' => ['required', 'min:8', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-//            'status' => ['integer', 'min:0', 'max:0'],
-//            'congregacao' => ['required', 'integer', 'min:1', 'max:'.$lastCongregacao -> id]
-//        ], [
-//            'name.required' => 'Nome é obrigatório.',
-//            'username.required' =>  'Nome de usuário é obrigatório.',
-//            'username.min' => 'O nome de usuário precisa ter no mínimo 6 dígitos.',
-//            'username.unique' => 'Esse nome de usuário já está sendo usado.',
-//            'status.integer' => 'Status só pode ser cadastrado como ativo',
-//            'status.min' => 'Status só pode ser cadastrado como ativo',
-//            'status.max' => 'Status só pode ser cadastrado como ativo',
-//            'congregacao.required' =>  'Congregação é obrigatória.',
-//            'congregacao.min' =>  'Congregação não pode ser cadastrada MÍNIMO.',
-//            'congregacao.max' =>  'Congregação não pode ser cadastrada MÁXIMO',
-//            'password.required' => 'A senha é obrigatória.',
-//            'password.min' => 'A senha precisa ter no mínimo 8 dígitos.',
-//            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-//        ]);
-//
-//        $user = new User;
-//        $user -> name = $request->name;
-//        $user -> username = $request->username;
-//        $user -> password = bcrypt($request->password);
-//        $user -> id_nivel = 1;
-//        $user -> congregacao_id = $request->congregacao;
-//        if ($request->super_master) {
-//          $user->super_master = true;
-//        } else {
-//          $user->super_master = false;
-//        }
-//        $user -> status = 0;
-//        $user -> save();
-//
-//
-//        return redirect()->back()->with('msg', 'Usuário Master cadastrado com sucesso');
-//    }
 
     public function logout(Request $request) {
         Auth::logout();

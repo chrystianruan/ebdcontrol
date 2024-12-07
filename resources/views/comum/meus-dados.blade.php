@@ -20,7 +20,7 @@
   @if($pessoa->paternidade_maternidade != null)
   <div class="col-12">
     <label for="paternidade-maternidade" class="form-label">Paternidade/Maternidade</label>
-    <input type="text" class="form-control" id="paternidade-maternidade" value="@if($pessoa->paternidade-maternidade !=null) {{$pessoa->paternidade-maternidade}} @else - @endif" disabled>
+    <input type="text" class="form-control" id="paternidade-maternidade" value="@if($pessoa->paternidade_maternidade !=null) {{$pessoa->paternidade_maternidade}} @else - @endif" disabled>
   </div>
   @endif
   @if($pessoa->responsavel != null)
@@ -69,12 +69,14 @@
 </form>
 
 <div class="col-12">
-  <button class="btn btn-primary" id="btn-form">Alterar Senha</button>
+  <button class="btn btn-primary" id="btn-alterar">Alterar Senha</button>
 </div>
 
 <hr>
 
-<form id="my_form" class="row g-3" style="display: none; margin: 15px 0">
+<form id="form-alterar-senha" class="row g-3" style="display: none; margin: 15px 0" action="/user/change-password" method="POST">
+    @method('POST')
+    @csrf
   <div class="col-md-4">
     <label for="matricula" class="form-label">Matrícula</label>
     <input type="text" class="form-control" id="matricula" value="{{$pessoa->matricula}}" disabled>
@@ -82,68 +84,28 @@
   <div class="col-md-4">
     <label for="nova-senha" class="form-label">Nova Senha</label>
     <div class="input-group">
-      <i id="btn-lock-senha" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
-      <input type="password" class="form-control" id="senha" placeholder="Nova senha" >
+      <input type="password" class="form-control" id="senha" placeholder="Digite sua senha" name="password">
+       <i id="btn-lock-senha" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
     </div>
   </div>
   <div class="col-md-4">
     <label for="confirma-senha" class="form-label">Confirmar Senha</label>
     <div class="input-group">
+      <input type="password" class="form-control" id="confirma-senha" placeholder="Confirme sua senha" >
       <i id="btn-lock-confirma" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
-      <input type="password" class="form-control" id="confirma-senha" placeholder="Nova senha" >
     </div>
     <div id="senha-error" style="color: red; display: none; margin-top: 5px">As senhas são diferentes!</div>
   </div>
   <div class="col-12">
-    <button class="btn btn-danger" type="submit">Salvar</button>
+    <button class="btn btn-danger" type="button" id="btn-save">Salvar</button>
   </div>
 </form>
 
-<script>
-  let btn = document.getElementById('btn-form')
-  let form = document.getElementById('my_form')
-
-  btn.addEventListener('click', function() {
-    if (form.style.display === 'none') {
-      form.style.display = 'block'
-    } else {
-      form.style.display = 'none'
-    }
-  })
-  
-  form.addEventListener("submit", function (event) {
-    let senha = document.getElementById("senha");
-    let confirmaSenha = document.getElementById("confirma-senha");
-    let senhaError = document.getElementById("senha-error");
-
-    if (senha.value !== confirmaSenha.value) {
-      event.preventDefault();
-      senhaError.style.display = "block";
-      confirmaSenha.classList.add("is-invalid");
-    } else {
-      senhaError.style.display = "none";
-      confirmaSenha.classList.remove("is-invalid");
-    }
-  });
-
-  function showOrHidePassword(senhaID, btnID) {
-    let password = document.getElementById(senhaID)
-    let btnLock = document.getElementById(btnID)
-
-    btnLock.addEventListener("click", function() {
-      if (password.type === "password") {
-        password.type = "text";
-        btnLock.className = "bx bx-lock-open-alt btn btn-outline-secondary";
-      } else {
-        password.type = "password";
-        btnLock.className = "bx bx-lock-alt btn btn-outline-secondary"
-      }
-    } )
-  }
-
-  showOrHidePassword("senha", "btn-lock-senha");
-  showOrHidePassword("confirma-senha", "btn-lock-confirma");
-  
+<script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous">
 </script>
+    <script src="/js/meusDados.js"></script>
 
 @endsection
