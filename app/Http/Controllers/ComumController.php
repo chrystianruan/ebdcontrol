@@ -15,12 +15,12 @@ class ComumController extends Controller
 {
     private $pessoaRepository;
     private $presencaPessoaRepository;
-    private $chamadaDiaRepository;
-    public function __construct(PessoaRepository $pessoaRepository, PresencaPessoaRepository $presencaPessoaRepository, ChamadaDiaCongregacaoRepository $chamadaDiaRepository)
+    private $chamadaDiaCongregacaoRepository;
+    public function __construct(PessoaRepository $pessoaRepository, PresencaPessoaRepository $presencaPessoaRepository, ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository)
     {
         $this->pessoaRepository = $pessoaRepository;
         $this->presencaPessoaRepository = $presencaPessoaRepository;
-        $this->chamadaDiaRepository = $chamadaDiaRepository;
+        $this->chamadaDiaCongregacaoRepository= $chamadaDiaCongregacaoRepository;
     }
     public function index() : View {
         $view = 'dashboard';
@@ -36,7 +36,14 @@ class ComumController extends Controller
             }
         }
         $pessoaSalas = $this->pessoaRepository->getSalasOfPessoa(auth()->user()->pessoa_id);
-        $dateChamadaDia= $this->chamadaDiaRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+
+        $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        } else {
+            $dateChamadaDia = null;
+        }
+
         return view('comum.marcar-presenca', compact(['view', 'pessoaSalas', 'presente', 'dateChamadaDia']));
     }
 

@@ -14,7 +14,7 @@
     <header class="header" id="header">
         <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
         <div> <img src="/img/logo_ebd_extend.png" alt="" width="120"> </div>
-        <div class="header_img"> <img src="https://i.imgur.com/hczKIze.jpg" alt=""> </div>
+        <div class="header_img"> <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt=""> </div>
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
@@ -44,18 +44,6 @@
                         <i class='bx bxs-user-detail nav_icon'></i>
                         <span class="nav_name">
                             Minhas Presenças
-                        </span>
-                    </a>
-                    <a href="#" class="nav_link @if ($view == 'avaliacao') active @endif">
-                        <i class='bx bxs-comment-detail nav_icon'></i>
-                        <span class="nav_name">
-                            Avaliação
-                        </span>
-                    </a>
-                    <a href="#" class="nav_link @if ($view == 'rank') active @endif">
-                        <i class='bx bx-bar-chart-alt-2 nav_icon'></i>
-                        <span class="nav_name">
-                            Rank
                         </span>
                     </a>
                     <a href="/comum/meus-dados" class="nav_link @if ($view == 'meus-dados') active @endif">
