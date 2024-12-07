@@ -15,7 +15,7 @@
 @if(auth()->user()->permissao_id <= 3 && auth()->user()->status == false)<p><a href="/admin/">Acessar a área Admin</a></p>@endif
 @if(auth()->user()->permissao_id <= 2 && auth()->user()->status == false)<p><a href="/master/">Acessar a área Master</a></p>@endif
 @if(auth()->user()->permissao_id == 1)<p><a href="/super-master/">Acessar a área SuperMaster</a></p>@endif
-@if(auth()->user()->permissao_id == 5 && auth()->user()->pessoa_id)<p><a href="/comum/">Acessar a área comum</a></p>@endif
+@if(auth()->user()->pessoa_id)<p><a href="/comum/">Acessar a área comum</a></p>@endif
 @if (session('danger'))
     <div class="alert">
         <span>{{session('danger')}}</span>
