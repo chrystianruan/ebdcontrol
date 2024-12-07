@@ -54,12 +54,17 @@
                     </a>
                 </div>
             </div>
-            <a href="#" class="nav_link">
-                <i class='bx bx-log-out nav_icon'></i>
-                <span class="nav_name">
-                    Sair
-                </span>
-            </a>
+            <form action="/logout" method="POST">
+                @csrf
+                <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit">
+                    <a class="nav_link">
+                        <i class='bx bx-log-out nav_icon'></i>
+                        <span class="nav_name">
+                            Sair
+                        </span>
+                    </a>
+                </button>
+            </form>
         </nav>
     </div>
     <!--Container Main start-->
