@@ -143,7 +143,7 @@
 
     <div class="info">
         <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
-        <input type="hidden" id="classe" value="{{ base64_encode(auth()->user()->id_nivel) }}">
+        <input type="hidden" id="classe" value="{{ base64_encode(auth()->user()->sala_id) }}">
         <h2>Relatório de presenças</h2> <hr  style="margin-bottom: 2%">
 
         <h3>Data início</h3>

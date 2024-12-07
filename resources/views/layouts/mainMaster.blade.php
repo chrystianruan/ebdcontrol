@@ -18,7 +18,6 @@
       <i class="fa fa-caret-down"></i>
     </button>
     <div class="dropdown-content">
-      <a href="/master/cadastro/usuario"><i class="fa fa-user-plus"></i>Usuário</a>
       <a href="/master/cadastro/classe"><i class="fa fa-graduation-cap"></i>Classe</a>
     </div>
   </div>
@@ -31,19 +30,18 @@
       <a href="/master/filtro/classe"><i class="fa fa-graduation-cap"></i>Classe</a>
     </div>
   </div>
-{{--    <div class="dropdown">--}}
-{{--        <button class="dropbtn"><i class="fa fa-cogs"></i>Configurações--}}
-{{--            <i class="fa fa-caret-down"></i>--}}
-{{--        </button>--}}
-{{--        <div class="dropdown-content">--}}
-{{--            <a href="/master/filtro/usuario"><i class="fa fa-list"></i>Chamadas</a>--}}
-{{--            <a href="/master/configuracoes/pessoas"><i class="fa fa-user"></i>Pessoas</a>--}}
-{{--        </div>--}}
-{{--    </div>--}}
+    <div class="dropdown">
+        <button class="dropbtn"><i class="fa fa-cogs"></i>Configurações
+            <i class="fa fa-caret-down"></i>
+        </button>
+        <div class="dropdown-content">
+            <a href="/master/configuracoes/congregacao"><i class="fa fa-list"></i>Congregação</a>
+        </div>
+    </div>
   <a href="/sobre"><i class="fa fa-info-circle"></i>Sobre</a>
   <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
   <div style="float: right">
-    <a href="#" style="color: rgb(9, 150, 115)"><i class="fa fa-user" style="color: rgb(9, 150, 115)"></i>{{ auth()->user()->username}}</a>
+    <a href="#" style="color: rgb(9, 150, 115)"><i class="fa fa-user" style="color: rgb(9, 150, 115)"></i>{{ auth()->user()->matricula}}</a>
     <a> <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>
     </div>
 </div>

@@ -25,15 +25,15 @@ selectSala.addEventListener("change", function () {
                 var valueIdSelect = "presenca-"+item.pessoa_id;
                 row.append($('<td style="font-size: 1em">').text(item.pessoa_nome));
                 row.append($('<td style="font-size: 1em">').text(item.funcao_nome));
-                var select = $(`<select name="presencas[]" id="${valueIdSelect}" class="presencas">`);
-
-
-                select.append($('<option selected>').val(0).text('Não'));
-                select.append($('<option>').val(1).text('Sim'));
-
-
-                row.append($('<td style="font-size: 1em">').append(select));
-
+                if (item.presenca == 0) {
+                    var select = $(`<select name="presencas[]" id="${valueIdSelect}" class="presencas">`);
+                    select.append($('<option selected>').val(0).text('Não'));
+                    select.append($('<option>').val(1).text('Sim'));
+                    row.append($('<td style="font-size: 1em">').append(select));
+                } else {
+                    var icon = $('<i>').addClass('fa fa-check');
+                    row.append($('<td style="font-size: 1em">').append(icon));
+                }
 
                 $('#tbody-table-pessoas').append(row);
             });

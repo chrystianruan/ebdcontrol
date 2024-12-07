@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Models\ChamadaDiaCongregacao;
+use App\Models\Congregacao;
 use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Sala;
 use Carbon\Carbon;
 use DB;
+use Illuminate\View\View;
 
 class MasterController extends Controller
 {
@@ -22,19 +25,19 @@ class MasterController extends Controller
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
     }
     public function dashboardMaster() {
-        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
+        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
+        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
         ->where('status', false)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
-        ->groupBy('id_nivel')
+        ->groupBy('permissao_id')
         ->get();
-        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, id_nivel, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.id_nivel')
+        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
+        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
         ->where('status', true)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
-        ->groupBy('id_nivel')
+        ->groupBy('permissao_id')
         ->get();
 
         $linkAtivo = $this->linkCadastroGeral->getLinkActive(auth()->user()->congregacao_id);
@@ -132,6 +135,31 @@ class MasterController extends Controller
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
         return view('/master/configuracoes/pessoas', ['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual]);
+    }
+
+    public function indexConfiguracoesCongregacao() : View {
+        $congregacao = Congregacao::select('setors.nome as setor', 'congregacaos.nome as congregacao', 'congregacaos.id as id', 'congregacaos.latitude', 'congregacaos.longitude')
+            ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
+            ->findOrFail(auth()->user()->congregacao_id);
+        $matriculados = Pessoa::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->count();
+        $ativos = Pessoa::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('situacao', '=', 1)
+            ->count();
+        $inativos = Pessoa::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('situacao', '=', 2)
+            ->count();
+        return view('/master/configuracoes/congregacao', compact(['congregacao', 'matriculados', 'ativos', 'inativos']));
+    }
+
+    public function salvarLocalizacao(Request $request) : RedirectResponse
+    {
+        $congregacao = Congregacao::findOrFail(auth()->user()->congregacao_id);
+        $congregacao->latitude = $request->latitude;
+        $congregacao->longitude = $request->longitude;
+        $congregacao->save();
+
+        return redirect()->back()->with('msg', 'Localização salva com sucesso');
     }
 
 

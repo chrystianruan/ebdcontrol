@@ -120,8 +120,8 @@
         <!--<img src="image/profile.jpg" alt="profileImg">-->
       </div>
       <div class="name-job">
-        <div class="profile_name" style="color: rgb(9, 150, 115)">{{auth()->user()->username}}</div>
-        <div class="job">@if(auth()->user()->id_nivel == 2) Secretário/Admin @elseif(auth()->user()->id_nivel == 1) Master @else Classe @endif</div>
+        <div class="profile_name" style="color: rgb(9, 150, 115)">{{auth()->user()->matricula}}</div>
+        <div class="job">{{auth()->user()->permissao->name}}</div>
       </div>
       <a > <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>
     </div>
@@ -134,6 +134,9 @@
                 @endif
                 @if(session('msg2'))
                     <p class="msg2" id="msg2">{{session('msg2')}}</p>
+                @endif
+                @if(session('msg3'))
+                    <p class="msg3" id="msg3">{{session('msg3')}}</p>
                 @endif
             </div>
   <section class="home-section" >
@@ -152,7 +155,7 @@
   <script src="/js/layoutMain.js"></script>
 
   <script>
-@if(session('msg') || session('msg2'))
+@if(session('msg') || session('msg2') || session('msg3'))
   function hideMsg() {
     let msg = document.getElementById("msg");
     msg.style = "display:none";
@@ -163,9 +166,16 @@
     msg2.style = "display:none";
   }
 
+  function hideMsg3() {
+    let msg3 = document.getElementById("msg3");
+    msg3.style = "display:none";
+  }
+    setTimeout(hideMsg3, 20000);
+
   setTimeout(hideMsg, 2000);
   setTimeout(hideMsg2, 3000);
-  @endif
+
+      @endif
   </script>
   @stack('scripts-relatorio-presenca')
   @stack('scripts-cadastro')

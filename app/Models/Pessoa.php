@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use App\Http\Repositories\PresencaPessoaRepository;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pessoa extends Model
@@ -36,6 +39,20 @@ class Pessoa extends Model
 
     public function presencas() : HasMany {
         return $this->hasMany(PresencaPessoa::class);
+    }
+
+    public function user() : HasOne {
+        return $this->hasOne(User::class);
+    }
+
+    public function presente() : bool {
+        $presencaPessoaRepository = new PresencaPessoaRepository();
+        if ($presencaPessoaRepository->findByPessoaIdAndToday($this->id)) {
+            if ($presencaPessoaRepository->findByPessoaIdAndToday($this->id)->presente) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

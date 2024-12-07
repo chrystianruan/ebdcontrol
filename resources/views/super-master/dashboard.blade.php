@@ -6,73 +6,73 @@
 <link rel="stylesheet" href="/css/supermaster.css">
 
 <div class="div-btn-modal" id="div-btn-modal">
-<button class="btn-modal" id="btn-modal-user"> Cadastrar usuário </button>
+{{--<button class="btn-modal" id="btn-modal-user"> Cadastrar usuário </button>--}}
 <button class="btn-modal" id="btn-modal-congregacao"> Cadastrar congregação </button>
 </div>
 
-<div class="dialog" id="modal-user">
-    <div class="dialog-overlay" tabindex="-1"></div>
-    <div class="dialog-content" role="dialog">
-        <div role="document">
-            <button class="dialog-close" id="dialog-close-user">&times;</button>
-            <h1 id="dialogTitle">Cadastro de usuário Master</h1>
-            <hr>
-            <div class="row" style="margin: 2%">
-                <div class="col-75">
-                    <div class="container">
-                        <form action="/super-master/cadastro/usuario" method="POST">
-                            @csrf
-                            <div class="col-50">
-                                <h3>Informações Pessoais</h3>
-                                @if ($errors->any())
-                                    <div class="alert">
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                    </div>
-                                @endif
+{{--<div class="dialog" id="modal-user">--}}
+{{--    <div class="dialog-overlay" tabindex="-1"></div>--}}
+{{--    <div class="dialog-content" role="dialog">--}}
+{{--        <div role="document">--}}
+{{--            <button class="dialog-close" id="dialog-close-user">&times;</button>--}}
+{{--            <h1 id="dialogTitle">Cadastro de usuário Master</h1>--}}
+{{--            <hr>--}}
+{{--            <div class="row" style="margin: 2%">--}}
+{{--                <div class="col-75">--}}
+{{--                    <div class="container">--}}
+{{--                        <form action="/super-master/cadastro/usuario" method="POST">--}}
+{{--                            @csrf--}}
+{{--                            <div class="col-50">--}}
+{{--                                <h3>Informações Pessoais</h3>--}}
+{{--                                @if ($errors->any())--}}
+{{--                                    <div class="alert">--}}
+{{--                                        <ul>--}}
+{{--                                            @foreach ($errors->all() as $error)--}}
+{{--                                                <li>{{ $error }}</li>--}}
+{{--                                            @endforeach--}}
+{{--                                        </ul>--}}
+{{--                                    </div>--}}
+{{--                                @endif--}}
 
-                                <label for="nome"><i class="fa fa-address-book"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
-                                <input type="text" id="nome" required name="name" placeholder="Digite o nome do usuário" value="{{old('name')}}">
-
-
-                                <label for="nivel"><i class="fa fa-level-down"></i>Setor <font style="color:red;font-weight: bold">*</font></label>
-                                <select name="setor" id="setor" required>
-                                    <option selected disabled value="">Selecionar</option>
-                                    @foreach ($setores as $s)
-                                        <option value="{{ $s->id }}">{{ $s->nome }}</option>
-                                    @endforeach
-                                </select>
-
-                                <label for="nivel"><i class="fa fa-level-down"></i>Congregacão <font style="color:red;font-weight: bold">*</font></label>
-                                <select name="congregacao" id="congregacao" required> </select>
+{{--                                <label for="nome"><i class="fa fa-address-book"></i>Nome <font style="color:red;font-weight: bold">*</font></label>--}}
+{{--                                <input type="text" id="nome" required name="name" placeholder="Digite o nome do usuário" value="{{old('name')}}">--}}
 
 
-                                <label for="nivel"><i class="fa fa-admin"></i>SuperMaster <font style="color:red;font-weight: bold">*</font><input type="checkbox" value="1" name="super_master"></label>
+{{--                                <label for="nivel"><i class="fa fa-level-down"></i>Setor <font style="color:red;font-weight: bold">*</font></label>--}}
+{{--                                <select name="setor" id="setor" required>--}}
+{{--                                    <option selected disabled value="">Selecionar</option>--}}
+{{--                                    @foreach ($setores as $s)--}}
+{{--                                        <option value="{{ $s->id }}">{{ $s->nome }}</option>--}}
+{{--                                    @endforeach--}}
+{{--                                </select>--}}
+
+{{--                                <label for="nivel"><i class="fa fa-level-down"></i>Congregacão <font style="color:red;font-weight: bold">*</font></label>--}}
+{{--                                <select name="congregacao" id="congregacao" required> </select>--}}
 
 
-                                <fieldset>
-                                    <legend style="font-weight: bold">Login</legend>
-                                    <label for="username"><i class="fa fa-user"></i>Nome de usuário <font style="color:red;font-weight: bold">*</font></label>
-                                    <input type="text" id="username" style="width: 95%" required name="username" placeholder="Digite o username do usuário" value="{{old('username')}}">
-
-                                    <label for="senha"><i class="fa fa-lock"></i>Senha <font style="color:red;font-weight: bold">*</font></label>
-                                    <input type="password" id="senha" style="width: 95%" name="password"  placeholder="Padrão: ebd@CPF">
-                                </fieldset>
+{{--                                <label for="nivel"><i class="fa fa-admin"></i>SuperMaster <font style="color:red;font-weight: bold">*</font><input type="checkbox" value="1" name="super_master"></label>--}}
 
 
-                                <input type="submit" value="Cadastrar" class="btn">
-                            </div>
-                        </form>
-                    </div>
-                </div>
+{{--                                <fieldset>--}}
+{{--                                    <legend style="font-weight: bold">Login</legend>--}}
+{{--                                    <label for="username"><i class="fa fa-user"></i>Nome de usuário <font style="color:red;font-weight: bold">*</font></label>--}}
+{{--                                    <input type="text" id="username" style="width: 95%" required name="username" placeholder="Digite o username do usuário" value="{{old('username')}}">--}}
 
-            </div>
-        </div>
-    </div>
-</div>
+{{--                                    <label for="senha"><i class="fa fa-lock"></i>Senha <font style="color:red;font-weight: bold">*</font></label>--}}
+{{--                                    <input type="password" id="senha" style="width: 95%" name="password"  placeholder="Padrão: ebd@CPF">--}}
+{{--                                </fieldset>--}}
+
+
+{{--                                <input type="submit" value="Cadastrar" class="btn">--}}
+{{--                            </div>--}}
+{{--                        </form>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </div>--}}
+{{--</div>--}}
 
 <div class="dialog" id="modal-congregacao">
     <div class="dialog-overlay" tabindex="-1"></div>

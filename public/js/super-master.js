@@ -6,32 +6,32 @@
 // let modalCongregacao = document.getElementById("modal-congregacao");
 // let closeModalUs
 
-let modalUser = document.getElementById("modal-user")
+// let modalUser = document.getElementById("modal-user")
 let modalCongregacao = document.getElementById("modal-congregacao");
 let btnModalUser = document.getElementById("btn-modal-user");
 let btnModalCongregacao = document.getElementById("btn-modal-congregacao");
-let closeModalUser = document.getElementById("dialog-close-user");
+// let closeModalUser = document.getElementById("dialog-close-user");
 let closeModalCongregacao = document.getElementById("dialog-close-congregacao");
 
-function showModalUser() {
-    modalUser.style.display = "block"
-}
+// function showModalUser() {
+//     modalUser.style.display = "block"
+// }
 
 function showModalCongregacao() {
     modalCongregacao.style.display = "block"
 }
 
-function hideModalUser() {
-    modalUser.style.display = "none"
-}
+// function hideModalUser() {
+//     modalUser.style.display = "none"
+// }
 
 function hideModalCongregacao() {
     modalCongregacao.style.display = "none"
 }
 
-btnModalUser.addEventListener("click", showModalUser)
+// btnModalUser.addEventListener("click", showModalUser)
 btnModalCongregacao.addEventListener("click", showModalCongregacao)
-closeModalUser.addEventListener("click", hideModalUser)
+// closeModalUser.addEventListener("click", hideModalUser)
 closeModalCongregacao.addEventListener("click", hideModalCongregacao)
 
 // for (let i = 0; i <= btnModal.length; i++) {

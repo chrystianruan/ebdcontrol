@@ -18,7 +18,7 @@ class Admin
     public function handle(Request $request, Closure $next)
     {
             $user = auth()->user();
-            if(auth()->check() && $user->id_nivel > 2) {
+            if(auth()->check() && $user->permissao_id > 3) {
                 return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
             }
         return $next($request);
