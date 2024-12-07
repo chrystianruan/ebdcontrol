@@ -10,7 +10,6 @@
   <title>Início</title>
 </head>
 <body>
-
 <p>Olá, {{auth()->user()->matricula }}</p>
 @if(auth()->user()->permissao_id == 4 && auth()->user()->status == false)<p><a href="/classe/">Acessar a área de Secretário/Classe ou professor</a></p>@endif
 @if(auth()->user()->permissao_id <= 3 && auth()->user()->status == false)<p><a href="/admin/">Acessar a área Admin</a></p>@endif
@@ -20,6 +19,11 @@
 @if (session('danger'))
     <div class="alert">
         <span>{{session('danger')}}</span>
+    </div>
+@endif
+@if (session('msg_success'))
+    <div class="alert-success">
+        <span>{{session('msg_success')}}</span>
     </div>
 @endif
 

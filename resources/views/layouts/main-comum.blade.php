@@ -126,6 +126,7 @@
         setTimeout(hideMsgErrosRequest, 6000);
         @endif
     </script>
+    @stack('scripts-meus-dados')
 </body>
 </html>
 

@@ -42,9 +42,13 @@ Route::middleware(['auth'])->group(function() {
     Route::post('/baixar-relatorio-presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
     Route::post('/realizar-chamada', [ChamadaController::class, 'realizarChamada']);
     Route::post('/user/change-password', [UserController::class, 'changePassword']);
+    Route::get('/reset-password', function() {
+        return view('/reset-password');
+    })->name('password.reset');
+    Route::post('/post/reset-password', [UserController::class, 'resetPassword']);
 });
 
-Route::middleware(['auth', 'classe', 'status'])->group(function () {
+Route::middleware(['auth', 'classe', 'status', 'resetPassword'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);
     Route::get('/classe/cadastro-pessoa', [PessoaController::class, 'indexCadastroClasse']);
     Route::post('/classe/cadastro-pessoa', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.classe');
@@ -61,7 +65,7 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'master', 'status'])->group(function () {
+Route::middleware(['auth', 'master', 'status', 'resetPassword'])->group(function () {
     Route::get('/master', [MasterController::class, 'dashboardMaster']);
     Route::get('/master/cadastro/usuario', [AuthController::class, 'indexUsuarioMaster']);
     Route::post('/master/cadastro/usuario', [AuthController::class, 'storeUsuarioMaster']);
@@ -94,7 +98,7 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'admin', 'status'])->group(function () {
+Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
     Route::get('/admin/aniversariantes', [AdminController::class, 'indexAniversariantes']);
     Route::post('/admin/aniversariantes', [AdminController::class, 'searchAniversariantes']);
@@ -156,7 +160,7 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
+Route::middleware(['auth', 'supermaster', 'status', 'resetPassword'])->group(function () {
     Route::get('/super-master/', [SuperMasterController::class, 'index']);
     Route::post('/super-master/cadastro/usuario', [AuthController::class, 'storeUsuarioSuperMaster']);
     Route::get('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
@@ -172,7 +176,7 @@ Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
     Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
 });
 
-Route::middleware(['auth', 'comum', 'status'])->group(function () {
+Route::middleware(['auth', 'comum', 'status', 'resetPassword'])->group(function () {
     Route::get('/comum', [ComumController::class, 'index']);
     Route::get('/comum/marcar-presenca', [ComumController::class, 'indexMarcarPresenca']);
     Route::post('/comum/marcar-presenca', [PresencaPessoaController::class, 'marcarPresencaIndividualNivelComum']);

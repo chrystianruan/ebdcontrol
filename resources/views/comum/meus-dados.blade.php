@@ -67,7 +67,6 @@
     </div>
   </div>
 </form>
-
 <div class="col-12">
   <button class="btn btn-primary" id="btn-alterar">Alterar Senha</button>
 </div>
@@ -82,7 +81,7 @@
     <input type="text" class="form-control" id="matricula" value="{{$pessoa->matricula}}" disabled>
   </div>
   <div class="col-md-4">
-    <label for="nova-senha" class="form-label">Nova Senha</label>
+    <label for="nova-senha" class="form-label">Nova Snha</label>
     <div class="input-group">
       <input type="password" class="form-control" id="senha" placeholder="Digite sua senha" name="password">
        <i id="btn-lock-senha" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
@@ -101,11 +100,13 @@
   </div>
 </form>
 
+@push('scripts-meus-dados')
 <script
     src="https://code.jquery.com/jquery-3.6.0.js"
     integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous">
 </script>
-    <script src="/js/meusDados.js"></script>
+<script src="/js/changePassword.js"></script>
+@endpush
 
 @endsection
