@@ -18,15 +18,15 @@
         </div>
 
 
-        @if(auth()->user()->id_nivel == 1)
+        @if(auth()->user()->permissao_id == 2)
             <a href="/master"><button>Voltar</button></a>
         @endif
 
-        @if(auth()->user()->id_nivel == 2)
+        @if(auth()->user()->permissao_id == 3)
             <a href="/admin"><button>Voltar</button></a>
         @endif
 
-        @if(auth()->user()->id_nivel != 1 && auth()->user()->id_nivel != 2)
+        @if(auth()->user()->permissao_id != 2 && auth()->user()->permissao_id != 3)
             <a href="/classe"><button>Voltar</button></a>
         @endif
         </div>

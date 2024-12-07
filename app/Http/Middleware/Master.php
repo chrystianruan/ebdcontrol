@@ -17,7 +17,7 @@ class Master
     public function handle(Request $request, Closure $next)
     {
         $user = auth()->user();
-            if(auth()->check() AND $user->id_nivel !== 1) {
+            if(auth()->check() && $user->permissao_id > 2) {
                 return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
             }
         return $next($request);

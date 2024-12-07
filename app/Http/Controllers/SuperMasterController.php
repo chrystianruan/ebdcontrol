@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Congregacao;
+use App\Models\Permissao;
 use App\Models\Pessoa;
 use App\Models\Sala;
 use App\Models\Setor;
@@ -19,8 +20,8 @@ class SuperMasterController extends Controller
     public function userFilters(Request $request) {
         $setores = Setor::orderBy("nome")
             ->get();
+        $permissoes = Permissao::all();
         $users = User::select('users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
-            ->where('id_nivel', '=', 1)
             ->where('users.id', '>', 1);
         if ($request->congregacao) {
             $users = $users->where('congregacao_id', '=', $request->congregacao);
@@ -29,17 +30,17 @@ class SuperMasterController extends Controller
             $users = $users->where("name", "like",'%'.$request->nome.'%');
         }
         if ($request->supermaster) {
-            $users = $users->where("super_master", '=', $request->supermaster);
+            $users = $users->where("permissao_id", '=', $request->supermaster);
         }
         if ($request->status) {
             $users = $users->where("status", '=', $request->status);
         }
         $users = $users->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
             ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
-            ->orderBy("name")
+            ->orderBy("users.matricula")
             ->get();
 
-        return view('super-master.filters.users', compact(['users', 'setores']));
+        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes']));
 
     }
 
@@ -51,8 +52,9 @@ class SuperMasterController extends Controller
             ->findOrFail($id);
         if($user->id !== 1) {
             $setores = Setor::orderBy("nome")->get();
+            $permissoes = Permissao::where('id', '<>', 4)->get();
 
-            return view('super-master.edit.user', compact(['user', 'setores']));
+            return view('super-master.edit.user', compact(['user', 'setores', 'permissoes']));
         } else {
             return redirect()->back();
         }
@@ -60,31 +62,23 @@ class SuperMasterController extends Controller
 
     public function updateUserSuperMaster(Request $request, $id) {
         $this->validate($request, [
-            'nome' => ['required'],
-            'username' => ['required', 'min:6', 'unique:users,username,'.$request->id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
         ], [
-            'nome.required' => 'Nome é obrigatório',
-            'username.required' => 'Nome de usuário é obrigatório',
             'status.required' =>  'Status é obrigatório.',
             'status.integer' =>  'Esse Status não pode ser cadastrado.',
             'status.min' =>  'Esse Status não pode ser cadastrado.',
             'status.max' =>  'Esse Status não pode ser cadastrado.',
-
         ]);
         $user = User::findOrFail($id);
         if($user->id !== 1) {
-            $user->name = $request->nome;
-            $user->username = $request->username;
             $user->congregacao_id = $request->congregacao;
-            $user->super_master = $request->supermaster;
+            $user->permissao_id = $request->supermaster;
             $user->status = $request->status;
             $user->save();
             return redirect('/super-master/filters/users')->with('msg', 'Usuário atualizado com sucesso');
         } else {
             return redirect()->back();
         }
-
 
     }
 
@@ -98,10 +92,10 @@ class SuperMasterController extends Controller
     }
     public function updatePasswordUserSuperMaster(Request $request, $id) {
         $this->validate($request, [
-            'password' => ['required', 'min:8', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
+            'password' => ['required', 'min:6', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
         ], [
             'password.required' => 'A senha é obrigatória.',
-            'password.min' => 'A senha precisa ter no mínimo 8 dígitos.',
+            'password.min' => 'A senha precisa ter no mínimo 6 dígitos.',
             'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
 
         ]);

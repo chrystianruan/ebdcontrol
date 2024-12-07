@@ -4,6 +4,12 @@
 
 @section('content')
 <link rel="stylesheet" href="/css/saber.css">
+<style>
+    .marker {
+        font-weight: bolder;
+        color: yellow
+    }
+</style>
 <div class="card-container">
 	<span class="pro" @if($pessoa->situacao == 1) style="background-color: green" @else  style="background-color: red" @endif>@if($pessoa->situacao == 1)Ativo @else Inativo @endif</span>
 	<span class="pro2" @if($pessoa->sexo == 1) style="background-color: blue" @else  style="background-color: pink" @endif> @if($pessoa->sexo == 1) Masculino @else Feminino @endif</span>
@@ -12,7 +18,7 @@
 	@endif
 
 	<h3>{{$pessoa -> nome}}	</h3>
-	<h4>@foreach($pessoa->salas as $key=>$sala)@if($sala->id == auth()->user()->id_nivel) {{ $sala->nome }} ({{ $pessoa->funcoes[$key]['nome'] }}) @endif   @endforeach</h4>
+	<h4>@foreach($pessoa->salas as $key=>$sala)@if($sala->id == auth()->user()->sala_id) {{ $sala->nome }} ({{ $pessoa->funcoes[$key]['nome'] }}) @endif   @endforeach</h4>
 	<p> Idade: <span style="color: yellow">
 		@if(floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25) < 2)
         {{floor((strtotime(date('Y-m-d')) - strtotime($pessoa -> data_nasc))/(60 * 60 * 24) /365.25)}} ano
@@ -33,6 +39,13 @@
 			<li>{{$pessoa->cursos}}</li>
 			@endif
 		</ul>
+        @if (!empty($pessoa->user->matricula) && !empty($pessoa->user->password_temp))
+            <h6>Dados de Usuário</h6>
+            <ul>
+                <li>Matrícula: <span class="marker">{{ $pessoa->user->matricula }}</span></li>
+                <li>Senha temporária: <span class="marker">{{ $pessoa->user->password_temp}}</span></li>
+            </ul>
+        @endif
 	</div>
 </div>
 

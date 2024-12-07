@@ -38,9 +38,10 @@
                         </select>
                     </fieldset>
                     <select name="supermaster">
-                        <option selected disabled value="">SuperMaster</option>
-                        <option value=1>Sim</option>
-                        <option value="on">Não</option>
+                        <option selected disabled value="">Permissão</option>
+                        @foreach($permissoes as $p)
+                            <option value="{{ $p->id }}">{{ $p->name }}</option>
+                        @endforeach
                     </select>
 
 
@@ -102,7 +103,7 @@
         <tr>
             <th>Nome
             <th>Username
-            <th>SuperAdmin</th>
+            <th>Permissão</th>
             <th>Congregação/Setor
             <th>Status
             <th style="center">Ações
@@ -112,9 +113,9 @@
             <tbody>
             <tr> <!-- <tr class="disabled">  -->
 
-                <td>{{$u -> name}}
-                <td>{{$u -> username}}
-                <td> @if($u->super_master) Sim @else Não @endif</td>
+                <td>@if($u->pessoa_id){{ $u->pessoa->nome }} @else Sem dados @endif
+                <td>{{ $u->matricula }}
+                <td><span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span></td>
                 <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}
                 <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
                 <td>

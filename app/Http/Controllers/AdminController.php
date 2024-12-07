@@ -763,7 +763,7 @@ class AdminController extends Controller
     }
 
     public function sobre() {
-        return view('/admin/sobre');
+        return view('/admin/sobre'); 
     }
 
 }

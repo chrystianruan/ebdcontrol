@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/chamada.css">
 @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
-@if($chamadas -> count() == 0)
+@if(!$chamadaPadraoRealizada)
     @if ($errors->any())
     <div class="alert">
         <ul>
@@ -19,11 +19,11 @@
 <form action="/realizar-chamada" method="POST">
     @csrf
     <input type="hidden" id="pessoas" name="pessoas_presencas" value="{{ $pessoas }}">
-    <input type="hidden" id="sala" name="sala" value="{{ auth()->user()->id_nivel }}">
+    <input type="hidden" id="sala" name="sala" value="{{ auth()->user()->sala_id }}">
     <input type="hidden" name="route" value="{{ url('/classe/todas-chamadas') }}">
 <div style=" overflow-x: auto">
 <table style="margin: 3% 3% 0 3%;">
-    <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->id_nivel) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
+    <caption class="cont"><span style="font-weight: bold"> @foreach($salas as $sala) @if($sala -> id == auth()->user()->sala_id) {{ $sala -> nome }} @endif @endforeach - {{date('d/m/Y')}}</span></caption>
     <thead>
         <tr>
         <th>Nome</th>
@@ -38,10 +38,14 @@
         <td>{{ $p->pessoa_nome}}</td>
         <td>{{ $p->funcao_nome }}</td>
         <td>
+            @if (!$p->presenca)
             <select name="presencas[]" id="presenca-{{ $p->pessoa_id }}" class="presencas">
-                <option selected value="0" style="background-color: red">Não</option>
+                <option value="0" style="background-color: red">Não</option>
                 <option value="1" style="background-color: green">Sim</option>
             </select>
+            @else
+                <i class="fa fa-check" style="color: greenyellow; font-size: 1.2em">
+            @endif
         </tr>
         @endforeach
     </tbody>
@@ -58,7 +62,7 @@
 
     <div class="inputs-extras">
         <label>Presentes</label>
-        <input name="presentes" type="number" id="presentes" min="0" required readonly value="0">
+        <input name="presentes" type="number" id="presentes" min="0" required readonly value="{{ $quantidadePresencas }}">
     </div>
 
     <div class="inputs-extras">

@@ -24,7 +24,7 @@
     <a href="/sobre"><i class="fa fa-info-circle"></i>Sobre</a>
     <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
     <div style="float: right">
-        <a href="#" style="color: rgb(9, 150, 115)"><i class="bx bx-user" ></i>{{ auth()->user()->username }}</a>
+        <a href="#" style="color: rgb(9, 150, 115)"><i class="bx bx-user" ></i>{{ auth()->user()->matricula }}</a>
         <a> <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>
     </div>
 </div>

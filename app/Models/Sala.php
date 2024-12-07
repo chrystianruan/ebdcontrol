@@ -30,4 +30,8 @@ class Sala extends Model
     public function preCadastros() : HasMany {
         return $this->hasMany(PreCadastro::class);
     }
+
+    public function users() : HasMany {
+        return $this->hasMany(User::class);
+    }
 }

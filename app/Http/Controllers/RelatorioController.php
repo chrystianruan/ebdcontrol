@@ -42,6 +42,7 @@ class RelatorioController extends Controller {
             $relatorios = $this->chamadaRepository->getSumOfChamadasFindByMesOrYear($request->mes, $request->ano);
             $chamadas = Chamada::where('congregacao_id', auth()->user()->congregacao_id)
                 ->whereDate('created_at', Carbon::today())
+                ->where('chamada_padrao', true)
                 ->get();
             $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
             $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);

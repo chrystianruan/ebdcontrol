@@ -9,6 +9,8 @@ use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
 use App\Http\Requests\UpdatePessoaRequest;
+use App\Http\Utils\GenerateMatricula;
+use App\Http\Utils\PermissaoEnum;
 use App\Mail\EmailToAdminSistema;
 use App\Mail\PessoaCadastradaMail;
 use App\Models\Congregacao;
@@ -20,6 +22,7 @@ use App\Models\PessoaSala;
 use App\Models\Publico;
 use App\Models\Sala;
 use App\Models\Uf;
+use App\Models\User;
 use Dompdf\Exception;
 use FontLib\TrueType\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -33,9 +36,13 @@ class PessoaService
     use ValidatesRequests;
     private $linkCadastroGeral;
     private $pessoaRepository;
-    public function __construct(LinkCadastroGeral $linkCadastroGeral, PessoaRepository $pessoaRepository) {
+    private $generateMatricula;
+    public function __construct(LinkCadastroGeral $linkCadastroGeral,
+                                PessoaRepository $pessoaRepository,
+                                GenerateMatricula $generateMatricula) {
         $this->linkCadastroGeral = $linkCadastroGeral;
         $this->pessoaRepository = $pessoaRepository;
+        $this->generateMatricula = $generateMatricula;
     }
     public function liberarLinkGeral(int $congregacaoId) {
         $linkExistente = $this->linkCadastroGeral->getLink($congregacaoId);
@@ -101,19 +108,15 @@ class PessoaService
             $pessoa->hash = $hash;
             $pessoa->save();
 
-            $pessoaCadastrada = Pessoa::where('hash', $hash)->first();
-
             $this->storePessoaInSala($pessoa->id, $classeIdRequest);
-
-            $pessoaCadastrada->hash = null;
-            $pessoaCadastrada->save();
+            $this->createExternalUser($pessoa->id, $congregacaoIdRequest);
 
             $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
             $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
             Mail::to('chrystianr37@gmail.com')
                 ->send($email);
 
-            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
+            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso.');
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             throw $exception;
@@ -183,6 +186,24 @@ class PessoaService
             $pessoaSala->funcao_id = FuncaoEnum::ALUNO->value;
             $pessoaSala->active = 1;
             $pessoaSala->save();
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    private function createExternalUser(int $pessoaId, int $congregacaoId) : void {
+        try {
+            $password = bin2hex(random_bytes(3));
+            $externalUser = new User();
+            $externalUser->pessoa_id = $pessoaId;
+            $externalUser->matricula = $this->generateMatricula->getMatricula($congregacaoId);
+            $externalUser->password = bcrypt($password);
+            $externalUser->password_temp = $password;
+            $externalUser->reset_password = true;
+            $externalUser->congregacao_id = $congregacaoId;
+            $externalUser->permissao_id = PermissaoEnum::COMUM->value;
+            $externalUser->save();
 
         } catch (\Exception $e) {
             throw $e;

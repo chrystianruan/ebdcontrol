@@ -11,7 +11,7 @@
                 @csrf
                 <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->congregacao_id }}">
                 @if ($route == "cadastro.pessoa.classe")
-                <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->id_nivel }}">
+                <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->sala_id }}">
                 @endif
                 <div class="col-50">
                     <h2>{{$title}} - <span style="color: #1d10a7">{{$congregacao->congregacao_nome}} | {{ $congregacao->setor_nome }} | IEADERN PARNAMIRIM</span></h2>

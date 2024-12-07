@@ -42,8 +42,31 @@ class PresencaPessoaRepository
     }
 
     public function findByDateAndSala(string $date, int $salaId) :  ?\Illuminate\Database\Eloquent\Collection {
-        return PresencaPessoa::whereDate('created_at', $date)
+        return PresencaPessoa::whereDate('presenca_pessoas.created_at', $date)
             ->where('sala_id', $salaId)
+            ->join('pessoas', 'pessoas.id', '=', 'presenca_pessoas.pessoa_id')
+            ->orderBy('pessoas.nome')
+            ->get();
+    }
+
+    public function findByMonthAndYearAndPessoa($month, $year, $pessoaId) : Collection {
+        return PresencaPessoa::select('presenca_pessoas.created_at', 'salas.nome as sala_nome', 'funcaos.nome as funcao_nome', 'presenca_pessoas.presente')
+            ->join('salas', 'salas.id', '=', 'presenca_pessoas.sala_id')
+            ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id')
+            ->where('pessoa_id', $pessoaId)
+            ->whereMonth('presenca_pessoas.created_at', $month)
+            ->whereYear('presenca_pessoas.created_at', $year)
+            ->orderBy('presenca_pessoas.created_at', 'desc')
+            ->get();
+    }
+
+    public function findByYearAndPessoa($year, $pessoaId) : Collection {
+        return PresencaPessoa::select('presenca_pessoas.created_at', 'salas.nome as sala_nome', 'funcaos.nome as funcao_nome', 'presenca_pessoas.presente')
+            ->join('salas', 'salas.id', '=', 'presenca_pessoas.sala_id')
+            ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id')
+            ->where('pessoa_id', $pessoaId)
+            ->whereYear('presenca_pessoas.created_at', $year)
+            ->orderBy('presenca_pessoas.created_at', 'desc')
             ->get();
     }
 
