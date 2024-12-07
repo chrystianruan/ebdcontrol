@@ -40,4 +40,19 @@ class ComumController extends Controller
         return view('comum.marcar-presenca', compact(['view', 'pessoaSalas', 'presente', 'dateChamadaDia']));
     }
 
+
+    public function meusDados() : View {
+
+        $pessoa = Pessoa::select('pessoas.*',
+        'ufs.nome as uf_nome',
+        'formations.nome as formation_nome', 'users.matricula as matricula')
+        ->join('ufs', 'pessoas.id_uf', '=', 'ufs.id')
+        ->join('formations', 'pessoas.id_formation', '=', 'formations.id')
+        ->join('users', 'pessoas.id', '=', 'users.pessoa_id')
+        ->findOrFail(auth()->user()->pessoa_id);
+
+        $view = 'meus-dados';
+        return view('comum.meus-dados', compact('view', 'pessoa'));
+    }
+
 }
