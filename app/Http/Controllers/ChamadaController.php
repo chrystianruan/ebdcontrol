@@ -92,7 +92,7 @@ class ChamadaController extends Controller
     }
 
     public function realizarChamada(Request $request) {
-        if ($this->chamadaRepository->getChamadaToday($request->sala)) {
+        if ($this->chamadaRepository->getChamadaPadraoToday($request->sala)) {
             return redirect($request->route)->with('msg2', 'A chamada não pode ser realizada, pois já encontra concluída');
         }
 
@@ -108,14 +108,12 @@ class ChamadaController extends Controller
             $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, $request->sala, TipoPresenca::SISTEMA);
 
             if ($this->chamadaRepository->getChamadaToday($request->sala)) {
-                $chamada = Chamada::where('id_sala', '=', $request->sala)
-                    ->whereDate('created_at', Carbon::today())
-                    ->first();
-                $chamada->matriculados = $pessoas->count();
+                $chamada = $this->chamadaRepository->getChamadaToday($request->sala);
                 $chamada->visitantes = $dataToInt['visitantes'];
                 $chamada->biblias = $dataToInt['biblias'];
                 $chamada->revistas = $dataToInt['revistas'];
                 $chamada->observacoes = $request->observacoes;
+                $chamada->chamada_padrao = true;
                 $chamada->save();
 
                 DB::commit();
@@ -124,12 +122,12 @@ class ChamadaController extends Controller
 
             $novaChamada = new Chamada;
             $novaChamada->id_sala = $request->sala;
-            $novaChamada->matriculados = $pessoas->count();
             $novaChamada->visitantes = $dataToInt['visitantes'];
             $novaChamada->biblias = $dataToInt['biblias'];
             $novaChamada->revistas = $dataToInt['revistas'];
             $novaChamada->observacoes = $request->observacoes;
             $novaChamada->congregacao_id = auth()->user()->congregacao_id;
+            $novaChamada->chamada_padrao = true;
             $novaChamada->save();
 
             DB::commit();

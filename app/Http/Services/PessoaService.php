@@ -109,16 +109,14 @@ class PessoaService
             $pessoa->save();
 
             $this->storePessoaInSala($pessoa->id, $classeIdRequest);
-            $matricula = $this->generateMatricula->getMatricula($congregacaoIdRequest);
-            $password = bin2hex(random_bytes(3));
-            $this->createExternalUser($pessoa->id, $matricula, $congregacaoIdRequest, $password);
+            $this->createExternalUser($pessoa->id, $congregacaoIdRequest);
 
             $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
             $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
             Mail::to('chrystianr37@gmail.com')
                 ->send($email);
 
-            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso. Matricula: '.$matricula.' Senha: '.$password);
+            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso.');
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             throw $exception;
@@ -194,16 +192,22 @@ class PessoaService
         }
     }
 
-    private function createExternalUser(int $pessoaId, string $matricula, int $congregacaoId, string $password) : void {
-        $externalUser = new User();
-        $externalUser->pessoa_id = $pessoaId;
-        $externalUser->matricula = $matricula;
-        $externalUser->password = bcrypt($password);
-        $externalUser->password_temp = $password;
-        $externalUser->reset_password = true;
-        $externalUser->congregacao_id = $congregacaoId;
-        $externalUser->permissao_id = PermissaoEnum::COMUM->value;
-        $externalUser->save();
+    private function createExternalUser(int $pessoaId, int $congregacaoId) : void {
+        try {
+            $password = bin2hex(random_bytes(3));
+            $externalUser = new User();
+            $externalUser->pessoa_id = $pessoaId;
+            $externalUser->matricula = $this->generateMatricula->getMatricula($congregacaoId);
+            $externalUser->password = bcrypt($password);
+            $externalUser->password_temp = $password;
+            $externalUser->reset_password = true;
+            $externalUser->congregacao_id = $congregacaoId;
+            $externalUser->permissao_id = PermissaoEnum::COMUM->value;
+            $externalUser->save();
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
     }
 
     private function updatePessoaInSala(int $pessoaId, array $salas) : void {
