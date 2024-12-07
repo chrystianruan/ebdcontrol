@@ -20,22 +20,22 @@
   @if($pessoa->paternidade_maternidade != null)
   <div class="col-12">
     <label for="paternidade-maternidade" class="form-label">Paternidade/Maternidade</label>
-    <input type="text" class="form-control" id="paternidade-maternidade" value="{{$pessoa->paternidade_maternidade}}" disabled>
+    <input type="text" class="form-control" id="paternidade-maternidade" value="@if($pessoa->paternidade-maternidade !=null) {{$pessoa->paternidade-maternidade}} @else - @endif" disabled>
   </div>
   @endif
   @if($pessoa->responsavel != null)
   <div class="col-12">
     <label for="responsavel" class="form-label">Responsavel</label>
-    <input type="text" class="form-control" id="responsavel" value="{{$pessoa->responsavel}}" disabled>
+    <input type="text" class="form-control" id="responsavel" value="@if($pessoa->responsavel !=null) {{$pessoa->responsavel}} @else - @endif" disabled>
   </div>
   @endif
   <div class="col-md-3">
     <label for="phoneNumber" class="form-label">Telefone</label>
-    <input type="text" class="form-control" id="phoneNumber" value="{{$pessoa->telefone}}" disabled>
+    <input type="text" class="form-control" id="phoneNumber" value="@if($pessoa->telefone !=null) {{$pessoa->telefone}} @else - @endif" disabled>
   </div>
   <div class="col-md-4">
     <label for="ocupacao" class="form-label">Ocupação</label>
-    <input type="text" class="form-control" id="ocupacao" value="{{$pessoa->ocupacao}}" disabled>
+    <input type="text" class="form-control" id="ocupacao" value="@if($pessoa->ocupacao !=null) {{$pessoa->ocupacao}} @else - @endif" disabled>
   </div>
   <div class="col-md-4">
     <label for="inputCity" class="form-label">Cidade</label>
@@ -47,7 +47,7 @@
   </div>
   <div class="col-12">
     <label for="formation" class="form-label">Formação</label>
-    <input type="text" class="form-control" id="formation" value="{{$pessoa->formation_name}}" disabled>
+    <input type="text" class="form-control" id="formation" value="@if($pessoa->formation_name !=null) {{$pessoa->formation_name}} @else - @endif" disabled>
   </div>
   <div class="col-md-4">
     <label for="gridCheck" class="form-label">Sexo</label>
@@ -77,32 +77,73 @@
 <form id="my_form" class="row g-3" style="display: none; margin: 15px 0">
   <div class="col-md-4">
     <label for="matricula" class="form-label">Matrícula</label>
-    <input type="text" class="form-control" id="matricula" value="" disabled>
+    <input type="text" class="form-control" id="matricula" value="{{$pessoa->matricula}}" disabled>
   </div>
   <div class="col-md-4">
     <label for="nova-senha" class="form-label">Nova Senha</label>
-    <input type="text" class="form-control" id="senha" value="" placeholder="Nova senha" >
+    <div class="input-group">
+      <i id="btn-lock-senha" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
+      <input type="password" class="form-control" id="senha" placeholder="Nova senha" >
+    </div>
   </div>
   <div class="col-md-4">
     <label for="confirma-senha" class="form-label">Confirmar Senha</label>
-    <input type="text" class="form-control" id="confirma-senha" value="" placeholder="Confirmar senha">
+    <div class="input-group">
+      <i id="btn-lock-confirma" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>
+      <input type="password" class="form-control" id="confirma-senha" placeholder="Nova senha" >
+    </div>
+    <div id="senha-error" style="color: red; display: none; margin-top: 5px">As senhas são diferentes!</div>
   </div>
   <div class="col-12">
-    <button class="btn btn-danger">Salvar</button>
+    <button class="btn btn-danger" type="submit">Salvar</button>
   </div>
 </form>
 
 <script>
-  var btn = document.getElementById('btn-form');
-  var form = document.getElementById('my_form');
+  let btn = document.getElementById('btn-form')
+  let form = document.getElementById('my_form')
 
   btn.addEventListener('click', function() {
     if (form.style.display === 'none') {
-      form.style.display = 'block';
+      form.style.display = 'block'
     } else {
-      form.style.display = 'none';
+      form.style.display = 'none'
+    }
+  })
+  
+  form.addEventListener("submit", function (event) {
+    let senha = document.getElementById("senha");
+    let confirmaSenha = document.getElementById("confirma-senha");
+    let senhaError = document.getElementById("senha-error");
+
+    if (senha.value !== confirmaSenha.value) {
+      event.preventDefault();
+      senhaError.style.display = "block";
+      confirmaSenha.classList.add("is-invalid");
+    } else {
+      senhaError.style.display = "none";
+      confirmaSenha.classList.remove("is-invalid");
     }
   });
+
+  function showOrHidePassword(senhaID, btnID) {
+    let password = document.getElementById(senhaID)
+    let btnLock = document.getElementById(btnID)
+
+    btnLock.addEventListener("click", function() {
+      if (password.type === "password") {
+        password.type = "text";
+        btnLock.className = "bx bx-lock-open-alt btn btn-outline-secondary";
+      } else {
+        password.type = "password";
+        btnLock.className = "bx bx-lock-alt btn btn-outline-secondary"
+      }
+    } )
+  }
+
+  showOrHidePassword("senha", "btn-lock-senha");
+  showOrHidePassword("confirma-senha", "btn-lock-confirma");
+  
 </script>
 
 @endsection
