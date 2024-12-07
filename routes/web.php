@@ -174,6 +174,7 @@ Route::middleware(['auth', 'comum', 'status'])->group(function () {
     Route::get('/comum', [ComumController::class, 'index']);
     Route::get('/comum/marcar-presenca', [ComumController::class, 'indexMarcarPresenca']);
     Route::post('/comum/marcar-presenca', [PresencaPessoaController::class, 'marcarPresencaIndividualNivelComum']);
+    Route::get('/comum/meus-dados', [ComumController::class, 'meusDados']);
 });
 
 Route::get('/teste-email', function() {
