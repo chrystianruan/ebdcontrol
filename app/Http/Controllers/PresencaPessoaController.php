@@ -7,6 +7,7 @@ use App\Http\DTOs\PresencaPessoaDTO;
 use App\Http\DTOs\PresencaIndividualDadosValidacaoDTO;
 use App\Http\Enums\orderBy;
 use App\Http\Enums\TipoPresenca;
+use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\SalaRepository;
 use App\Http\Requests\PresencaIndividualRequest;
 use App\Http\Services\PresencaPessoaService;
@@ -24,11 +25,13 @@ class PresencaPessoaController extends Controller
 {
     private $presencaPessoaService;
     private $salaRepository;
+    private $pessoaRepository;
 
-    public function __construct(PresencaPessoaService $presencaPessoaService, SalaRepository $salaRepository)
+    public function __construct(PresencaPessoaService $presencaPessoaService, SalaRepository $salaRepository, PessoaRepository $pessoaRepository)
     {
         $this->presencaPessoaService = $presencaPessoaService;
         $this->salaRepository = $salaRepository;
+        $this->pessoaRepository = $pessoaRepository;
     }
 
     public function show(int $id) {
@@ -81,6 +84,11 @@ class PresencaPessoaController extends Controller
 
     public function marcarPresencaIndividualNivelComum(PresencaIndividualRequest $request) : RedirectResponse {
         try {
+            $pessoaSalas = $this->pessoaRepository->getSalasOfPessoa(auth()->user()->pessoa_id);
+
+            if ($pessoaSalas->count() > 1 && !$request->pessoa_sala) {
+                return redirect()->back()->with('msg_error', 'O vínculo é obrigatório para marcar presença.');
+            }
 
             $salaId = (int) $request->pessoa_sala ? PessoaSala::findOrFail($request->pessoa_sala)->sala_id : $request->sala;
 
