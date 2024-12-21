@@ -98,6 +98,7 @@ class ClasseController extends Controller
             ->get();
         $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->sala_id);
         $alunosInativos = $this->pessoaRepository->getInativos(auth()->user()->sala_id);
+        $codigoClasse = Sala::find(auth()->user()->sala_id)->hash;
 
         $chamadaDiaBD = $this->chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
         if ($chamadaDiaBD) {
@@ -108,7 +109,7 @@ class ClasseController extends Controller
 
         return view('/classe/dashboard', ['niverMes' => $niverMes, 'alunosInativos' => $alunosInativos,
             'chamadaDia' => $chamadaDia, 'interesseProf' => $interesseProf, 'idadesPessoas' => $idadesPessoas, 'formacoes' => $formacoes,
-            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes, 'dateChamadaDia' => $dateChamadaDia]);
+            'chamadasMes' => $chamadasMes, 'chamadasAno' => $chamadasAno, 'funcoes' => $funcoes, 'dateChamadaDia' => $dateChamadaDia, 'codigoClasse' => $codigoClasse]);
     }
 
     public function indexCadastroClasse()

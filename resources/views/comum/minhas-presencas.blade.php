@@ -20,7 +20,7 @@
                     <div class="col">
                         <label> Ano</label>
                         <select class="form-control" required name="year">
-                            <option selected>-- SELECIONE --</option>
+                            <option selected disabled value="">-- SELECIONE --</option>
                             @for($i = 2023; $i <= date('Y'); $i++)
                                 <option value="{{$i}}">{{$i}}</option>
                             @endfor
@@ -29,7 +29,7 @@
                     <div class="col">
                         <label>Mês </label>
                         <select class="form-control col-sm" required name="month">
-                            <option selected>-- SELECIONE --</option>
+                            <option selected disabled value="">-- SELECIONE --</option>
                             @foreach($mesesNome as $i => $mes)
                                 <option value="{{$i}}">{{$mes}}</option>
                             @endforeach
