@@ -189,7 +189,8 @@
 
                     @endif
 
-                    <td style="width: 180px">  <div class="wrapper">
+                    <td style="width: 180px">
+                        <div class="wrapper">
                             Ver classes
                             <div class="tooltip">
                                 <ul>
