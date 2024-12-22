@@ -7,6 +7,12 @@
     <h4>Dashboard</h4>
     <hr>
     <div class="container">
+        @if(auth()->user()->pessoa->situacao == 2)
+            <div class="alert alert-warning">
+                <i class="bx bxs-error" style="font-size: 1.2em"></i>
+                Você está inativado! Para mais informações, entre em contato com a secretaria.
+            </div>
+        @endif
         <div class="row">
             <div class="col-sm">
                 <div class="card">
