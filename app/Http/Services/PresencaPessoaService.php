@@ -117,7 +117,7 @@ class PresencaPessoaService
         $chamada = $this->chamadaRepository->getChamadaToday($salaId);
 
         if (!$chamada) {
-            $this->chamadaService->criarRegistroChamadaPresencaIndividual($salaId, $congregacaoId);
+            $this->chamadaService->criarRegistroChamadaPresencaIndividual($salaId, $congregacaoId, $this->pessoaRepository->findBySalaIdAndSituacao($salaId)->count());
         } else {
             $chamada->matriculados = $this->pessoaRepository->findBySalaIdAndSituacao($salaId)->count();
             $chamada->presentes = $chamada->presentes + 1;
