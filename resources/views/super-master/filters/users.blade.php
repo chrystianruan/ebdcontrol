@@ -102,18 +102,18 @@
         <thead>
         <tr>
             <th>Nome
-            <th>Username
+            <th>Matrícula
             <th>Permissão</th>
             <th>Congregação/Setor
             <th>Status
-            <th style="center">Ações
+            <th style="text-align: center">Ações
         </thead>
         @foreach($users as $u)
 
             <tbody>
             <tr> <!-- <tr class="disabled">  -->
 
-                <td>@if($u->pessoa_id){{ $u->pessoa->nome }} @else Sem dados @endif
+                <td>@if($u->pessoa_id) @if ($u->pessoa) {{ $u->pessoa->nome }} @else Pessoa apagada @endif @else Sem dados @endif
                 <td>{{ $u->matricula }}
                 <td><span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span></td>
                 <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}

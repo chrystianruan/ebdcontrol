@@ -95,7 +95,7 @@
       <th>Matrícula
       <th>Nível
       <th>Status
-      <th style="center">Ações
+      <th style="text-align: center">Ações
   </thead>
 
 
@@ -104,7 +104,7 @@
       @if ($u->permissao_id != 1)
         <tr>
 
-          <td>@if($u->pessoa_id) {{ $u->pessoa->nome }} @else Sem dados @endif
+          <td>@if($u->pessoa_id) @if ($u->pessoa) {{ $u->pessoa->nome }} @else Pessoa apagada @endif @else Sem dados @endif
           <td>{{$u->matricula}}
           <td>{{ $u->permissao->name }} @if ($u->sala_id) ({{ $u->sala->nome }}) @endif
           <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
