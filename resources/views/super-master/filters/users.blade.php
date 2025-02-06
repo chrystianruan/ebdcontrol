@@ -5,7 +5,7 @@
 @section('content')
 
     <link rel="stylesheet" href="/css/filtrosPessoa.css">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div style="margin: 15px">
 
         <form action="/super-master/filters/users" method="POST">
@@ -21,7 +21,7 @@
 
                     <select name="status">
                         <option selected disabled value="">Status</option>
-                        <option value="on">Ativo</option>
+                        <option value="0">Ativo</option>
                         <option value=1>Inativo</option>
 
                     </select>
@@ -103,6 +103,8 @@
         <tr>
             <th>Nome
             <th>Matrícula
+            <th>Senha Temporária </th>
+            <th>Reset</th>
             <th>Permissão</th>
             <th>Congregação/Setor
             <th>Status
@@ -115,12 +117,22 @@
 
                 <td>@if($u->pessoa_id) @if ($u->pessoa) {{ $u->pessoa->nome }} @else Pessoa apagada @endif @else Sem dados @endif
                 <td>{{ $u->matricula }}
-                <td><span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span></td>
+                <td>{{ $u->password_temp }}</td>
+                <td>
+                    @if($u->reset_password == false)
+                        <i style="padding: 2px; border-radius: 3px; background-color: green" class="bx bx-user-check icon"></i>
+                    @else
+                        <i class="bx bx-user-x icon" style="padding: 2px; border-radius: 3px; background-color: green" class="bx bx-user-x icon"> </i>
+                    @endif
+                </td>
+                <td>
+                    <span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span>
+                </td>
                 <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}
                 <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
                 <td>
                     <a href="/super-master/edit/user/{{$u->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-                    <a href="/super-master/edit/password-user/{{$u->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-lock icon'></i> </a>
+                    <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor:pointer;" id="btn-reset-password-{{ $u->id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
                 </td>
             </tr>
 
@@ -147,6 +159,22 @@
                     $('#congregacao').html(option).show();
                 }
             })
+        });
+
+        $('.btn-reset-password').click(function () {
+            var response = confirm('Deseja realmente resetar a senha do usuário?');
+            if (response) {
+                let userId = this.id.replace("btn-reset-password-", "");
+                $.ajax({
+                    type: 'PUT',
+                    url: '{{ url('/super-master/reset-password/user') }}/'+userId,
+                    dataType: 'json',
+                    success: function (data) {
+                        alert(data.response);
+                        window.location.reload();
+                    }
+                })
+            }
         });
 
     </script>

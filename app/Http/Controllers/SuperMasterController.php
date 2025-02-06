@@ -8,6 +8,8 @@ use App\Models\Pessoa;
 use App\Models\Sala;
 use App\Models\Setor;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class SuperMasterController extends Controller
@@ -82,31 +84,21 @@ class SuperMasterController extends Controller
 
     }
 
-    public function editPasswordUserSuperMaster($id) {
-        $user = User::findOrFail($id);
+    public function forceResetPassword($userId) : JsonResponse {
+        $user = User::findOrFail($userId);
         if($user->id !== 1) {
-            return view('super-master.edit.password-user')->with(compact(['user']));
-        } else {
-            return redirect()->back();
-        }
-    }
-    public function updatePasswordUserSuperMaster(Request $request, $id) {
-        $this->validate($request, [
-            'password' => ['required', 'min:6', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-        ], [
-            'password.required' => 'A senha é obrigatória.',
-            'password.min' => 'A senha precisa ter no mínimo 6 dígitos.',
-            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-
-        ]);
-        $user = User::findOrFail($id);
-        if($user->id !== 1) {
-            $user->password = bcrypt($request->password);
+            $password = bin2hex(random_bytes(3));
+            $user->password = bcrypt($password);
+            $user->password_temp = $password;
+            $user->reset_password = true;
             $user->save();
-            return redirect('/super-master/filters/users')->with('msg', 'Senha de usuário atualizado com sucesso');
-
+            return response()->json([
+                'response' => 'Senha de usuário resetada com sucesso'
+            ], 201);
         } else {
-            return redirect()->back();
+            return response()->json([
+                'response' => 'Não é possível resetar a senha do usuário administrador'
+            ], 403);
         }
     }
 

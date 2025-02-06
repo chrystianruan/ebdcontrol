@@ -194,10 +194,10 @@ class PessoaService
 
     private function createExternalUser(int $pessoaId, int $congregacaoId) : void {
         try {
-            $password = bin2hex(random_bytes(3));
             $externalUser = new User();
             $externalUser->pessoa_id = $pessoaId;
             $externalUser->matricula = $this->generateMatricula->getMatricula($congregacaoId);
+            $password = bin2hex(random_bytes(3));
             $externalUser->password = bcrypt($password);
             $externalUser->password_temp = $password;
             $externalUser->reset_password = true;
