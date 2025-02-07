@@ -46,8 +46,8 @@
     <input type="text" class="form-control" id="inputState" value="{{$pessoa->uf_nome}}" disabled>
   </div>
   <div class="col-12">
-    <label for="formation" class="form-label">Formação</label>
-    <input type="text" class="form-control" id="formation" value="@if($pessoa->formation_name !=null) {{$pessoa->formation_name}} @else - @endif" disabled>
+    <label for="formation" class="form-label">Formação Acadêmica</label>
+    <input type="text" class="form-control" id="formation" value="{{$pessoa->formation_nome}}" disabled>
   </div>
   <div class="col-md-4">
     <label for="gridCheck" class="form-label">Sexo</label>
@@ -81,7 +81,7 @@
     <input type="text" class="form-control" id="matricula" value="{{$pessoa->matricula}}" disabled>
   </div>
   <div class="col-md-4">
-    <label for="nova-senha" class="form-label">Nova Snha</label>
+    <label for="nova-senha" class="form-label">Nova Senha</label>
     <div class="input-group">
       <input type="password" class="form-control" id="senha" placeholder="Digite sua senha" name="password">
        <i id="btn-lock-senha" class="bx bx-lock-alt btn btn-outline-secondary" style="cursor: pointer; display: flex; align-items: center; justify-content: center;"></i>

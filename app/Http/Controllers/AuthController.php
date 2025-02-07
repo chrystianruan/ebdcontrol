@@ -32,8 +32,6 @@ class AuthController extends Controller
     }
 
 
-
-
     public function index() {
         return view('welcome');
     }
@@ -47,144 +45,8 @@ class AuthController extends Controller
         return view("/about");
     }
 
-    public function indexUsuarioMaster() {
-
-        $dataAtual = date('d/m/Y');
-        $niveisRestricted = Sala::where('id', '=', 1)
-            ->orWhere('id', '=', 2);
-        $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')
-            ->union($niveisRestricted)
-            ->get();
-        return view('/master/cadastro/usuario', ['niveis' => $niveis, 'dataAtual' => $dataAtual]);
-    }
-
-    public function searchUserMaster(Request $request) {
-        $nome = request('nome');
-        $nivel = request('nivel');
-        $status = request('status');
-        $niveisRestricted = Sala::where('id', '=', 1)
-            ->orWhere('id', '=', 2);
-        $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('nome')
-            ->union($niveisRestricted)
-            ->get();
-        //nome
-        if(isset($request->nome) && empty($request->nivel) && empty($request -> status)) {
-            $users = User::where([['name', 'like', '%'.$request -> nome.'%']])
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->where('id', '>', 1)
-                ->get();
-
-        }
-         //nivel
-        elseif(empty($request->nome) && isset($request->nivel) && empty($request -> status)) {
-            $users = User::where('permissao_id', '=', $request->nivel)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->where('id', '>', 1)
-                ->get();
-
-        }
-        //status
-        elseif(empty($request->nome) && empty($request->nivel) && isset($request -> status)) {
-            $users = User::where('status', $request->status)
-                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-                ->where('id', '>', 1)
-                ->get();
-
-        }
-        //nivel e status
-        elseif(empty($request->nome) && isset($request->nivel) && isset($request -> status)) {
-            $users = User::where('permissao_id', '=', $request->nivel)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->where('id', '>', 1)
-            ->where('status', $request->status)
-            ->get();
-
-        }
-         else {
-            $users = User::where('id', '>', 1)->where('congregacao_id', '=', auth()->user()->congregacao_id)->get();
-        }
-
-        return view('/master/filtro/usuario', ['niveis' => $niveis, 'users' => $users, 'nome' => $nome,
-        'status' => $status, 'nivel' => $nivel]);
-
-    }
-
-    public function editUserMaster($id) {
-        $user = User::findOrFail($id);
-        if($user->id !== 1) {
-            $niveis = Permissao::where('id', '>', 1)
-                ->get();
-            return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
-        } else {
-            return redirect()->back();
-        }
-    }
-
-    public function updateUserMaster(Request $request) {
-        $lastNivel = Permissao::orderBy('id', 'desc')
-            ->first();
-        $this->validate($request, [
-            'id_nivel' => ['required', 'integer', 'min:2', 'max:'.$lastNivel -> id],
-            'status' => ['required', 'integer', 'min:0', 'max: 1']
-        ], [
-            'id_nivel.required' =>  'Nível é obrigatório.',
-            'id_nivel.integer' =>  'Esse nível não pode ser cadastrado.',
-            'id_nivel.min' =>  'Esse nível não pode ser cadastrado.',
-            'id_nivel.max' =>  'Esse nível não pode ser cadastrado.',
-            'status.required' =>  'Status é obrigatório.',
-            'status.integer' =>  'Esse Status não pode ser cadastrado.',
-            'status.min' =>  'Esse Status não pode ser cadastrado.',
-            'status.max' =>  'Esse Status não pode ser cadastrado.',
-
-        ]);
-            $user = User::findOrFail($request->id);
-            if($user->id !== 1) {
-                User::findOrFail($request->id)->update([
-                    'permissao_id' => $request->id_nivel,
-                    'status' => $request->status,
-                    'sala_id' => $request->sala
-                ]);
-                return redirect('/master/filtro/usuario')->with('msg', 'Usuário atualizado com sucesso.');
-            } else {
-                return redirect()->back();
-            }
 
 
-    }
-
-    public function editUserPassword($id) {
-
-        $user = User::findOrFail($id);
-        if($user->id !== 1) {
-            return view('/master/edit/usuario-senha', ['user' => $user]);
-        } else {
-            return redirect()->back();
-        }
-    }
-
-    public function updateUserPassword(Request $request) {
-        $this->validate($request, [
-            'password' => ['required', 'min:6', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-        ], [
-            'password.required' => 'A senha é obrigatória.',
-            'password.min' => 'A senha precisa ter no mínimo 6 dígitos.',
-            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-
-        ]);
-        $user = User::findOrFail($request->id);
-        if($user->id !== 1) {
-            if (isset($request->id_nivel) || isset($request->name) || isset($request->username) || isset($request->status)) {
-                return redirect('/master/filtro/usuario')->with('msg2', 'Seu usuário não tem permissão');
-            } else {
-                User::findOrFail($request->id)->update(['password' => bcrypt($request->password)]);
-                return redirect('/master/filtro/usuario')->with('msg', 'Senha de Usuário atualizada com sucesso.');
-            }
-        } else {
-            return redirect()->back();
-        }
-    }
 
     public function logout(Request $request) {
         Auth::logout();

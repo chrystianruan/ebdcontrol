@@ -8,6 +8,8 @@ use App\Models\Pessoa;
 use App\Models\Sala;
 use App\Models\Setor;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class SuperMasterController extends Controller
@@ -18,29 +20,39 @@ class SuperMasterController extends Controller
     }
 
     public function userFilters(Request $request) {
+        $nome = $request->nome;
+        $setor = $request->setor ? Setor::findOrFail((int) $request->setor)->nome : null;
+        $congregacao = $request->congregacao ? Congregacao::findOrFail((int) $request->congregacao)->nome : null;
+        $permission = $request->permission ? Permissao::findOrFail((int) $request->permission)->name : null;
+        $status = $request->status != null ? $request->status == 0 ? "Ativo" : "Inativo" : null;
         $setores = Setor::orderBy("nome")
             ->get();
         $permissoes = Permissao::all();
-        $users = User::select('users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
+        $users = User::select('users.id as user_id','pessoas.*', 'users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
+            ->leftJoin('pessoas' , 'users.pessoa_id', '=', 'pessoas.id')
+            ->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
+            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
             ->where('users.id', '>', 1);
+
         if ($request->congregacao) {
-            $users = $users->where('congregacao_id', '=', $request->congregacao);
+            $users = $users->where('users.congregacao_id', '=', $request->congregacao);
+        }
+        if ($request->setor) {
+            $users = $users->where('setors.id', '=', $request->setor);
         }
         if ($request->nome) {
-            $users = $users->where("name", "like",'%'.$request->nome.'%');
+            $users = $users->where("pessoas.nome", "like",'%'.$request->nome.'%');
         }
-        if ($request->supermaster) {
-            $users = $users->where("permissao_id", '=', $request->supermaster);
+        if ($request->permission) {
+            $users = $users->where("users.permissao_id", '=', $request->permission);
         }
-        if ($request->status) {
-            $users = $users->where("status", '=', $request->status);
+        if ($request->status != null) {
+            $users = $users->where("users.status", '=', $request->status);
         }
-        $users = $users->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
-            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
-            ->orderBy("users.matricula")
+        $users = $users->orderBy("pessoas.nome")
             ->get();
 
-        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes']));
+        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes', 'nome', 'setor', 'permission', 'status', 'congregacao']));
 
     }
 
@@ -82,31 +94,21 @@ class SuperMasterController extends Controller
 
     }
 
-    public function editPasswordUserSuperMaster($id) {
-        $user = User::findOrFail($id);
+    public function forceResetPassword($userId) : JsonResponse {
+        $user = User::findOrFail($userId);
         if($user->id !== 1) {
-            return view('super-master.edit.password-user')->with(compact(['user']));
-        } else {
-            return redirect()->back();
-        }
-    }
-    public function updatePasswordUserSuperMaster(Request $request, $id) {
-        $this->validate($request, [
-            'password' => ['required', 'min:6', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-        ], [
-            'password.required' => 'A senha é obrigatória.',
-            'password.min' => 'A senha precisa ter no mínimo 6 dígitos.',
-            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-
-        ]);
-        $user = User::findOrFail($id);
-        if($user->id !== 1) {
-            $user->password = bcrypt($request->password);
+            $password = bin2hex(random_bytes(3));
+            $user->password = bcrypt($password);
+            $user->password_temp = $password;
+            $user->reset_password = true;
             $user->save();
-            return redirect('/super-master/filters/users')->with('msg', 'Senha de usuário atualizado com sucesso');
-
+            return response()->json([
+                'response' => 'Senha de usuário resetada com sucesso'
+            ], 201);
         } else {
-            return redirect()->back();
+            return response()->json([
+                'response' => 'Não é possível resetar a senha do usuário administrador'
+            ], 403);
         }
     }
 

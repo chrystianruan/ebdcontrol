@@ -67,14 +67,12 @@ Route::middleware(['auth', 'classe', 'status', 'resetPassword'])->group(function
 
 Route::middleware(['auth', 'master', 'status', 'resetPassword'])->group(function () {
     Route::get('/master', [MasterController::class, 'dashboardMaster']);
-    Route::get('/master/cadastro/usuario', [AuthController::class, 'indexUsuarioMaster']);
-    Route::post('/master/cadastro/usuario', [AuthController::class, 'storeUsuarioMaster']);
-    Route::get('/master/filtro/usuario', [AuthController::class, 'searchUserMaster']);
-    Route::post('/master/filtro/usuario', [AuthController::class, 'searchUserMaster']);
-    Route::get('/master/edit/usuario/{id}', [AuthController::class, 'editUserMaster']);
-    Route::put('/master/update/usuario/{id}', [AuthController::class, 'updateUserMaster']);
-    Route::get('/master/edit/usuario-senha/{id}', [AuthController::class, 'editUserPassword']);
-    Route::put('/master/update/usuario-senha/{id}', [AuthController::class, 'updateUserPassword']);
+    Route::get('/master/cadastro/usuario', [MasterController::class, 'indexUsuarioMaster']);
+    Route::get('/master/filtro/usuario', [MasterController::class, 'searchUserMaster']);
+    Route::post('/master/filtro/usuario', [MasterController::class, 'searchUserMaster']);
+    Route::get('/master/edit/usuario/{id}', [MasterController::class, 'editUserMaster']);
+    Route::put('/master/update/usuario/{id}', [MasterController::class, 'updateUserMaster']);
+    Route::put('/master/update/reset-password/{userId}', [MasterController::class, 'forceResetPassword']);
 
     Route::get('/master/cadastro/classe', [MasterController::class, 'indexSalaMaster']);
     Route::post('/master/cadastro/classe', [MasterController::class, 'storeSalaMaster']);
@@ -167,8 +165,7 @@ Route::middleware(['auth', 'supermaster', 'status', 'resetPassword'])->group(fun
     Route::post('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
     Route::get('/super-master/edit/user/{id}', [SuperMasterController::class, 'editUserSuperMaster']);
     Route::put('/super-master/update/user/{id}', [SuperMasterController::class, 'updateUserSuperMaster']);
-    Route::get('/super-master/edit/password-user/{id}', [SuperMasterController::class, 'editPasswordUserSuperMaster']);
-    Route::put('/super-master/update/password-user/{id}', [SuperMasterController::class, 'updatePasswordUserSuperMaster']);
+    Route::put('/super-master/reset-password/user/{userId}', [SuperMasterController::class, 'forceResetPassword']);
     Route::post('/super-master/new/congregacao', [SuperMasterController::class, 'newCongregacao']);
     Route::get('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
     Route::post('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);

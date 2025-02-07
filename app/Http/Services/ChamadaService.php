@@ -111,10 +111,10 @@ class ChamadaService
         return $this->chamadaRepository->findByCongregacaoAndMonthAndYearAndGroupByCreatedAt($congregacaoId, $month, $year);
     }
 
-    public function criarRegistroChamadaPresencaIndividual(int $salaId, int $congregacaoId) : void {
+    public function criarRegistroChamadaPresencaIndividual(int $salaId, int $congregacaoId, int $quantidadeMatriculados) : void {
        try {
            $chamada = new Chamada;
-           $chamada->matriculados = 1;
+           $chamada->matriculados = $quantidadeMatriculados;
            $chamada->presentes = 1;
            $chamada->id_sala = $salaId;
            $chamada->congregacao_id = $congregacaoId;

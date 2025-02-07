@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
+use App\Http\Utils\PermissaoEnum;
 use App\Models\ChamadaDiaCongregacao;
 use App\Models\Congregacao;
 use App\Models\LinkCadastroGeral;
+use App\Models\Permissao;
 use App\Models\Pessoa;
+use http\Env\Response;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -14,6 +18,7 @@ use App\Models\Sala;
 use Carbon\Carbon;
 use DB;
 use Illuminate\View\View;
+use phpDocumentor\Reflection\DocBlock\Tags\Author;
 
 class MasterController extends Controller
 {
@@ -162,6 +167,111 @@ class MasterController extends Controller
         return redirect()->back()->with('msg', 'Localização salva com sucesso');
     }
 
+    public function forceResetPassword($userId) : JsonResponse {
+        $user = User::findOrFail($userId);
+        if($user->id !== 1 || auth()->user()->congregacao_id !== $user->congregacao_id) {
+            $password = bin2hex(random_bytes(3));
+            $user->password = bcrypt($password);
+            $user->password_temp = $password;
+            $user->reset_password = true;
+            $user->save();
+            return response()->json([
+                'response' => 'Senha de usuário resetada com sucesso'
+            ], 201);
+        } else {
+            return response()->json([
+                'response' => 'Não é possível resetar a senha do usuário administrador'
+            ], 403);
+        }
+    }
+
+    public function indexUsuarioMaster() {
+
+        $dataAtual = date('d/m/Y');
+        $niveisRestricted = Sala::where('id', '=', 1)
+            ->orWhere('id', '=', 2);
+        $niveis = Sala::where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')
+            ->union($niveisRestricted)
+            ->get();
+        return view('/master/cadastro/usuario', ['niveis' => $niveis, 'dataAtual' => $dataAtual]);
+    }
+
+    public function searchUserMaster(Request $request) {
+        $nome = request('nome');
+        $status = request('status') != null ? (int) request('status') == 0 ? "Ativo" : "Inativo" : null;
+        $permission = request('permission') ? Permissao::find(request('permission'))->name : null;
+        $sala = request('sala') ? Sala::find(request('sala'))->nome : null;
+        $permissoes = Permissao::where('id', '>', 1)
+            ->get();
+
+        $users = User::select('users.id as user_id', 'users.*', 'pessoas.*')->where('permissao_id', '<>', PermissaoEnum::SUPERMASTER)
+            ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
+            ->leftJoin('pessoas', 'pessoas.id', '=', 'users.pessoa_id');
+
+        if($request->nome) {
+            $users = $users->where([['pessoas.nome', 'like', '%'.$request -> nome.'%']]);
+        }
+        if($request->permission) {
+            $users = $users->where('permissao_id', '=', $request->permission);
+        }
+        if ($request->status != null) {
+            $users = $users->where('status', '=', $request->status);
+        }
+        if ($request->sala) {
+            $users = $users->where('sala_id', '=', $request->sala);
+        }
+
+        $users = $users->orderBy('pessoas.nome')
+            ->get();
+
+        return view('/master/filtro/usuario', ['users' => $users, 'nome' => $nome,
+            'status' => $status, 'permissoes' => $permissoes, 'permission' => $permission, 'sala' => $sala]);
+
+    }
+
+    public function editUserMaster($id) {
+        $user = User::findOrFail($id);
+        if($user->id !== 1) {
+            $niveis = Permissao::where('id', '>', 1)
+                ->get();
+            return view('/master/edit/usuario', ['user' => $user, 'niveis' => $niveis]);
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function updateUserMaster(Request $request) {
+        $lastNivel = Permissao::orderBy('id', 'desc')
+            ->first();
+        $this->validate($request, [
+            'id_nivel' => ['required', 'integer', 'min:2', 'max:'.$lastNivel -> id],
+            'status' => ['required', 'integer', 'min:0', 'max: 1']
+        ], [
+            'id_nivel.required' =>  'Nível é obrigatório.',
+            'id_nivel.integer' =>  'Esse nível não pode ser cadastrado.',
+            'id_nivel.min' =>  'Esse nível não pode ser cadastrado.',
+            'id_nivel.max' =>  'Esse nível não pode ser cadastrado.',
+            'status.required' =>  'Status é obrigatório.',
+            'status.integer' =>  'Esse Status não pode ser cadastrado.',
+            'status.min' =>  'Esse Status não pode ser cadastrado.',
+            'status.max' =>  'Esse Status não pode ser cadastrado.',
+
+        ]);
+        $user = User::findOrFail($request->id);
+        if($user->id !== 1) {
+            User::findOrFail($request->id)->update([
+                'permissao_id' => $request->id_nivel,
+                'status' => $request->status,
+                'sala_id' => $request->sala
+            ]);
+            return redirect('/master/filtro/usuario')->with('msg', 'Usuário atualizado com sucesso.');
+        } else {
+            return redirect()->back();
+        }
+
+
+    }
 
 
 }
