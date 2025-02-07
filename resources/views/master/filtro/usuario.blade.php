@@ -22,7 +22,7 @@
       <select name="status">
         <option selected disabled value="">Status</option>
             <option value="0">Ativo</option>
-            <option value=1>Inativo</option>
+            <option value="1">Inativo</option>
 
       </select>
 
@@ -127,9 +127,9 @@
             </td>
           <td>{{ $u->permissao->name }} @if ($u->sala_id) ({{ $u->sala->nome }}) @endif
           <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
-          <td>
-            <a href="/master/edit/usuario/{{$u->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-            <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor: pointer" id="btn-reset-password-{{ $u->id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
+          <td >
+            <a href="/master/edit/usuario/{{$u->user_id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
+            <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor: pointer" id="btn-reset-password-{{ $u->user_id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
           </td>
         </tr>
       @endif

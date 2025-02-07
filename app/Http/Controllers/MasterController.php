@@ -205,7 +205,7 @@ class MasterController extends Controller
         $permissoes = Permissao::where('id', '>', 1)
             ->get();
 
-        $users = User::where('permissao_id', '<>', PermissaoEnum::SUPERMASTER)
+        $users = User::select('users.id as user_id', 'users.*', 'pessoas.*')->where('permissao_id', '<>', PermissaoEnum::SUPERMASTER)
             ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
             ->leftJoin('pessoas', 'pessoas.id', '=', 'users.pessoa_id');
 
@@ -215,8 +215,8 @@ class MasterController extends Controller
         if($request->permission) {
             $users = $users->where('permissao_id', '=', $request->permission);
         }
-        if ($request->status) {
-            $users = $users->where('status', '=', (bool) $request->status);
+        if ($request->status != null) {
+            $users = $users->where('status', '=', $request->status);
         }
         if ($request->sala) {
             $users = $users->where('sala_id', '=', $request->sala);
