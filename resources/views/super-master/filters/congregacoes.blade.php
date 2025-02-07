@@ -86,6 +86,7 @@
         <tr>
             <th>Nome
             <th>Setor
+            <th>Link de cadastro</th>
             <th style="text-align: center">Ação
         </thead>
         @foreach($congregacoes as $c)
@@ -95,6 +96,16 @@
 
                 <td>{{$c -> nome}}
                 <td>{{$c -> setor_nome}}
+                <td>
+                    <a href="{{ url('/cadastro')."/".base64_encode($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
+                        {{ url('/cadastro')."/".base64_encode($c->id) }}
+                    </a>
+                    @if ($c->linkCadastroGeral)
+                        <i class="bx bx-link icon" style="color: green; font-size: 1.7em; margin: 5px 10px;">
+                    @else
+                        <i class="bx bx-unlink icon" style="color: red; font-size: 1.7em; margin: 5px 10px; ">
+                    @endif
+                </td>
                 <td>
                     <a href="/super-master/edit/congregacao/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
                 </td>
