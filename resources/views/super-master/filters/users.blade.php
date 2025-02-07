@@ -22,14 +22,14 @@
                     <select name="status">
                         <option selected disabled value="">Status</option>
                         <option value="0">Ativo</option>
-                        <option value=1>Inativo</option>
+                        <option value="1">Inativo</option>
 
                     </select>
                     <fieldset style="border-radius: 10px">
                         <select name="setor" id="setor">
                             <option selected disabled value="">Setor</option>
-                            @foreach($setores as $setor)
-                            <option value="{{ $setor->id }}">{{ $setor->nome }}</option>
+                            @foreach($setores as $s)
+                            <option value="{{ $s->id }}">{{ $s->nome }}</option>
                             @endforeach
                         </select>
                         <select name="congregacao" id="congregacao">
@@ -37,7 +37,7 @@
 
                         </select>
                     </fieldset>
-                    <select name="supermaster">
+                    <select name="permission">
                         <option selected disabled value="">Permissão</option>
                         @foreach($permissoes as $p)
                             <option value="{{ $p->id }}">{{ $p->name }}</option>
@@ -61,29 +61,37 @@
 
 
 
-    @if(isset($nome) || isset($nivel) || isset($status))
+    @if(isset($nome) || isset($status) || isset($setor) || isset($congregacao) || isset($permission))
         <div class="busca">
             <p class="tit">Buscando por:</p>
 
-            @if(isset($nome) && empty($nivel) && empty($status))
+            @if(isset($nome))
                 <li class="ponto">Nome:
                     <i class="result"> {{$nome}} </i>
                 </li>
             @endif
 
-            @if(isset($nivel) && empty($nome))
-                <li class="ponto">Nível:
-                    <i class="result">@foreach($niveis as $n) @if($n -> id == $nivel) {{$n -> nome}} @endif @endforeach</i>
-                </li>
-            @endif
-
-            @if(isset($status) && empty($nome))
+            @if(isset($status))
                 <li class="ponto">Status:
-                    <i class="result"> @if($status == 'on') Ativo @elseif($status == 1) Inativo @endif</i>
+                    <i class="result">{{ $status }}</i>
                 </li>
             @endif
 
-
+            @if(isset($setor))
+                <li class="ponto">Setor:
+                    <i class="result"> {{ $setor }}</i>
+                </li>
+            @endif
+            @if(isset($congregacao))
+                <li class="ponto">Congregação:
+                    <i class="result"> {{ $congregacao }}</i>
+                </li>
+            @endif
+            @if(isset($permission))
+                <li class="ponto">Status:
+                    <i class="result"> {{ $permission }}</i>
+                </li>
+            @endif
         </div>
     @else
         <div class="busca">
@@ -120,9 +128,9 @@
                 <td>{{ $u->password_temp }}</td>
                 <td>
                     @if($u->reset_password == false)
-                        <i style="padding: 2px; border-radius: 3px; background-color: green" class="bx bx-user-check icon"></i>
+                        <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: green" class="bx bx-user-check icon"></i>
                     @else
-                        <i class="bx bx-user-x icon" style="padding: 2px; border-radius: 3px; background-color: green" class="bx bx-user-x icon"> </i>
+                        <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: red" class="bx bx-user-x icon"> </i>
                     @endif
                 </td>
                 <td>
@@ -131,8 +139,8 @@
                 <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}
                 <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
                 <td>
-                    <a href="/super-master/edit/user/{{$u->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-                    <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor:pointer;" id="btn-reset-password-{{ $u->id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
+                    <a href="/super-master/edit/user/{{$u->user_id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
+                    <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor:pointer;" id="btn-reset-password-{{ $u->user_id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
                 </td>
             </tr>
 

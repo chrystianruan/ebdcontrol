@@ -20,29 +20,39 @@ class SuperMasterController extends Controller
     }
 
     public function userFilters(Request $request) {
+        $nome = $request->nome;
+        $setor = $request->setor ? Setor::findOrFail((int) $request->setor)->nome : null;
+        $congregacao = $request->congregacao ? Congregacao::findOrFail((int) $request->congregacao)->nome : null;
+        $permission = $request->permission ? Permissao::findOrFail((int) $request->permission)->name : null;
+        $status = $request->status != null ? $request->status == 0 ? "Ativo" : "Inativo" : null;
         $setores = Setor::orderBy("nome")
             ->get();
         $permissoes = Permissao::all();
-        $users = User::select('users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
+        $users = User::select('users.id as user_id','pessoas.*', 'users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
+            ->leftJoin('pessoas' , 'users.pessoa_id', '=', 'pessoas.id')
+            ->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
+            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
             ->where('users.id', '>', 1);
+
         if ($request->congregacao) {
-            $users = $users->where('congregacao_id', '=', $request->congregacao);
+            $users = $users->where('users.congregacao_id', '=', $request->congregacao);
+        }
+        if ($request->setor) {
+            $users = $users->where('setors.id', '=', $request->setor);
         }
         if ($request->nome) {
-            $users = $users->where("name", "like",'%'.$request->nome.'%');
+            $users = $users->where("pessoas.nome", "like",'%'.$request->nome.'%');
         }
-        if ($request->supermaster) {
-            $users = $users->where("permissao_id", '=', $request->supermaster);
+        if ($request->permission) {
+            $users = $users->where("users.permissao_id", '=', $request->permission);
         }
-        if ($request->status) {
-            $users = $users->where("status", '=', $request->status);
+        if ($request->status != null) {
+            $users = $users->where("users.status", '=', $request->status);
         }
-        $users = $users->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
-            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
-            ->orderBy("users.matricula")
+        $users = $users->orderBy("pessoas.nome")
             ->get();
 
-        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes']));
+        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes', 'nome', 'setor', 'permission', 'status', 'congregacao']));
 
     }
 
