@@ -62,8 +62,9 @@
 
 
     @if(isset($nome) || isset($status) || isset($setor) || isset($congregacao) || isset($permission))
+        <p class="tit" style="margin: 3%; color: white">Buscando por:</p>
         <div class="busca">
-            <p class="tit">Buscando por:</p>
+
 
             @if(isset($nome))
                 <li class="ponto">Nome:

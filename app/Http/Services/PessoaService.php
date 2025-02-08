@@ -26,6 +26,8 @@ use App\Models\User;
 use Dompdf\Exception;
 use FontLib\TrueType\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -44,7 +46,7 @@ class PessoaService
         $this->pessoaRepository = $pessoaRepository;
         $this->generateMatricula = $generateMatricula;
     }
-    public function liberarLinkGeral(int $congregacaoId) {
+    public function liberarLinkGeral(int $congregacaoId) : JsonResponse {
         $linkExistente = $this->linkCadastroGeral->getLink($congregacaoId);
         if ($linkExistente) {
             if ($linkExistente->active == 1) {
@@ -52,14 +54,16 @@ class PessoaService
                 $linkExistente->save();
 
                 return response()->json([
-                    'response' => 'Link desativado com sucesso'
+                    'response' => 'Link desativado com sucesso',
+                    'status' => false
                 ]);
             }
             $linkExistente->active = 1;
             $linkExistente->save();
 
             return response()->json([
-                'response' => 'Link ativado com sucesso'
+                'response' => 'Link ativado com sucesso',
+                'status' => true
             ]);
         }
         $linkGeral = new LinkCadastroGeral();
@@ -68,12 +72,13 @@ class PessoaService
         $linkGeral->save();
 
         return response()->json([
-            'response' => 'Link liberado com sucesso'
+            'response' => 'Link liberado com sucesso',
+            'status' => true
         ]);
     }
 
 
-    public function store(mixed $request) {
+    public function store(mixed $request) :RedirectResponse {
         try {
             $classeIdRequest = intval($request->classe);
             $congregacaoIdRequest = intval($request->congregacao);

@@ -134,7 +134,7 @@ class SuperMasterController extends Controller
             $congregacoes = $congregacoes->where('setor_id', '=', $req->setor);
         }
         if ($req->nome) {
-            $congregacoes = $congregacoes->where('nome', 'like', '%' . $req->nome, '%');
+            $congregacoes = $congregacoes->where('congregacaos.nome', 'like', '%' . $req->nome .'%');
         }
         $congregacoes = $congregacoes
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
