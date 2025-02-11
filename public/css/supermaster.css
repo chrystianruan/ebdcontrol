@@ -19,7 +19,7 @@
 .btn-modal:hover {
     background-color: #4CBB17;
 }
-#modal-user, #modal-liberar-chamada, #modal-congregacao, #modal-liberar-cadastro {
+#modal-user, #modal-liberar-chamada, #modal-congregacao, #modal-liberar-cadastro, #modal-cadastro-classe {
     display: none;
 }
 
