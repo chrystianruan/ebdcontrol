@@ -178,6 +178,9 @@
                 $.ajax({
                     type: 'PUT',
                     url: '{{ url('/super-master/reset-password/user') }}/'+userId,
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                    },
                     dataType: 'json',
                     success: function (data) {
                         alert(data.response);
