@@ -171,6 +171,8 @@ Route::middleware(['auth', 'supermaster', 'status', 'resetPassword'])->group(fun
     Route::post('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
     Route::get('/super-master/edit/congregacao/{id}', [SuperMasterController::class, 'editCongregacao']);
     Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
+
+    Route::post('/super-master/new/sala', [SuperMasterController::class, 'newSala']);
 });
 
 Route::middleware(['auth', 'comum', 'status', 'resetPassword'])->group(function () {

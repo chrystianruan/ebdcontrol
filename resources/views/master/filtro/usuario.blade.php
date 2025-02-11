@@ -56,9 +56,8 @@
 
 
 @if(isset($nome) || isset($status) || isset($permission) || isset($sala))
+    <p class="tit" style="color: white; margin-left: 3%">Buscando por:</p>
 <div class="busca">
-  <p class="tit">Buscando por:</p>
-
   @if(isset($nome))
   <li class="ponto">Nome:
       <i class="result"> {{$nome}} </i>
@@ -91,7 +90,7 @@
 @endif
 
 
-
+<div style="overflow-x: scroll">
   <table style="margin:3%">
 
   @if($users -> count() > 1)
@@ -138,6 +137,7 @@
 
 
 </table>
+</div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 <script>

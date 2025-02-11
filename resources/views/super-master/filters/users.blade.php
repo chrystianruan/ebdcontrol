@@ -6,6 +6,7 @@
 
     <link rel="stylesheet" href="/css/filtrosPessoa.css">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+    <input type="hidden" value="{{ url('/api/congregacoes') }}" id="route-congregacoes-api">
     <div style="margin: 15px">
 
         <form action="/super-master/filters/users" method="POST">
@@ -62,8 +63,9 @@
 
 
     @if(isset($nome) || isset($status) || isset($setor) || isset($congregacao) || isset($permission))
+        <p class="tit" style="margin: 3%; color: white">Buscando por:</p>
         <div class="busca">
-            <p class="tit">Buscando por:</p>
+
 
             @if(isset($nome))
                 <li class="ponto">Nome:

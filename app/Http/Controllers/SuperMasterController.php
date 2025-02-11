@@ -128,13 +128,36 @@ class SuperMasterController extends Controller
         return redirect()->back()->with('msg', 'Congregação cadastrada com sucesso');
     }
 
+    public function newSala(Request $request) : RedirectResponse {
+        $this->validate($request, [
+            'select_congregacao' => ['required'],
+            'input_tipo_sala' => ['required'],
+            'input_nome_sala' => ['required']
+        ], [
+            'congregacao.required' => 'Congregação é obrigatória',
+            'input_tipo_sala.required' => 'Tipo de sala é obrigatório',
+            'input_nome_sala.required' => 'Nome da sala é obrigatório'
+        ]);
+        try {
+            $sala = new Sala;
+            $sala->congregacao_id = $request->select_congregacao;
+            $sala->tipo = $request->input_tipo_sala;
+            $sala->nome = $request->input_nome_sala;
+            $sala->save();
+            return redirect()->back()->with('msg', 'Sala cadastrada com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('msg', 'Erro ao cadastrar sala');
+        }
+
+    }
+
     public function congregacoesFilters(Request $req) {
         $congregacoes = Congregacao::select('congregacaos.*', 'setors.nome as setor_nome');
         if ($req->setor) {
             $congregacoes = $congregacoes->where('setor_id', '=', $req->setor);
         }
         if ($req->nome) {
-            $congregacoes = $congregacoes->where('nome', 'like', '%' . $req->nome, '%');
+            $congregacoes = $congregacoes->where('congregacaos.nome', 'like', '%' . $req->nome .'%');
         }
         $congregacoes = $congregacoes
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')

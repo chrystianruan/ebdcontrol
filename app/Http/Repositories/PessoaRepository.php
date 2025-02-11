@@ -138,4 +138,8 @@ class PessoaRepository
             ->orWhere('telefone', '=', $numberTelephone)
             ->get();
     }
+
+    public function findByCongregacao(int $congregacaoId) : ?Collection {
+        return Pessoa::where('congregacao_id', '=', $congregacaoId)->get();
+    }
 }

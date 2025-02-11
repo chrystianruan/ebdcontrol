@@ -4,7 +4,7 @@
 
 @section('content')
     <link rel="stylesheet" href="/css/filtrosPessoa.css">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <div style="margin: 15px">
 
         <form action="/super-master/filters/congregacoes" method="POST">
@@ -45,8 +45,9 @@
 
 
     @if(isset($nome) || isset($nivel) || isset($status))
+        <p class="tit" style="color: white; margin: 3%">Buscando por:</p>
         <div class="busca">
-            <p class="tit">Buscando por:</p>
+
 
             @if(isset($nome) && empty($nivel) && empty($status))
                 <li class="ponto">Nome:
@@ -75,46 +76,48 @@
     @endif
 
 
+    <div style="overflow-x:auto; margin-right: 3%">
 
-    <table style="margin:3%">
+        <table style="margin: 3%">
 
-        @if($congregacoes -> count() > 1)
-            <caption class="cont"><h4>Congregações: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$congregacoes -> count()}}</font></h4></caption>
-        @endif
+            @if($congregacoes -> count() > 1)
+                <caption class="cont"><h4>Congregações: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$congregacoes -> count()}}</font></h4></caption>
+            @endif
 
-        <thead>
-        <tr>
-            <th>Nome
-            <th>Setor
-            <th>Link de cadastro</th>
-            <th style="text-align: center">Ação
-        </thead>
-        @foreach($congregacoes as $c)
+            <thead>
+                <tr>
+                    <th>Nome </th>
+                    <th>Setor </th>
+                    <th>Link de cadastro</th>
+                    <th style="text-align: center">Ação</th>
+                </tr>
+            </thead>
+            @foreach($congregacoes as $c)
 
-            <tbody>
-            <tr> <!-- <tr class="disabled">  -->
+                <tbody>
+                <tr> <!-- <tr class="disabled">  -->
 
-                <td>{{$c -> nome}}
-                <td>{{$c -> setor_nome}}
-                <td>
-                    <a href="{{ url('/cadastro')."/".base64_encode($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
-                        {{ url('/cadastro')."/".base64_encode($c->id) }}
-                    </a>
-                    @if ($c->linkCadastroGeral)
-                        <i class="bx bx-link icon" style="color: green; font-size: 1.7em; margin: 5px 10px;">
-                    @else
-                        <i class="bx bx-unlink icon" style="color: red; font-size: 1.7em; margin: 5px 10px; ">
-                    @endif
-                </td>
-                <td>
-                    <a href="/super-master/edit/congregacao/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-                </td>
-            </tr>
+                    <td>{{$c -> nome}} </td>
+                    <td>{{$c -> setor_nome}} </td>
+                    <td>
+                        <div style="display: flex; flex-direction: row">
+                            <a href="{{ url('/cadastro')."/".base64_encode($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
+                                {{ url('/cadastro')."/".base64_encode($c->id) }}
+                            </a>
+                            <i class="ico-active-inactive-link-cadastro bx bx-link icon" id="ico-link-cadastro-active-{{ $c->id }}" style="@if(!$c->linkCadastroGeral)display:none; @endif color: green; font-size: 1.7em; margin: 5px 10px;; cursor: pointer"> </i>
+                            <i class="ico-active-inactive-link-cadastro bx bx-unlink icon" id="ico-link-cadastro-inative-{{ $c->id }}" style="@if($c->linkCadastroGeral)display:none; @endif color: red; font-size: 1.7em; margin: 5px 10px; cursor: pointer"> </i>
+                        </div>
+                    </td>
+                    <td>
+                        <a href="/super-master/edit/congregacao/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
+                    </td>
+                </tr>
 
-            </tbody>
+                </tbody>
 
-        @endforeach
-    </table>
+            @endforeach
+        </table>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         $('#setor').change(function () {
@@ -134,6 +137,37 @@
                     $('#congregacao').html(option).show();
                 }
             })
+        });
+        $('.ico-active-inactive-link-cadastro').click(function () {
+            let congregacaoId;
+            if (this.id.indexOf('active') !== -1){
+                congregacaoId = this.id.replace('ico-link-cadastro-active-', '');
+            } else {
+                congregacaoId = this.id.replace('ico-link-cadastro-inative-', '');
+            }
+            $.ajax({
+                type: 'POST',
+                url: '{{ url('/master/liberar-cadastro') }}',
+                dataType: 'json',
+                data: {
+                    congregacao: congregacaoId,
+                    _token: $('meta[name="csrf-token"]').attr('content'),
+                }
+            }).done (function (data) {
+                if (data){
+                    if (data.status){
+                        $('#ico-link-cadastro-inative-'+congregacaoId).css('display', 'none');
+                        $('#ico-link-cadastro-active-'+congregacaoId).css('display', 'block');
+                    } else {
+                        console.log("fechou")
+                        $('#ico-link-cadastro-active-'+congregacaoId).css('display', 'none');
+                        $('#ico-link-cadastro-inative-'+congregacaoId).css('display', 'block');
+                    }
+                }
+            }).fail (function() {
+                alert('Erro ao tentar liberar/desativar o link de cadastro geral');
+            })
+
         });
 
     </script>
