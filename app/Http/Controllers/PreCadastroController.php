@@ -36,7 +36,7 @@ class PreCadastroController extends Controller
         try {
             $classeIdRequest = intval($request->classe);
             $congregacaoIdRequest = intval($request->congregacao);
-            if ($this->pessoaRepository->findByCongregacao($congregacaoIdRequest)->count() > 0) {
+            if ($this->pessoaRepository->findByCongregacao($congregacaoIdRequest)->count() < 1) {
                 return $this->pessoaService->store($request);
             }
             $pessoa = new PreCadastro();

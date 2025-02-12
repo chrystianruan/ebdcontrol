@@ -118,8 +118,11 @@ class PessoaService
 
             $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
             $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
-            Mail::to('chrystianr37@gmail.com')
-                ->send($email);
+            $emails = ['chrystianr37@gmail.com', 'simongoncalvescosta@gmail.com'];
+            for ($i = 0; $i < count($emails); $i++) {
+                Mail::to($emails[$i])
+                    ->send($email);
+            }
 
             return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso.');
         } catch (\Exception $exception) {
