@@ -38,7 +38,7 @@ class CreateHashToSala extends Command
             }
         } else {
             foreach ($salas as $sala) {
-                $chamadaDiaCongregacaoRepository = new ChamcadaDiaCongregacaoRepository();
+                $chamadaDiaCongregacaoRepository = new ChamadaDiaCongregacaoRepository();
                 if ($chamadaDiaCongregacaoRepository->findChamadaDiaToday($sala->congregacao_id, date('Y-m-d'))) {
                     $sala->hash = bin2hex(random_bytes(2));
                     $sala->save();
