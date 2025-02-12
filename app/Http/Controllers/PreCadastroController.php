@@ -40,7 +40,7 @@ class PreCadastroController extends Controller
                 return $this->pessoaService->store($request);
             }
             $pessoa = new PreCadastro();
-            if ($this->pessoaRepository->findByNome($request->nome, auth()->user()->congregacao_id)->count() > 0) {
+            if ($this->pessoaRepository->findByNome($request->nome, $congregacaoIdRequest)->count() > 0) {
                 $pessoa->duplicata = true;
             }
             $pessoa->nome = $request->nome;

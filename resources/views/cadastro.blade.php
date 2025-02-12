@@ -13,6 +13,9 @@
 @if(session('msg'))
     <p class="msg" id="msg">{{session('msg')}}</p>
 @endif
+@if(session('msg2'))
+    <p class="msg2" id="msg2">{{session('msg2')}}</p>
+@endif
 @include('templates.cadastro-template')
 <script
     src="https://code.jquery.com/jquery-3.6.0.js"

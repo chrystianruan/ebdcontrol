@@ -78,7 +78,7 @@ class PessoaService
     }
 
 
-    public function store(mixed $request) :RedirectResponse {
+    public function store(mixed $request) : RedirectResponse {
         try {
             $classeIdRequest = intval($request->classe);
             $congregacaoIdRequest = intval($request->congregacao);
