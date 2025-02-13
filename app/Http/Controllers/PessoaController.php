@@ -101,7 +101,7 @@ class PessoaController extends Controller
     }
 
     public function delete(int $id, Request $request) {
-        return $this->pessoaService->delete($id, $request);
+        return $this->pessoaService->delete($id);
     }
 
     public function search(Request $request) {
