@@ -7,7 +7,9 @@ use App\Http\Repositories\ChamadaRepository;
 use App\Http\Repositories\PresencaPessoaRepository;
 use App\Models\Chamada;
 use App\Models\ChamadaDiaCongregacao;
+use App\Models\Congregacao;
 use App\Models\PresencaPessoa;
+use App\Models\Sala;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -97,6 +99,12 @@ class ChamadaService
         $chamadaDia->date = $date;
         $chamadaDia->active = true;
         $chamadaDia->save();
+
+       foreach (Sala::where('congregacao_id', $congregacaoId)->get() as $sala) {
+           $sala = Sala::find($sala->id);
+           $sala->hash = bin2hex(random_bytes(2));
+           $sala->save();
+       }
 
         return response()->json([
             'response' => 'Chamada liberada para o dia escolhido'
