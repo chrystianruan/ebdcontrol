@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/chamada.css">
 @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
-@if(!$chamadaPadraoRealizada)
+@if(empty($chamadaPadraoRealizada))
     @if ($errors->any())
     <div class="alert">
         <ul>
@@ -72,7 +72,7 @@
 
     <div class="inputs-extras">
         <label>Assist. Total</label>
-        <input type="number" min="0" id="assist_total" readonly required value="0">
+        <input type="number" min="0" id="assist_total" readonly required value="{{ $quantidadePresencas }}">
     </div>
 
     <div class="inputs-extras">
@@ -99,7 +99,7 @@
 
 </form>
 @else
-    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe @foreach($salas as $s) @foreach($chamadas as $c) @if($c -> id_sala == $s -> id) {{ $s -> nome }} @endif @endforeach @endforeach já foi cadastrada ou hoje não é domingo. </p></div>
+    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe {{ $chamadaPadraoRealizada->sala->nome }} já foi cadastrada ou hoje não é domingo. </p></div>
 
 @endif
 @else
