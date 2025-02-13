@@ -14,9 +14,13 @@ selectSala.addEventListener("change", function () {
             divTablePessoas.style.display = "block"
             divDadosInt.style.display = "block"
             $('#tbody-table-pessoas').empty();
-            $('#pessoas').val(JSON.stringify(data))
+            $('#pessoas').val(JSON.stringify(data.pessoas))
 
-            $.each(data, function(index, item) {
+            $('#matriculados').val(data.matriculados)
+            $('#presentes').val(data.presentes)
+            $('#assist_total').val(data.assist_total)
+
+            $.each(data.pessoas, function(index, item) {
                 var styleTeacher = "";
                 if (item.funcao_id == 2) {
                     styleTeacher = "background-color: rgba(59,52,52,0.73)"

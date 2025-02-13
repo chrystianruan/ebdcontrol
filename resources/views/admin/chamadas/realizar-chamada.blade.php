@@ -65,7 +65,7 @@
 
                         <div class="inputs-extras">
                             <label>Matriculados</label>
-                            <input name="matriculados"  type="number" required value="" readonly>
+                            <input name="matriculados"  type="number" id="matriculados" required value="" readonly>
                         </div>
 
                         <div class="inputs-extras">

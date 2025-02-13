@@ -3,8 +3,10 @@
 namespace App\Http\api\controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Repositories\ChamadaRepository;
 use App\Http\Repositories\PessoaRepository;
 
+use App\Models\Chamada;
 use App\Models\Pessoa;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
@@ -14,26 +16,27 @@ use Illuminate\Support\Facades\Log;
 class PessoaRestController extends Controller
 {
     private $pessoaRepository;
-    public function __construct(PessoaRepository $pessoaRepository)
+    private $chamadaRepository;
+    public function __construct(PessoaRepository $pessoaRepository, ChamadaRepository $chamadaRepository)
     {
         $this->pessoaRepository = $pessoaRepository;
-    }
-    public function getPessoasBySalaWithPresencas(int $salaId) :? \Illuminate\Support\Collection {
-        $pessoasNotFormated = $this->pessoaRepository->findBySalaIdAndSituacaoWithPresenca($salaId);
-        $pessoas = $this->formatPessoas($pessoasNotFormated);
-        return $pessoas;
+        $this->chamadaRepository = $chamadaRepository;
     }
 
-//    public function getQuantidadePresentes(\Illuminate\Support\Collection $pessoas) : int
-//    {
-//        $quantidadePresencas = 0;
-//        foreach ($pessoas as $pessoa) {
-//            if ($pessoa->presenca) {
-//                $quantidadePresencas++;
-//            }
-//        }
-//        return $quantidadePresencas;
-//    }
+    public function getDataSala(int $salaId) :? JsonResponse {
+        $pessoasNotFormated = $this->pessoaRepository->findBySalaIdAndSituacaoWithPresenca($salaId);
+        $pessoas = $this->formatPessoas($pessoasNotFormated);
+
+        $chamadaToday = $this->chamadaRepository->getChamadaToday($salaId);
+
+        return response()->json([
+            'pessoas' => $pessoas,
+            'matriculados' => $pessoas->count(),
+            'presentes' => isset($chamadaToday) ? $chamadaToday->presentes : 0,
+            'assist_total' => isset($chamadaToday) ? $chamadaToday->presentes+$chamadaToday->visitantes : 0,
+         ]);
+    }
+
 
     public function formatPessoas(Collection $pessoas) : \Illuminate\Support\Collection
     {
