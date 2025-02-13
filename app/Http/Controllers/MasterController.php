@@ -72,6 +72,7 @@ class MasterController extends Controller
         $sala -> nome = $request->nome;
         $sala -> tipo = $request->tipo;
         $sala -> congregacao_id = auth()->user()->congregacao_id;
+        $sala ->hash = bin2hex(random_bytes(2));
         $sala -> save();
         return redirect('/master/cadastro/classe')->with('msg', 'Sala cadastrada com sucesso');
     }
