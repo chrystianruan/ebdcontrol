@@ -30,16 +30,18 @@ class MasterController extends Controller
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
     }
     public function dashboardMaster() {
-        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
+        $qtdUsersAtivos = User::select(DB::raw('count(users.id) as qtd, permissao_id, permissoes.name as niveis'))
+        ->join('permissoes', 'permissoes.id', '=', 'users.permissao_id')
         ->where('status', false)
+        ->where('permissoes.id', '>', 1)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
         ->groupBy('permissao_id')
         ->get();
-        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, permissao_id, salas.nome as niveis'))
-        ->leftJoin('salas', 'salas.id', '=', 'users.sala_id')
+        $qtdUsersInativos = User::select(DB::raw('count(users.id) as qtd, permissao_id, permissoes.name as niveis'))
+        ->join('permissoes', 'permissoes.id', '=', 'users.permissao_id')
         ->where('status', true)
+        ->where('permissoes.id', '>', 1)
         ->where('users.congregacao_id', '=', auth()->user()->congregacao_id)
         ->where('users.id', '>', 1)
         ->groupBy('permissao_id')
@@ -72,6 +74,7 @@ class MasterController extends Controller
         $sala -> nome = $request->nome;
         $sala -> tipo = $request->tipo;
         $sala -> congregacao_id = auth()->user()->congregacao_id;
+        $sala ->hash = bin2hex(random_bytes(2));
         $sala -> save();
         return redirect('/master/cadastro/classe')->with('msg', 'Sala cadastrada com sucesso');
     }

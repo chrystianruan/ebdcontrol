@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" href="/css/chamada.css">
 @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
-@if(!$chamadaPadraoRealizada)
+@if(empty($chamadaPadraoRealizada))
     @if ($errors->any())
     <div class="alert">
         <ul>
@@ -34,19 +34,28 @@
 
     <tbody>
         @foreach($pessoas as $p)
-        <tr @if($p->funcao_id == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
-        <td>{{ $p->pessoa_nome}}</td>
-        <td>{{ $p->funcao_nome }}</td>
-        <td>
             @if (!$p->presenca)
-            <select name="presencas[]" id="presenca-{{ $p->pessoa_id }}" class="presencas">
-                <option value="0" style="background-color: red">Não</option>
-                <option value="1" style="background-color: green">Sim</option>
-            </select>
+                <tr @if($p->funcao_id == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
+                    <td>{{ $p->pessoa_nome}}</td>
+                    <td>{{ $p->funcao_nome }}</td>
+                    <td>
+                        <select name="presencas[]" id="presenca-{{ $p->pessoa_id }}" class="presencas">
+                            <option value="0" style="background-color: red">Não</option>
+                            <option value="1" style="background-color: green">Sim</option>
+                        </select>
+                    </td>
+                </tr>
             @else
-                <i class="fa fa-check" style="color: greenyellow; font-size: 1.2em">
+                @if ($p->dados_presenca->sala_id == auth()->user()->sala_id)
+                    <tr @if($p->funcao_id == 2) style="background-color: rgba(59,52,52,0.73)" @endif>
+                        <td>{{ $p->pessoa_nome}}</td>
+                        <td>{{ $p->funcao_nome }}</td>
+                        <td>
+                            <i class="fa fa-check" style="color: greenyellow; font-size: 1.2em"> </i>
+                        </td>
+                    </tr>
+                @endif
             @endif
-        </tr>
         @endforeach
     </tbody>
   </table>
@@ -72,7 +81,7 @@
 
     <div class="inputs-extras">
         <label>Assist. Total</label>
-        <input type="number" min="0" id="assist_total" readonly required value="0">
+        <input type="number" min="0" id="assist_total" readonly required value="{{ $quantidadePresencas }}">
     </div>
 
     <div class="inputs-extras">
@@ -99,7 +108,7 @@
 
 </form>
 @else
-    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe @foreach($salas as $s) @foreach($chamadas as $c) @if($c -> id_sala == $s -> id) {{ $s -> nome }} @endif @endforeach @endforeach já foi cadastrada ou hoje não é domingo. </p></div>
+    <div class="notRegister"> <p> <i style="color: red"class='bx bx-error'></i></i>A chamada da classe {{ $chamadaPadraoRealizada->sala->nome }} já foi cadastrada ou hoje não é domingo. </p></div>
 
 @endif
 @else

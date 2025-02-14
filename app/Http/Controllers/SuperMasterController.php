@@ -143,6 +143,7 @@ class SuperMasterController extends Controller
             $sala->congregacao_id = $request->select_congregacao;
             $sala->tipo = $request->input_tipo_sala;
             $sala->nome = $request->input_nome_sala;
+            $sala ->hash = bin2hex(random_bytes(2));
             $sala->save();
             return redirect()->back()->with('msg', 'Sala cadastrada com sucesso');
         } catch (\Exception $e) {

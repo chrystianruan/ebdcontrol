@@ -178,6 +178,10 @@ class PessoaService
             $pessoa = Pessoa::findOrFail($id);
             $pessoa->delete();
 
+            $user = User::where('pessoa_id', $id)->first();
+            $user->status = 1;
+            $user->save();
+
             return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi deletada com sucesso');
         } catch (\Exception $e) {
             Log::info($e->getMessage());

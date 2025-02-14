@@ -60,10 +60,28 @@ class ChamadaController extends Controller
     }
 
     public function apagarChamadaDia(int $id) {
-        ChamadaDiaCongregacao::findOrFail($id)->delete();
-        return response()->json([
-            'response' => 'Dia de chamada apagado com sucesso'
-        ], 201);
+        try {
+            $chamadaDia = ChamadaDiaCongregacao::findOrFail($id);
+            if ($chamadaDia->date < date('Y-m-d')) {
+                return response()->json([
+                    'response' => 'Não é possível apagar chamadas de dias anteriores'
+                ], 403);
+            }
+            if ($this->chamadaRepository->findByCreatedAtAndCongregacao(auth()->user()->congregacao_id, $chamadaDia->date)->count() > 0) {
+                return response()->json([
+                    'response' => 'Não é possível apagar registros de liberações de chamadas quando chamadas foram realizadas'
+                ], 403);
+            }
+            $chamadaDia->delete();
+            return response()->json([
+                'response' => 'Dia de chamada apagado com sucesso'
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'response' => 'Erro ao apagar dia de chamada'
+            ], 500);
+        }
     }
 
     public function showChamada(int $id) : ?View{

@@ -29,22 +29,12 @@ class CreateHashToSala extends Command
     public function handle()
     {
         $salas = \App\Models\Sala::all();
-        //verificar se o dia é domingo ou dia de chamada acessando a tabela chamada_dia_congregacoes
-        //se for, criar hash para cada sala
-        if (date('w') == 0) {
-            foreach ($salas as $sala) {
-                $sala->hash = bin2hex(random_bytes(2));
-                $sala->save();
-            }
-        } else {
-            foreach ($salas as $sala) {
-                $chamadaDiaCongregacaoRepository = new ChamadaDiaCongregacaoRepository();
-                if ($chamadaDiaCongregacaoRepository->findChamadaDiaToday($sala->congregacao_id, date('Y-m-d'))) {
-                    $sala->hash = bin2hex(random_bytes(2));
-                    $sala->save();
-                }
-            }
+
+        foreach ($salas as $sala) {
+            $sala->hash = bin2hex(random_bytes(2));
+            $sala->save();
         }
+
         return 0;
     }
 }

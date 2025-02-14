@@ -22,5 +22,5 @@ Route::get('/congregacoes/{id}', [ApiController::class, 'getCongregacoes']);
 
 Route::get('/salas/congregacao/{congregacaoId}', [SalaRestController::class, 'getSalasByCongregacao']);
 Route::get('/funcaos', [FuncaoRestController::class, 'getFuncaos']);
-Route::get('/pessoas_sala/{sala_id}', [PessoaRestController::class, 'getPessoasBySalaWithPresencas']);
+Route::get('/pessoas_sala/{sala_id}', [PessoaRestController::class, 'getDataSala']);
 Route::post('/pessoa/store/verify-duplicated', [PessoaRestController::class, 'verifyDuplicated'])->name('api.pessoa.store.verify-duplicated');
