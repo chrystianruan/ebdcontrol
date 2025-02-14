@@ -55,4 +55,12 @@ class Pessoa extends Model
         return false;
     }
 
+    public function dadosPresenca() : ?PresencaPessoa {
+        $presencaPessoaRepository = new PresencaPessoaRepository();
+        if ($presencaPessoaRepository->findByPessoaIdAndToday($this->id)) {
+            return $presencaPessoaRepository->findByPessoaIdAndToday($this->id);
+        }
+        return null;
+    }
+
 }

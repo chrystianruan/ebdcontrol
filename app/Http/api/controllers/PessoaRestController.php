@@ -51,6 +51,7 @@ class PessoaRestController extends Controller
                     'funcao_nome' => $pessoa->funcao_nome,
                     'funcao_id' => (int) $pessoa->funcao_id,
                     'presenca' => (bool) $pessoaBd->presente(),
+                    'dados_presenca' => $pessoaBd->dadosPresenca(),
                 ];
             array_push($pessoasFormat, $p);
         }
