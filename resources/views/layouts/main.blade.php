@@ -102,8 +102,6 @@
         </ul>
       </li>
 
-
-
       <li>
         <a href="/sobre">
           <i class='bx bx-info-circle' ></i>
@@ -113,6 +111,23 @@
           <li><a class="link_name" href="/sobre">Sobre</a></li>
         </ul>
       </li>
+        @if (auth()->user()->permissao_id < 3)
+            <li style="margin-top: 20%">
+                <div class="iocn-link">
+                    <a href="#">
+                        <i class='bx bx-shield' ></i>
+                        <span class="link_name">Usuário</span>
+                    </a>
+                    <i class='bx bxs-chevron-down arrow' ></i>
+                </div>
+                <ul class="sub-menu">
+                    <li><a class="link_name" href="#">Usuário</a></li>
+                    @if (auth()->user()->permissao_id == 1)<li><a href="/super-master">SuperMaster</a></li>@endif
+                    @if (auth()->user()->permissao_id <= 2)<li><a href="/master">Master</a></li>@endif
+                    <li><a href="/comum">Comum</a></li>
+                </ul>
+            </li>
+        @endif
 
       <li>
     <div class="profile-details">

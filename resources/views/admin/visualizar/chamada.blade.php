@@ -60,7 +60,7 @@
 
         <div class="inputs-extras">
             <label>Assist. Total</label>
-            <input name="assist_total" type="number" min="0" id="assist_total" value="{{$chamada -> assist_total}}" disabled>
+            <input name="assist_total" type="number" min="0" id="assist_total" value="{{ $chamada->presentes + $chamada->visitantes }}" disabled>
         </div>
 
         <div class="inputs-extras">
