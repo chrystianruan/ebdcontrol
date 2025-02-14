@@ -14,7 +14,33 @@
     <header class="header" id="header">
         <div class="header_toggle"> <i class='bx bx-menu' id="header-toggle"></i> </div>
         <div> <img src="/img/logo_ebd_extend.png" alt="" width="120"> </div>
-        <div class="header_img"> <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt=""> </div>
+        <div class="row">
+            <div class="btn-group col">
+                <button type="button" class="btn btn-secondary dropdown-toggle" style="width: 100px !important; max-width: 100% !important;" data-bs-toggle="dropdown" aria-expanded="false">
+                    Usuário
+                </button>
+                <ul class="dropdown-menu">
+                    @if(auth()->user()->permissao_id == 1)<li><a class="dropdown-item" href="/super-master">SuperMaster</a></li>@endif
+                    @if(auth()->user()->permissao_id <= 2)<li><a class="dropdown-item" href="/master">Master</a></li>@endif
+                    @if(auth()->user()->permissao_id <= 3)<li><a class="dropdown-item" href="/admin">Admin</a></li>@endif
+                    @if(auth()->user()->permissao_id == 4)<li><a class="dropdown-item" href="/classe">Classe</a></li>@endif
+
+
+                   @if(auth()->user()->permissao_id < 5) <li><hr class="dropdown-divider"></li> @endif
+                    <li>
+                        <form action="/logout" method="POST">
+                            @csrf
+                            <button class="dropdown-item btn-logout" style="border: none; font-size: 1em; background: none;cursor:pointer; color: red" type="submit">
+                                <i class='bx bx-log-out nav_icon'></i>
+                                <span class="nav_name">Sair</span>
+                            </button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class="header_img col"> <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png" alt=""> </div>
+        </div>
+
     </header>
     <div class="l-navbar" id="nav-bar">
         <nav class="nav">
@@ -54,17 +80,6 @@
                     </a>
                 </div>
             </div>
-            <form action="/logout" method="POST">
-                @csrf
-                <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit">
-                    <a class="nav_link">
-                        <i class='bx bx-log-out nav_icon'></i>
-                        <span class="nav_name">
-                            Sair
-                        </span>
-                    </a>
-                </button>
-            </form>
         </nav>
     </div>
     <!--Container Main start-->
