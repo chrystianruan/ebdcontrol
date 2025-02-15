@@ -48,7 +48,7 @@
       <div class="dropdown-content">
           @if(auth()->user()->permissao_id == 1)<a href="/super-master">SuperMaster</a>@endif
           <a href="/admin">Admin</a>
-          <a href="/comum">Comum</a>
+          @if(auth()->user()->pessoa_id)<a href="/comum">Comum</a>@endif
       </div>
     </div>
     <a> <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>

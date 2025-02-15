@@ -124,7 +124,7 @@
                     <li><a class="link_name" href="#">Usuário</a></li>
                     @if (auth()->user()->permissao_id == 1)<li><a href="/super-master">SuperMaster</a></li>@endif
                     @if (auth()->user()->permissao_id <= 2)<li><a href="/master">Master</a></li>@endif
-                    <li><a href="/comum">Comum</a></li>
+                    @if(auth()->user()->pessoa_id)<li><a href="/comum">Comum</a></li>@endif
                 </ul>
             </li>
         @endif

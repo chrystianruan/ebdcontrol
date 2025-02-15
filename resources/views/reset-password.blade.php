@@ -18,7 +18,7 @@
             <div class="card-body">
                 <div class="alert alert-primary" role="alert">
                     <i class="bx bxs-info-circle"></i>
-                    Olá, {{ auth()->user()->pessoa->nome }}!
+                    Olá, @if (isset(auth()->user()->pessoa_id)) {{ auth()->user()->pessoa->nome }}! @else {{ auth()->user()->matricula }} @endif
                     Para prosseguir com o uso do sistema, é necessário que você altere sua senha.
                 </div>
                 @if ($errors->any())
