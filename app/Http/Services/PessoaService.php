@@ -117,11 +117,10 @@ class PessoaService
             $this->createExternalUser($pessoa->id, $congregacaoIdRequest);
 
             $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
-            $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
             $emails = ['chrystianr37@gmail.com', 'simongoncalvescosta@gmail.com'];
             for ($i = 0; $i < count($emails); $i++) {
                 Mail::to($emails[$i])
-                    ->send($email);
+                    ->send(new PessoaCadastradaMail($request->nome, $congregacao->nome));
             }
 
             return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso.');

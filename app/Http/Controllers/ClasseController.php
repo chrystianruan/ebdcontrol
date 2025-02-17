@@ -201,7 +201,7 @@ class ClasseController extends Controller
         $chamadaPadraoRealizada = $this->chamadaRepository->getChamadaPadraoToday($sala);
         $pessoasNotFormated = $this->pessoaRepository->findBySalaIdAndSituacaoWithPresenca($sala);
         $pessoas = $this->formatPessoas($pessoasNotFormated);
-        $quantidadePresencas = $this->getQuantidadePresentes($pessoas);
+        $quantidadePresencas = $this->chamadaRepository->getChamadaToday($sala) ? $this->chamadaRepository->getChamadaToday($sala)->presentes : 0;
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
