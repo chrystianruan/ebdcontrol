@@ -1,59 +1,52 @@
 
 
-// let btnModal = document.getElementsByClassName("btn-modal");
-// let closeModal = document.getElementsByClassName("dialog-close");
-// let modalUser = document.getElementById("modal-user");
-// let modalCongregacao = document.getElementById("modal-congregacao");
-// let closeModalUs
 
-let modalUser = document.getElementById("modal-user")
+
 let modalCongregacao = document.getElementById("modal-congregacao");
-let btnModalUser = document.getElementById("btn-modal-user");
 let btnModalCongregacao = document.getElementById("btn-modal-congregacao");
-let closeModalUser = document.getElementById("dialog-close-user");
 let closeModalCongregacao = document.getElementById("dialog-close-congregacao");
 
-function showModalUser() {
-    modalUser.style.display = "block"
+let modalCadastroClasse = document.getElementById("modal-cadastro-classe");
+let btnModalCadastroClasse = document.getElementById("btn-modal-cadastro-classe");
+let closeModalCadastroClasse = document.getElementById("dialog-close-cadastro-classe");
+
+function showModalCadastroClasse() {
+    modalCadastroClasse.style.display = "block"
 }
 
 function showModalCongregacao() {
     modalCongregacao.style.display = "block"
 }
 
-function hideModalUser() {
-    modalUser.style.display = "none"
+function hideModalCadastroClasse() {
+    modalCadastroClasse.style.display = "none"
 }
 
 function hideModalCongregacao() {
     modalCongregacao.style.display = "none"
 }
 
-btnModalUser.addEventListener("click", showModalUser)
 btnModalCongregacao.addEventListener("click", showModalCongregacao)
-closeModalUser.addEventListener("click", hideModalUser)
 closeModalCongregacao.addEventListener("click", hideModalCongregacao)
 
-// for (let i = 0; i <= btnModal.length; i++) {
-//     btnModal[i].addEventListener("click", function () {
-//         if (btnModal[i].id === "btn-modal-user") {
-//             modalUser.style.display = "block";
-//         } else {
-//             modalCongregacao.style.display = "block"
-//         }
-//         console.log("id do btn open: "+btnModal[i].id)
-//     });
-// }
-//
-// for (let i = 0; i <= closeModal.length; i++) {
-//     closeModal[i].addEventListener("click", function () {
-//         console.log("fechar modal")
-//         if (closeModal[i].id === "dialog-close-user") {
-//             modalUser.style.display = "none";
-//         } else {
-//             modalCongregacao.style.display = "none";
-//         }
-//         console.log("id do btn close: "+closeModal[i].id)
-//     });
-// }
-//
+btnModalCadastroClasse.addEventListener("click", showModalCadastroClasse)
+closeModalCadastroClasse.addEventListener("click", hideModalCadastroClasse)
+
+$('#select-setor').change(function () {
+    let setorId = $('#select-setor').val();
+    $.ajax({
+        type: 'GET',
+        url: $('#route-congregacoes-api').val()+"/"+setorId,
+        dataType: 'json',
+        success: dados => {
+            var option;
+            option += `<option selected disabled value="">Selecionar</option>`;
+            if (dados.length > 0){
+                $.each(dados, function(i, obj){
+                    option += `<option value="${obj.id}">${obj.nome}</option>`;
+                })
+            }
+            $('#select-congregacao').html(option).show();
+        }
+    })
+});

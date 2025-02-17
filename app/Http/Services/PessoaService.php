@@ -9,6 +9,8 @@ use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\PessoaSalaRepository;
 use App\Http\Requests\StorePessoaRequest;
 use App\Http\Requests\UpdatePessoaRequest;
+use App\Http\Utils\GenerateMatricula;
+use App\Http\Utils\PermissaoEnum;
 use App\Mail\EmailToAdminSistema;
 use App\Mail\PessoaCadastradaMail;
 use App\Models\Congregacao;
@@ -20,9 +22,12 @@ use App\Models\PessoaSala;
 use App\Models\Publico;
 use App\Models\Sala;
 use App\Models\Uf;
+use App\Models\User;
 use Dompdf\Exception;
 use FontLib\TrueType\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -33,11 +38,15 @@ class PessoaService
     use ValidatesRequests;
     private $linkCadastroGeral;
     private $pessoaRepository;
-    public function __construct(LinkCadastroGeral $linkCadastroGeral, PessoaRepository $pessoaRepository) {
+    private $generateMatricula;
+    public function __construct(LinkCadastroGeral $linkCadastroGeral,
+                                PessoaRepository $pessoaRepository,
+                                GenerateMatricula $generateMatricula) {
         $this->linkCadastroGeral = $linkCadastroGeral;
         $this->pessoaRepository = $pessoaRepository;
+        $this->generateMatricula = $generateMatricula;
     }
-    public function liberarLinkGeral(int $congregacaoId) {
+    public function liberarLinkGeral(int $congregacaoId) : JsonResponse {
         $linkExistente = $this->linkCadastroGeral->getLink($congregacaoId);
         if ($linkExistente) {
             if ($linkExistente->active == 1) {
@@ -45,14 +54,16 @@ class PessoaService
                 $linkExistente->save();
 
                 return response()->json([
-                    'response' => 'Link desativado com sucesso'
+                    'response' => 'Link desativado com sucesso',
+                    'status' => false
                 ]);
             }
             $linkExistente->active = 1;
             $linkExistente->save();
 
             return response()->json([
-                'response' => 'Link ativado com sucesso'
+                'response' => 'Link ativado com sucesso',
+                'status' => true
             ]);
         }
         $linkGeral = new LinkCadastroGeral();
@@ -61,12 +72,13 @@ class PessoaService
         $linkGeral->save();
 
         return response()->json([
-            'response' => 'Link liberado com sucesso'
+            'response' => 'Link liberado com sucesso',
+            'status' => true
         ]);
     }
 
 
-    public function store(mixed $request) {
+    public function store(mixed $request) : RedirectResponse {
         try {
             $classeIdRequest = intval($request->classe);
             $congregacaoIdRequest = intval($request->congregacao);
@@ -101,19 +113,17 @@ class PessoaService
             $pessoa->hash = $hash;
             $pessoa->save();
 
-            $pessoaCadastrada = Pessoa::where('hash', $hash)->first();
-
             $this->storePessoaInSala($pessoa->id, $classeIdRequest);
-
-            $pessoaCadastrada->hash = null;
-            $pessoaCadastrada->save();
+            $this->createExternalUser($pessoa->id, $congregacaoIdRequest);
 
             $congregacao = Congregacao::findOrFail($congregacaoIdRequest);
-            $email = new PessoaCadastradaMail($request->nome, $congregacao->nome);
-            Mail::to('chrystianr37@gmail.com')
-                ->send($email);
+            $emails = ['chrystianr37@gmail.com', 'simongoncalvescosta@gmail.com'];
+            for ($i = 0; $i < count($emails); $i++) {
+                Mail::to($emails[$i])
+                    ->send(new PessoaCadastradaMail($request->nome, $congregacao->nome));
+            }
 
-            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso');
+            return redirect()->back()->with('msg', 'Pessoa cadastrada com sucesso.');
         } catch (\Exception $exception) {
             Log::info($exception->getMessage());
             throw $exception;
@@ -167,6 +177,10 @@ class PessoaService
             $pessoa = Pessoa::findOrFail($id);
             $pessoa->delete();
 
+            $user = User::where('pessoa_id', $id)->first();
+            $user->status = 1;
+            $user->save();
+
             return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi deletada com sucesso');
         } catch (\Exception $e) {
             Log::info($e->getMessage());
@@ -183,6 +197,24 @@ class PessoaService
             $pessoaSala->funcao_id = FuncaoEnum::ALUNO->value;
             $pessoaSala->active = 1;
             $pessoaSala->save();
+
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    private function createExternalUser(int $pessoaId, int $congregacaoId) : void {
+        try {
+            $externalUser = new User();
+            $externalUser->pessoa_id = $pessoaId;
+            $externalUser->matricula = $this->generateMatricula->getMatricula($congregacaoId);
+            $password = bin2hex(random_bytes(3));
+            $externalUser->password = bcrypt($password);
+            $externalUser->password_temp = $password;
+            $externalUser->reset_password = true;
+            $externalUser->congregacao_id = $congregacaoId;
+            $externalUser->permissao_id = PermissaoEnum::COMUM->value;
+            $externalUser->save();
 
         } catch (\Exception $e) {
             throw $e;

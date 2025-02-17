@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class  LinkCadastroGeral extends Model
 {
@@ -20,6 +21,9 @@ class  LinkCadastroGeral extends Model
         return LinkCadastroGeral::where('congregacao_id', $congregacaoId)
             ->where('active', 1)
             ->first();
+    }
+    public function congregacao() : BelongsTo {
+        return $this->belongsTo(Congregacao::class);
     }
 
 

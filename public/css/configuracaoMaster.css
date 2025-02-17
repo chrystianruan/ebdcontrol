@@ -1,0 +1,66 @@
+.container-d{
+    margin-top: 20px;
+}
+.container-infos{
+    margin: 30px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px;
+}
+.div-infos-congregacao {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.div-infos-congregacao div {
+    margin: 8px;
+}
+.div-info-unique {
+    display: flex;
+    flex-direction: column;
+}
+input[type="text"] {
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    margin-top: 3px;
+    border: 1px solid #ccc;
+}
+label {
+    font-weight: bold;
+}
+
+.span-abrir-modal-local {
+    cursor: pointer;
+}
+
+.span-abrir-modal-local:hover {
+    color: #007bff;
+}
+
+#btn-obter-localizacao {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #cccccc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: black;
+}
+#btn-obter-localizacao:hover {
+    background-color: #b3b3b3;
+}
+.btn-confirmar-localizacao{
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.btn-confirmar-localizacao:hover {
+    background-color: #0056b3;
+}

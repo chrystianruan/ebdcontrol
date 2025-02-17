@@ -149,6 +149,16 @@
     padding: 10px;
 }
 
+.msg2 {
+    background-color: #ee9595;
+    color: #571d15;
+    border: 1px solid #e69090;
+    width: 100%;
+    margin-top: 0;
+    text-align: center;
+    padding: 10px;
+}
+
 .div-add-sala {
     background-color: transparent;
     padding: 10px;

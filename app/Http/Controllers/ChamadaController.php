@@ -11,11 +11,8 @@ use App\Http\Services\ChamadaService;
 use App\Http\Services\PresencaPessoaService;
 use App\Models\Chamada;
 use App\Models\ChamadaDiaCongregacao;
-use App\Models\PresencaPessoa;
 use App\Models\Sala;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -63,10 +60,28 @@ class ChamadaController extends Controller
     }
 
     public function apagarChamadaDia(int $id) {
-        ChamadaDiaCongregacao::findOrFail($id)->delete();
-        return response()->json([
-            'response' => 'Dia de chamada apagado com sucesso'
-        ], 201);
+        try {
+            $chamadaDia = ChamadaDiaCongregacao::findOrFail($id);
+            if ($chamadaDia->date < date('Y-m-d')) {
+                return response()->json([
+                    'response' => 'Não é possível apagar chamadas de dias anteriores'
+                ], 403);
+            }
+            if ($this->chamadaRepository->findByCreatedAtAndCongregacao(auth()->user()->congregacao_id, $chamadaDia->date)->count() > 0) {
+                return response()->json([
+                    'response' => 'Não é possível apagar registros de liberações de chamadas quando chamadas foram realizadas'
+                ], 403);
+            }
+            $chamadaDia->delete();
+            return response()->json([
+                'response' => 'Dia de chamada apagado com sucesso'
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'response' => 'Erro ao apagar dia de chamada'
+            ], 500);
+        }
     }
 
     public function showChamada(int $id) : ?View{
@@ -82,17 +97,17 @@ class ChamadaController extends Controller
 
     public function showChamadaClasse(int $id) {
         $chamada = Chamada::findOrFail($id);
-        if ($chamada->sala->id != auth()->user()->id_nivel) {
+        if ($chamada->sala->id != auth()->user()->sala_id) {
             return abort(403);
         }
-        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $findSala = Sala::findOrFail(auth()->user()->sala_id);
         $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
 
         return view('/classe/visualizar-chamada', compact(['chamada', 'presencas', 'findSala']));
     }
 
     public function realizarChamada(Request $request) {
-        if ($this->chamadaRepository->getChamadaToday($request->sala)) {
+        if ($this->chamadaRepository->getChamadaPadraoToday($request->sala)) {
             return redirect($request->route)->with('msg2', 'A chamada não pode ser realizada, pois já encontra concluída');
         }
 
@@ -108,14 +123,12 @@ class ChamadaController extends Controller
             $this->presencaPessoaService->marcarPresencasLote($request->pessoas_presencas, $request->sala, TipoPresenca::SISTEMA);
 
             if ($this->chamadaRepository->getChamadaToday($request->sala)) {
-                $chamada = Chamada::where('id_sala', '=', $request->sala)
-                    ->whereDate('created_at', Carbon::today())
-                    ->first();
-                $chamada->matriculados = $pessoas->count();
+                $chamada = $this->chamadaRepository->getChamadaToday($request->sala);
                 $chamada->visitantes = $dataToInt['visitantes'];
                 $chamada->biblias = $dataToInt['biblias'];
                 $chamada->revistas = $dataToInt['revistas'];
                 $chamada->observacoes = $request->observacoes;
+                $chamada->chamada_padrao = true;
                 $chamada->save();
 
                 DB::commit();
@@ -124,12 +137,12 @@ class ChamadaController extends Controller
 
             $novaChamada = new Chamada;
             $novaChamada->id_sala = $request->sala;
-            $novaChamada->matriculados = $pessoas->count();
             $novaChamada->visitantes = $dataToInt['visitantes'];
             $novaChamada->biblias = $dataToInt['biblias'];
             $novaChamada->revistas = $dataToInt['revistas'];
             $novaChamada->observacoes = $request->observacoes;
             $novaChamada->congregacao_id = auth()->user()->congregacao_id;
+            $novaChamada->chamada_padrao = true;
             $novaChamada->save();
 
             DB::commit();
@@ -148,10 +161,10 @@ class ChamadaController extends Controller
     public function generatePdfToChamadasToClasse($id)
     {
         $chamada = Chamada::findOrFail($id);
-        if ($chamada->sala->id != auth()->user()->id_nivel) {
+        if ($chamada->sala->id != auth()->user()->sala_id) {
             return abort(403);
         }
-        $findSala = Sala::findOrFail(auth()->user()->id_nivel);
+        $findSala = Sala::findOrFail(auth()->user()->sala_id);
         $presencas = $this->presencaPessoaRepository->findByDateAndSala(date('Y-m-d', strtotime($chamada->created_at)), $chamada->id_sala);
 
         return PDF::loadView('/classe/pdf-chamada', compact(['chamada', 'findSala', 'presencas']))

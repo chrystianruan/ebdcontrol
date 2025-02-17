@@ -18,7 +18,7 @@ class Classe
     {
 
         $user = auth()->user();
-            if(auth()->check() AND ($user->id_nivel === 1 OR $user->id_nivel === 2)) {
+            if(auth()->check() AND $user->permissao_id !== 4) {
                 return redirect()->route('inicio')->with('danger', 'Você não tem permissão!');
             }
         return $next($request);

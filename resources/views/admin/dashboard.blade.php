@@ -118,22 +118,38 @@
   <h2>Importante</h2> <hr  style="margin-bottom: 2%">
   <h3>Aniversariantes do mês ({{date('m')}})</h3>
   <li>@if($niverMes < 1) Nenhum aniversariante nesse mês @else <span style="font-weight: bold; color:chartreuse">{{$niverMes}}</span> nesse mês @endif <a style="color: deepskyblue" href="/admin/aniversariantes"> Aniversariantes </a> </li>
-  <h3>Interessados em ser professor</h3>
-  <li>@if($interesseProf->count() < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf->count()}}</span> interessado(s) @endif</li>
-  <h3>Inativos</h3>
-  <li>@if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{ $alunosInativos->count() }}</span> inativo(s) @endif</li>
-    <h3>Pré-Cadastros</h3>
-    <li>
-        @if($preCadastros < 1)
-            Nenhum pré-cadastro
-        @else
-            <span style="font-weight: bold; color:chartreuse">
-                {{ $preCadastros }}
-            </span> registro(s)
-        @endif
-    </li>
+  <h3>Códigos das Classes</h3>
+    <div class="wrapper" style="margin-top: 10px">
+        <span style="text-align: center"> Ver Códigos </span>
+        <div class="tooltip">
+            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; flex-direction: row;">
+                @foreach($codigosClasse as $c)
+                    <p><strong>{{ $c->nome }}</strong>: {{ $c->hash }}</p>
+                @endforeach
+            </div>
+        </div>
+    </div>
 
 </div>
+    <div class="info" >
+        <h2>Dados Pessoas</h2> <hr  style="margin-bottom: 2%">
+        <h3>Interessados em ser professor</h3>
+        <li>@if($interesseProf->count() < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf->count()}}</span> interessado(s) @endif</li>
+        <h3>Inativos</h3>
+        <li>@if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{ $alunosInativos->count() }}</span> inativo(s) @endif</li>
+        <h3>Pré-Cadastros</h3>
+        <li>
+            @if($preCadastros < 1)
+                Nenhum pré-cadastro
+            @else
+                <span style="font-weight: bold; color:chartreuse">
+                {{ $preCadastros }}
+            </span> registro(s)
+            @endif
+        </li>
+
+    </div>
+
 
     <div class="info" >
         <h2>Chamadas Físicas</h2> <hr  style="margin-bottom: 2%">

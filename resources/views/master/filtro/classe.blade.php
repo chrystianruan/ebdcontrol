@@ -46,27 +46,27 @@
   </form>
 </div>
 
-
+@if(isset($salap))
+<p class="tit" style="margin-left: 3%; color: white">Buscando por:</p>
 
   <div class="busca">
 
-  @if(isset($salap))
-    <p class="tit">Buscando por:</p>
 
     @if(isset($salap))
     <p class="it">Sala: <i class="result">@foreach($salas as $sala) @if($sala -> id == $salap) {{$sala -> nome}}  @endif @endforeach</i></p>
     @endif
 
-    @else
 
-    <p class="it">Buscando por: <i class="result">Tudo</i></p>
 
-    @endif
 
 
   </div>
 
+@else
 
+    <p class="it" style="margin-left: 3%; color: white">Buscando por: <i class="result">Tudo</i></p>
+
+@endif
 
   <table style="margin:3%">
 

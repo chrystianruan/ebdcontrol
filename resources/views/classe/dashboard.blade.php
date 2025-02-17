@@ -143,7 +143,7 @@
 
     <div class="info">
         <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
-        <input type="hidden" id="classe" value="{{ base64_encode(auth()->user()->id_nivel) }}">
+        <input type="hidden" id="classe" value="{{ base64_encode(auth()->user()->sala_id) }}">
         <h2>Relatório de presenças</h2> <hr  style="margin-bottom: 2%">
 
         <h3>Data início</h3>
@@ -159,6 +159,8 @@
 
     <div class="info" >
         <h2>Importante</h2> <hr  style="margin-bottom: 2%">
+        <h3>Código da Classe</h3>
+        <li><span style="font-weight: bold; color:chartreuse">{{ $codigoClasse}}</span></li>
         <h3>Aniversariantes do mês ({{date('m')}})</h3>
         <li>@if($niverMes->count() < 1) Nenhum aniversariante nesse mês @else <span style="font-weight: bold; color:chartreuse">{{$niverMes->count()}}</span> nesse mês @endif <a style="color: deepskyblue" href="/classe/aniversariantes"> Aniversariantes </a> </li>
         <h3>Interessados em ser professor</h3>

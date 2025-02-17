@@ -25,16 +25,6 @@
                     <span class="title">Informações</span>
 
                     <div class="fields">
-                        <div class="input-field">
-                            <label style="text-align:left">Nome <span style="color:red;font-weight: bold;">*</span></label>
-                            <input type="text" name="nome" value="{{ $user->name }}">
-
-                        </div>
-                        <div class="input-field">
-                            <label style="text-align:left">Nome de usuário <span style="color:red;font-weight: bold;">*</span></label>
-                            <input type="text" name="username" value="{{ $user->username }}">
-
-                        </div>
                         <div class="input-field" style="margin: 5px">
                             <label style="text-align:left">Setor <span style="color:red;font-weight: bold;">*</span></label>
                             <select id="setor" class="inputprof" required name="id_nivel">
@@ -56,13 +46,15 @@
 
                         </div>
                         <div class="input-field">
-                            <label style="text-align:left">SuperMaster?<span style="color:red;font-weight: bold;">*</span></label>
+                            <label style="text-align:left">Permissão<span style="color:red;font-weight: bold;">*</span></label>
                             <select class="inputprof" required name="supermaster">
-                                <option value=1 @if($user->super_master) selected @endif >Sim</option>
-                                <option value=0 @if(!$user->super_master) selected @endif> Não</option>
+                               @foreach($permissoes as $p)
+                                   <option @if($user->permissao_id == $p->id) selected @endif value="{{ $p->id }}">{{ $p->name }}</option>
+                               @endforeach
 
                             </select>
                         </div>
+
 
                         <div class="input-field" style="margin: 5px">
                             <label style="text-align:left">Status <span style="color:red;font-weight: bold;">*</span></label>

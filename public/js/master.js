@@ -124,8 +124,11 @@ $(document).ready(function(){
             data: {
                 _token: $('meta[name="csrf-token"]').attr('content'),
             },
-            success: function(result) {
+            success: data => {
                 getChamadas();
+            },
+            error: data => {
+                alert(data.responseJSON.response);
             }
         });
     });

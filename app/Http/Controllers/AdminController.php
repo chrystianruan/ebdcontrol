@@ -98,12 +98,18 @@ class AdminController extends Controller
         $pessoas = Pessoa::orderBy('nome')
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->get();
+        $codigosClasse = Sala::select('nome', 'hash')
+            ->where('congregacao_id', auth()->user()->congregacao_id)
+            ->orderBy('nome', 'asc')
+            ->get();
+
         return view('/admin/dashboard', ['salas' => $salas, 'formations' => $formations, 'pessoas' => $pessoas,
          'meses' => $meses, 'mesesNome' => $mesesNome, 'niverMes' => $niverMes,'dataAno' => $dataAno,
          'sexos' => $sexos,'funcoes' => $funcoes, 'interesseProf' => $interesseProf,
           'alunosInativos' => $alunosInativos,  'chamadaDia' => $chamadaDia,
           'chamadasMes' => $chamadasMes, 'chamadasMesTotal' => $chamadasMesTotal, 'chamadasAno' => $chamadasAno,
-          'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes,  'preCadastros' => $preCadastros,]);
+          'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes,  'preCadastros' => $preCadastros,
+          'codigosClasse' => $codigosClasse]);
     }
 
     public function getArrayQuantidadePessoasPerFuncao() : array {

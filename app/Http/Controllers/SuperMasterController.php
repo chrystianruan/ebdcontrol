@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Congregacao;
+use App\Models\Permissao;
 use App\Models\Pessoa;
 use App\Models\Sala;
 use App\Models\Setor;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 class SuperMasterController extends Controller
@@ -17,29 +20,39 @@ class SuperMasterController extends Controller
     }
 
     public function userFilters(Request $request) {
+        $nome = $request->nome;
+        $setor = $request->setor ? Setor::findOrFail((int) $request->setor)->nome : null;
+        $congregacao = $request->congregacao ? Congregacao::findOrFail((int) $request->congregacao)->nome : null;
+        $permission = $request->permission ? Permissao::findOrFail((int) $request->permission)->name : null;
+        $status = $request->status != null ? $request->status == 0 ? "Ativo" : "Inativo" : null;
         $setores = Setor::orderBy("nome")
             ->get();
-        $users = User::select('users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
-            ->where('id_nivel', '=', 1)
+        $permissoes = Permissao::all();
+        $users = User::select('users.id as user_id','pessoas.*', 'users.*', 'congregacaos.nome as nome_congregacao', 'setors.nome as nome_setor')
+            ->leftJoin('pessoas' , 'users.pessoa_id', '=', 'pessoas.id')
+            ->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
+            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
             ->where('users.id', '>', 1);
+
         if ($request->congregacao) {
-            $users = $users->where('congregacao_id', '=', $request->congregacao);
+            $users = $users->where('users.congregacao_id', '=', $request->congregacao);
+        }
+        if ($request->setor) {
+            $users = $users->where('setors.id', '=', $request->setor);
         }
         if ($request->nome) {
-            $users = $users->where("name", "like",'%'.$request->nome.'%');
+            $users = $users->where("pessoas.nome", "like",'%'.$request->nome.'%');
         }
-        if ($request->supermaster) {
-            $users = $users->where("super_master", '=', $request->supermaster);
+        if ($request->permission) {
+            $users = $users->where("users.permissao_id", '=', $request->permission);
         }
-        if ($request->status) {
-            $users = $users->where("status", '=', $request->status);
+        if ($request->status != null) {
+            $users = $users->where("users.status", '=', $request->status);
         }
-        $users = $users->join("congregacaos", 'congregacaos.id', '=', 'users.congregacao_id')
-            ->join("setors", 'setors.id', '=', 'congregacaos.setor_id')
-            ->orderBy("name")
+        $users = $users->orderBy("pessoas.nome")
             ->get();
 
-        return view('super-master.filters.users', compact(['users', 'setores']));
+        return view('super-master.filters.users', compact(['users', 'setores', 'permissoes', 'nome', 'setor', 'permission', 'status', 'congregacao']));
 
     }
 
@@ -51,8 +64,9 @@ class SuperMasterController extends Controller
             ->findOrFail($id);
         if($user->id !== 1) {
             $setores = Setor::orderBy("nome")->get();
+            $permissoes = Permissao::where('id', '<>', 4)->get();
 
-            return view('super-master.edit.user', compact(['user', 'setores']));
+            return view('super-master.edit.user', compact(['user', 'setores', 'permissoes']));
         } else {
             return redirect()->back();
         }
@@ -60,24 +74,17 @@ class SuperMasterController extends Controller
 
     public function updateUserSuperMaster(Request $request, $id) {
         $this->validate($request, [
-            'nome' => ['required'],
-            'username' => ['required', 'min:6', 'unique:users,username,'.$request->id],
             'status' => ['required', 'integer', 'min:0', 'max: 1']
         ], [
-            'nome.required' => 'Nome é obrigatório',
-            'username.required' => 'Nome de usuário é obrigatório',
             'status.required' =>  'Status é obrigatório.',
             'status.integer' =>  'Esse Status não pode ser cadastrado.',
             'status.min' =>  'Esse Status não pode ser cadastrado.',
             'status.max' =>  'Esse Status não pode ser cadastrado.',
-
         ]);
         $user = User::findOrFail($id);
         if($user->id !== 1) {
-            $user->name = $request->nome;
-            $user->username = $request->username;
             $user->congregacao_id = $request->congregacao;
-            $user->super_master = $request->supermaster;
+            $user->permissao_id = $request->supermaster;
             $user->status = $request->status;
             $user->save();
             return redirect('/super-master/filters/users')->with('msg', 'Usuário atualizado com sucesso');
@@ -85,34 +92,23 @@ class SuperMasterController extends Controller
             return redirect()->back();
         }
 
-
     }
 
-    public function editPasswordUserSuperMaster($id) {
-        $user = User::findOrFail($id);
+    public function forceResetPassword($userId) : JsonResponse {
+        $user = User::findOrFail($userId);
         if($user->id !== 1) {
-            return view('super-master.edit.password-user')->with(compact(['user']));
-        } else {
-            return redirect()->back();
-        }
-    }
-    public function updatePasswordUserSuperMaster(Request $request, $id) {
-        $this->validate($request, [
-            'password' => ['required', 'min:8', 'regex:/^.*(?=[^a-z]*[a-z])(?=\D*\d)(?=[^!@?]*[!@?]).*$/'],
-        ], [
-            'password.required' => 'A senha é obrigatória.',
-            'password.min' => 'A senha precisa ter no mínimo 8 dígitos.',
-            'password.regex' => 'A senha precisa conter, no mínimo, uma letra maiúscula, minúscula, um número e um caractere especial (@)'
-
-        ]);
-        $user = User::findOrFail($id);
-        if($user->id !== 1) {
-            $user->password = bcrypt($request->password);
+            $password = bin2hex(random_bytes(3));
+            $user->password = bcrypt($password);
+            $user->password_temp = $password;
+            $user->reset_password = true;
             $user->save();
-            return redirect('/super-master/filters/users')->with('msg', 'Senha de usuário atualizado com sucesso');
-
+            return response()->json([
+                'response' => 'Senha de usuário resetada com sucesso'
+            ], 201);
         } else {
-            return redirect()->back();
+            return response()->json([
+                'response' => 'Não é possível resetar a senha do usuário administrador'
+            ], 403);
         }
     }
 
@@ -132,13 +128,37 @@ class SuperMasterController extends Controller
         return redirect()->back()->with('msg', 'Congregação cadastrada com sucesso');
     }
 
+    public function newSala(Request $request) : RedirectResponse {
+        $this->validate($request, [
+            'select_congregacao' => ['required'],
+            'input_tipo_sala' => ['required'],
+            'input_nome_sala' => ['required']
+        ], [
+            'congregacao.required' => 'Congregação é obrigatória',
+            'input_tipo_sala.required' => 'Tipo de sala é obrigatório',
+            'input_nome_sala.required' => 'Nome da sala é obrigatório'
+        ]);
+        try {
+            $sala = new Sala;
+            $sala->congregacao_id = $request->select_congregacao;
+            $sala->tipo = $request->input_tipo_sala;
+            $sala->nome = $request->input_nome_sala;
+            $sala ->hash = bin2hex(random_bytes(2));
+            $sala->save();
+            return redirect()->back()->with('msg', 'Sala cadastrada com sucesso');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('msg', 'Erro ao cadastrar sala');
+        }
+
+    }
+
     public function congregacoesFilters(Request $req) {
         $congregacoes = Congregacao::select('congregacaos.*', 'setors.nome as setor_nome');
         if ($req->setor) {
             $congregacoes = $congregacoes->where('setor_id', '=', $req->setor);
         }
         if ($req->nome) {
-            $congregacoes = $congregacoes->where('nome', 'like', '%' . $req->nome, '%');
+            $congregacoes = $congregacoes->where('congregacaos.nome', 'like', '%' . $req->nome .'%');
         }
         $congregacoes = $congregacoes
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')

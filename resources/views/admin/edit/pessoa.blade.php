@@ -207,7 +207,7 @@
                     </div>
                     <input type="submit" value="Atualizar" class="btn">
                 </form>
-                @if(auth()->user()->id_nivel == 1)
+                @if(auth()->user()->permissao_id == 2)
                     <hr>
                     <div>
                         <h3 style="color: red">Apagar pessoa do sistema</h3>

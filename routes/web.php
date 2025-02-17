@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\ChamadaAdminController;
+use App\Http\Controllers\ComumController;
 use App\Http\Controllers\PreCadastroController;
+use App\Http\Controllers\PresencaPessoaController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -38,9 +41,14 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/sobre', function () { return view('/about'); });
     Route::post('/baixar-relatorio-presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'getPresencasOfClasse'])->name('relatorios.presenca-classe-post');
     Route::post('/realizar-chamada', [ChamadaController::class, 'realizarChamada']);
+    Route::post('/user/change-password', [UserController::class, 'changePassword']);
+    Route::get('/reset-password', function() {
+        return view('/reset-password');
+    })->name('password.reset');
+    Route::post('/post/reset-password', [UserController::class, 'resetPassword']);
 });
 
-Route::middleware(['auth', 'classe', 'status'])->group(function () {
+Route::middleware(['auth', 'classe', 'status', 'resetPassword'])->group(function () {
     Route::get('/classe', [ClasseController::class, 'indexClasse']);
     Route::get('/classe/cadastro-pessoa', [PessoaController::class, 'indexCadastroClasse']);
     Route::post('/classe/cadastro-pessoa', [PreCadastroController::class, 'store'])->name('cadastro.pessoa.classe');
@@ -57,16 +65,14 @@ Route::middleware(['auth', 'classe', 'status'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'master', 'status'])->group(function () {
+Route::middleware(['auth', 'master', 'status', 'resetPassword'])->group(function () {
     Route::get('/master', [MasterController::class, 'dashboardMaster']);
-    Route::get('/master/cadastro/usuario', [AuthController::class, 'indexUsuarioMaster']);
-    Route::post('/master/cadastro/usuario', [AuthController::class, 'storeUsuarioMaster']);
-    Route::get('/master/filtro/usuario', [AuthController::class, 'searchUserMaster']);
-    Route::post('/master/filtro/usuario', [AuthController::class, 'searchUserMaster']);
-    Route::get('/master/edit/usuario/{id}', [AuthController::class, 'editUserMaster']);
-    Route::put('/master/update/usuario/{id}', [AuthController::class, 'updateUserMaster']);
-    Route::get('/master/edit/usuario-senha/{id}', [AuthController::class, 'editUserPassword']);
-    Route::put('/master/update/usuario-senha/{id}', [AuthController::class, 'updateUserPassword']);
+    Route::get('/master/cadastro/usuario', [MasterController::class, 'indexUsuarioMaster']);
+    Route::get('/master/filtro/usuario', [MasterController::class, 'searchUserMaster']);
+    Route::post('/master/filtro/usuario', [MasterController::class, 'searchUserMaster']);
+    Route::get('/master/edit/usuario/{id}', [MasterController::class, 'editUserMaster']);
+    Route::put('/master/update/usuario/{id}', [MasterController::class, 'updateUserMaster']);
+    Route::put('/master/update/reset-password/{userId}', [MasterController::class, 'forceResetPassword']);
 
     Route::get('/master/cadastro/classe', [MasterController::class, 'indexSalaMaster']);
     Route::post('/master/cadastro/classe', [MasterController::class, 'storeSalaMaster']);
@@ -82,12 +88,15 @@ Route::middleware(['auth', 'master', 'status'])->group(function () {
     Route::get('/master/chamadas-dia', [ChamadaController::class, 'chamadasLiberadaMes']);
 
     Route::get('/master/configuracoes/pessoas', [MasterController::class, 'indexConfiguracoesPessoas']);
+    Route::get('/master/configuracoes/congregacao', [MasterController::class, 'indexConfiguracoesCongregacao']);
+
+    Route::post('/congregacao/salvar-localizacao', [MasterController::class, 'salvarLocalizacao']);
     Route::delete('/delete-pessoa/{id}', [PessoaController::class, 'delete']);
 
 
 });
 
-Route::middleware(['auth', 'admin', 'status'])->group(function () {
+Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
     Route::get('/admin/aniversariantes', [AdminController::class, 'indexAniversariantes']);
     Route::post('/admin/aniversariantes', [AdminController::class, 'searchAniversariantes']);
@@ -149,20 +158,30 @@ Route::middleware(['auth', 'admin', 'status'])->group(function () {
 
 });
 
-Route::middleware(['auth', 'supermaster', 'status'])->group(function () {
+Route::middleware(['auth', 'supermaster', 'status', 'resetPassword'])->group(function () {
     Route::get('/super-master/', [SuperMasterController::class, 'index']);
     Route::post('/super-master/cadastro/usuario', [AuthController::class, 'storeUsuarioSuperMaster']);
     Route::get('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
     Route::post('/super-master/filters/users', [SuperMasterController::class, 'userFilters']);
     Route::get('/super-master/edit/user/{id}', [SuperMasterController::class, 'editUserSuperMaster']);
     Route::put('/super-master/update/user/{id}', [SuperMasterController::class, 'updateUserSuperMaster']);
-    Route::get('/super-master/edit/password-user/{id}', [SuperMasterController::class, 'editPasswordUserSuperMaster']);
-    Route::put('/super-master/update/password-user/{id}', [SuperMasterController::class, 'updatePasswordUserSuperMaster']);
+    Route::put('/super-master/reset-password/user/{userId}', [SuperMasterController::class, 'forceResetPassword']);
     Route::post('/super-master/new/congregacao', [SuperMasterController::class, 'newCongregacao']);
     Route::get('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
     Route::post('/super-master/filters/congregacoes', [SuperMasterController::class, 'congregacoesFilters']);
     Route::get('/super-master/edit/congregacao/{id}', [SuperMasterController::class, 'editCongregacao']);
     Route::put('/super-master/update/congregacao/{id}', [SuperMasterController::class, 'updateCongregacao']);
+
+    Route::post('/super-master/new/sala', [SuperMasterController::class, 'newSala']);
+});
+
+Route::middleware(['auth', 'comum', 'status', 'resetPassword'])->group(function () {
+    Route::get('/comum', [ComumController::class, 'index']);
+    Route::get('/comum/marcar-presenca', [ComumController::class, 'indexMarcarPresenca']);
+    Route::post('/comum/marcar-presenca', [PresencaPessoaController::class, 'marcarPresencaIndividualNivelComum']);
+    Route::get('/comum/meus-dados', [ComumController::class, 'meusDados']);
+    Route::get('/comum/minhas-presencas', [ComumController::class, 'minhasPresencas']);
+    Route::post('/comum/minhas-presencas', [ComumController::class, 'minhasPresencas']);
 });
 
 Route::get('/teste-email', function() {

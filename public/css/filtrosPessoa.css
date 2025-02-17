@@ -110,7 +110,6 @@ form .title{
 .itens {
   display: flex;
   flex-wrap: wrap;
-  justify-content:  baseline;
   margin: 0.8%;
 
 }
@@ -167,7 +166,8 @@ form .title{
 .busca {
   background-color: #7b4ea51a;
   color: white;
-  float: left;
+  display: flex;
+    flex-direction: row;
   padding: 7px;
   margin: 2%;
   border-radius: 10px;

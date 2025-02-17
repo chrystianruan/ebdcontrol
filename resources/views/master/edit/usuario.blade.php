@@ -8,6 +8,7 @@
 <div class="container" >
         <header>Edição de Usuário - {{date('d/m/Y')}}</header>
         <form action="/master/update/usuario/{{$user -> id}}" method="POST" style=" min-height: 240px">
+            <input type="hidden" value="{{ url('/') }}" id="url">
             @csrf
             @method('PUT')
             <div class="formFirst">
@@ -25,26 +26,23 @@
                     <span class="title">Informações</span>
 
                     <div class="fields">
-                        <div class="input-field">
-                            <label style="text-align:left">Nome <font style="color:red;font-weight: bold;">*</font></label>
-                            <input type="text" name="name" value="{{ $user->name }}">
-
-                        </div>
-                        <div class="input-field">
-                            <label style="text-align:left">Nome de usuário <font style="color:red;font-weight: bold;">*</font></label>
-                            <input type="text" name="username" value="{{ $user->username }}">
-
-                        </div>
+                    </div>
                     <div class="input-field" style="margin: 5px">
                             <label style="text-align:left">Nível de acesso <font style="color:red;font-weight: bold;">*</font></label>
-                            <select class="inputprof" required name="id_nivel">
+                            <select class="inputprof" id="nivel" required name="id_nivel">
                             <option disabled value="">Selecionar</option>
                                 @foreach($niveis as $n)
-                                    <option @if($user -> id_nivel == $n -> id) selected @endif value="{{$n -> id}}"> {{$n -> nome}}</option>
+                                    <option @if($user->permissao_id == $n -> id) selected @endif value="{{$n -> id}}"> {{$n -> name}}</option>
                                 @endforeach
-                                </select>
+                            </select>
+                    </div>
 
-                        </div>
+                    <div class="input-field div-select-salas" style="margin: 5px; display: none">
+                        <label style="text-align:left">Nível de acesso <font style="color:red;font-weight: bold;">*</font></label>
+                        <select id="select-salas" name="sala">
+
+                        </select>
+                    </div>
 
                         <div class="input-field" style="margin: 5px">
                             <label style="text-align:left">Status <font style="color:red;font-weight: bold;">*</font></label>
@@ -71,11 +69,40 @@
 
 
                 </div>
-
+            </div>
 
 
         </form>
-    </div>
+
+</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script>
+        $("#nivel").change(function() {
+            if (this.value == 4) {
+                $.ajax({
+                    url: $('#url').val()+"/api/salas/congregacao/{{ base64_encode(auth()->user()->congregacao_id) }}",
+                    type: 'GET',
+                    dataType: 'json',
+                    success: data => {
+                        var option;
+                        option += '<option selected value="" disabled>Selecionar</option>'
+                        $.each(data, function(i, obj){
+                            option += `<option value="${obj.id}">${obj.nome}</option>`;
+                        })
+                        $('#select-salas').append(option);
+                    },
+                    error: data => {
+                        alert(data)
+                    }
+                });
+                $('.div-select-salas').show();
+                $('#select-salas').attr('required','required');
+            } else {
+                $('.div-select-salas').hide();
+                $('#select-salas').removeAttr('required');
+            }
+        });
+    </script>
 
 
 

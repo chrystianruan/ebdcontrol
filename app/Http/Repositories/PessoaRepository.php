@@ -36,10 +36,18 @@ class PessoaRepository
     }
 
     public function getSalasOfPessoa(int $pessoaId) : ?Collection {
-        return PessoaSala::select('pessoa_salas.id', DB::raw('salas.id as sala_id'), DB::raw('funcaos.id as funcao_id'))
+        return PessoaSala::select('pessoa_salas.id',
+            DB::raw('salas.id as sala_id'),
+            DB::raw('funcaos.id as funcao_id'),
+            'salas.nome as sala_nome',
+            'funcaos.nome as funcao_nome',
+            'salas.tipo as sala_tipo',
+            'pessoas.nome as pessoa_nome'
+        )
             ->where('pessoa_id', $pessoaId)
             ->join('salas', 'salas.id', '=', 'pessoa_salas.sala_id')
             ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
+            ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
             ->get();
     }
 
@@ -129,5 +137,9 @@ class PessoaRepository
             ->orWhere('sexo', '=', $sexo)
             ->orWhere('telefone', '=', $numberTelephone)
             ->get();
+    }
+
+    public function findByCongregacao(int $congregacaoId) : ?Collection {
+        return Pessoa::where('congregacao_id', '=', $congregacaoId)->get();
     }
 }
