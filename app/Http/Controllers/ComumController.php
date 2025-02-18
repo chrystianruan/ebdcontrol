@@ -25,8 +25,8 @@ class ComumController extends Controller
     public function index() : View {
         $view = 'dashboard';
         $pessoaSalas = $this->pessoaRepository->getSalasOfPessoa(auth()->user()->pessoa_id);
-        $quantidadePresencasMes = $this->presencaPessoaRepository->findByMonthAndYearAndPessoa(date('m'), date('Y'), auth()->user()->pessoa_id)->count();
-        $quantidadePresencasAno = $this->presencaPessoaRepository->findByYearAndPessoa(date('Y'), auth()->user()->pessoa_id)->count();
+        $quantidadePresencasMes = $this->presencaPessoaRepository->findByMonthAndYearAndPessoaAndPresente(date('m'), date('Y'), auth()->user()->pessoa_id, 1)->count();
+        $quantidadePresencasAno = $this->presencaPessoaRepository->findByYearAndPessoaAndPresente(date('Y'), auth()->user()->pessoa_id, 1)->count();
 
         return view('comum.index', compact(['view', 'pessoaSalas', 'quantidadePresencasMes', 'quantidadePresencasAno']));
     }
