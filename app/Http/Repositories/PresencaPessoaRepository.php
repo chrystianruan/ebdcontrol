@@ -59,6 +59,28 @@ class PresencaPessoaRepository
             ->orderBy('presenca_pessoas.created_at', 'desc')
             ->get();
     }
+    public function findByMonthAndYearAndPessoaAndPresente(int $month, int $year, int $pessoaId, bool $presenca) : Collection {
+        return PresencaPessoa::select('presenca_pessoas.created_at', 'salas.nome as sala_nome', 'funcaos.nome as funcao_nome', 'presenca_pessoas.presente')
+            ->join('salas', 'salas.id', '=', 'presenca_pessoas.sala_id')
+            ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id')
+            ->where('pessoa_id', $pessoaId)
+            ->where('presente', $presenca)
+            ->whereMonth('presenca_pessoas.created_at', $month)
+            ->whereYear('presenca_pessoas.created_at', $year)
+            ->orderBy('presenca_pessoas.created_at', 'desc')
+            ->get();
+    }
+
+    public function findByYearAndPessoaAndPresente(int $year, int $pessoaId, bool $presenca) : Collection {
+        return PresencaPessoa::select('presenca_pessoas.created_at', 'salas.nome as sala_nome', 'funcaos.nome as funcao_nome', 'presenca_pessoas.presente')
+            ->join('salas', 'salas.id', '=', 'presenca_pessoas.sala_id')
+            ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id')
+            ->where('pessoa_id', $pessoaId)
+            ->where('presente', $presenca)
+            ->whereYear('presenca_pessoas.created_at', $year)
+            ->orderBy('presenca_pessoas.created_at', 'desc')
+            ->get();
+    }
 
     public function findByYearAndPessoa($year, $pessoaId) : Collection {
         return PresencaPessoa::select('presenca_pessoas.created_at', 'salas.nome as sala_nome', 'funcaos.nome as funcao_nome', 'presenca_pessoas.presente')
