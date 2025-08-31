@@ -81,7 +81,8 @@ class PessoaRepository
     public function getAniversariantesMes(int $salaId = null) : ?Collection {
         $pessoas = PessoaSala::join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
             ->where('pessoas.congregacao_id', auth()->user()->congregacao_id)
-            ->whereMonth('data_nasc', '=',  date('n'));
+            ->whereMonth('data_nasc', '=',  date('n'))
+            ->where('situacao', StatusEnum::ATIVO->value);
 
         if ($salaId != null) {
             $pessoas = $pessoas->where('pessoa_salas.sala_id', $salaId);
