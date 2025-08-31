@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\StatusEnum;
 use App\Http\Enums\TipoPresenca;
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\ChamadaRepository;
@@ -84,16 +85,13 @@ class ClasseController extends Controller
         $funcoes = $this->pessoaService->getArrayQuantidadePessoasPerFuncao(auth()->user()->sala_id);
         $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoAndSalaCount(auth()->user()->sala_id);
         $chamadaDia = Chamada::where('id_sala', '=', $nivel)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereDate('created_at', Carbon::today())
             ->get();
         $chamadasMes = Chamada::where('id_sala', '=', $nivel)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereMonth('created_at', Carbon::now())
             ->whereYear('created_at', '=', Carbon::now())
             ->get();
         $chamadasAno = Chamada::where('id_sala', '=', $nivel)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->whereYear('created_at', Carbon::now())
             ->get();
         $niverMes = $this->pessoaRepository->getAniversariantesMes(auth()->user()->sala_id);
@@ -305,7 +303,9 @@ class ClasseController extends Controller
                 ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
                 ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
                 ->where('sala_id', $nivel)
+                ->where('pessoas.situacao', StatusEnum::ATIVO->value)
                 ->whereMonth('pessoas.data_nasc', '=', $request->mes)
+                ->orderBy('pessoas.nome')
                 ->get();
 
         } else {
@@ -313,7 +313,9 @@ class ClasseController extends Controller
                 ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
                 ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
                 ->where('sala_id', $nivel)
+                ->where('pessoas.situacao', StatusEnum::ATIVO->value)
                 ->whereMonth('pessoas.data_nasc', '=', Carbon::now())
+                ->orderBy('pessoas.nome')
                 ->get();
         }
 
