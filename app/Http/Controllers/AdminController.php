@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Enums\FuncaoEnum;
+use App\Http\Enums\StatusEnum;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Models\PreCadastro;
@@ -61,9 +62,7 @@ class AdminController extends Controller
             ->count();
         $interesseProf = $this->pessoaRepository->findByInteresseAndCongregacaoAndSalaCount();
         //$idadesPessoas = DB::select('SELECT count(id) as qtd, floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25) as idades from pessoas group by (floor( (unix_timestamp(current_timestamp()) - unix_timestamp(pessoas.data_nasc)) / (60 * 60 * 24) /365.25));');
-        $niverMes = Pessoa::whereMonth('data_nasc', '=', $dataMes)
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->count();
+        $niverMes = $this->pessoaRepository->getAniversariantesMes()->count();
         $mativo = Pessoa::where('sexo', '=', 1)->where('situacao', '=', 1)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->count();
@@ -717,6 +716,7 @@ class AdminController extends Controller
             ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
             ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('pessoas.situacao', StatusEnum::ATIVO->value)
             ->whereMonth('pessoas.data_nasc', '=', Carbon::now())
             ->orderBy('nome')
             ->groupBy('pessoa_salas.pessoa_id')
@@ -740,7 +740,8 @@ class AdminController extends Controller
         $pessoas = Pessoa::select('pessoas.*', 'funcaos.nome as nome_funcao')
             ->join('pessoa_salas', 'pessoa_salas.pessoa_id', '=', 'pessoas.id')
             ->join('funcaos', 'funcaos.id', '=', 'pessoa_salas.funcao_id')
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id);
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->where('pessoas.situacao', StatusEnum::ATIVO->value);
 
         if($request->mes) {
             $pessoas = $pessoas->whereMonth('pessoas.data_nasc', '=', $request->mes);

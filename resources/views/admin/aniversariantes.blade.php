@@ -118,6 +118,7 @@
   <thead>
     <tr>
         <th>Nome</th>
+        <th>Número de Telefone</th>
         <th>Data de Nascimento</th>
         <th>Classe/Função</th>
         <th>Ação</th>
@@ -127,11 +128,36 @@
   <tbody>
       @foreach($pessoas as $p)
         <tr @if (in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::PROFESSOR_SUBSTITUTO->value, array_column($p->funcoes->toArray(), 'id')) || in_array(\App\Http\Enums\FuncaoEnum::AUXILIAR_SALA->value, array_column($p->funcoes->toArray(), 'id'))) style="background-color: #d95eff" @endif>
-            <td>{{$p -> nome}}</td>
-            <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>{{date('d/m', strtotime($p -> data_nasc))}}</td>
-            <td><ul>@foreach($p->salas as $key=>$sala) <li> {{ $sala->nome }} ({{ $p->funcoes[$key]['nome'] }})</li> @endforeach</ul></td>
-            <td><div style="text-align: center">
-                <a href="/admin/visualizar/pessoa/{{$p->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>
+            <td>
+                {{$p -> nome}}
+            </td>
+            <td>
+                @if($p->telefone == null && $p->telefone_responsavel == null)
+                    -
+                @else
+                    <a class="link-wpp" href="https://api.whatsapp.com/send?phone=55{{ $p->responsavel ? $p->telefone_responsavel : $p->telefone  }}" target="blank">
+                        {{ $p->responsavel ? $p->telefone_responsavel : $p->telefone }}
+                    </a>
+                    {{ $p->responsavel ? "(Responsável)" : "" }}
+                @endif
+            </td>
+            <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>
+                {{date('d/m', strtotime($p -> data_nasc))}}
+            </td>
+            <td>
+                <ul>
+                    @foreach($p->salas as $key=>$sala)
+                        <li>
+                            {{ $sala->nome }} ({{ $p->funcoes[$key]['nome'] }})
+                        </li>
+                    @endforeach
+                </ul>
+            </td>
+            <td>
+                <div style="text-align: center">
+                    <a href="/admin/visualizar/pessoa/{{$p->id}}" style="text-decoration: none; color:black; margin: 5px;float: left">
+                        <i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i>
+                    </a>
                 </div>
             </td>
         </tr>
