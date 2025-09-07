@@ -68,7 +68,13 @@
                             <td>{{date('d/m/Y', strtotime($presenca->created_at))}}</td>
                             <td>{{$presenca->sala_nome}}</td>
                             <td>{{$presenca->funcao_nome}}</td>
-                            <td>{{$presenca->presente}}</td>
+                            <td>
+                                @if($presenca->presente)
+                                    <i class='bx bx-check' style="color: green; font-size: 1.2em"></i>
+                                @else
+                                    <i class='bx bx-x' style="color: red; font-size: 1.2em"></i>
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 @else
