@@ -28,6 +28,7 @@
                 </div>
             </div>
         </div>
+        <div id="loading" class="icon-loading" style="display:none;"></div>
         @if(count($classesFaltantes) > 0)
             @if ($errors->any())
                 <div class="alert">

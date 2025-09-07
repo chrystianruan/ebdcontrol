@@ -135,10 +135,10 @@
                 @if($p->telefone == null && $p->telefone_responsavel == null)
                     -
                 @else
-                    <a class="link-wpp" href="https://api.whatsapp.com/send?phone=55{{ $p->responsavel ? $p->telefone_responsavel : $p->telefone  }}" target="blank">
-                        {{ $p->responsavel ? $p->telefone_responsavel : $p->telefone }}
+                    <a class="link-wpp" href="https://api.whatsapp.com/send?phone=55{{ floor((strtotime(date('Y-m-d')) - strtotime($p->data_nasc))/(60 * 60 * 24) /365.25) < 18 ? $p->telefone_responsavel : $p->telefone  }}" target="blank">
+                        {{ floor((strtotime(date('Y-m-d')) - strtotime($p->data_nasc))/(60 * 60 * 24) /365.25) < 18 ? $p->telefone_responsavel : $p->telefone }}
                     </a>
-                    {{ $p->responsavel ? "(Responsável)" : "" }}
+                    {{ floor((strtotime(date('Y-m-d')) - strtotime($p->data_nasc))/(60 * 60 * 24) /365.25) < 18 ? "(Responsável)" : "" }}
                 @endif
             </td>
             <td @if (date('d/m', strtotime($p->data_nasc)) == date('d/m')) style="color: yellow; font-weight: bolder" @endif>
