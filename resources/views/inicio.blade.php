@@ -10,7 +10,7 @@
   <title>Início</title>
 </head>
 <body>
-<p>Olá, {{auth()->user()->matricula }}</p>
+<p>Olá, {{auth()->user()->pessoa->nome }}</p>
 @if(auth()->user()->permissao_id == 4 && auth()->user()->status == false)<p><a href="/classe/">Acessar a área de Secretário/Classe ou professor</a></p>@endif
 @if(auth()->user()->permissao_id <= 3 && auth()->user()->status == false)<p><a href="/admin/">Acessar a área Admin</a></p>@endif
 @if(auth()->user()->permissao_id <= 2 && auth()->user()->status == false)<p><a href="/master/">Acessar a área Master</a></p>@endif

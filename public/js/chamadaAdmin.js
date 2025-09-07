@@ -3,6 +3,9 @@ let divDadosInt = document.getElementById("div-dados-inteiros");
 let selectSala = document.getElementById("select-sala")
 
 selectSala.addEventListener("change", function () {
+    $('#loading').show();
+    divTablePessoas.style.display = "none";
+    divDadosInt.style.display = "none";
     var finalUrl = $('#buscar-pessoas').val() + "/" + selectSala.value;
     $.ajax({
         url: finalUrl,
@@ -37,27 +40,31 @@ selectSala.addEventListener("change", function () {
                     row.append($('<td style="font-size: 1em">').append(select));
 
                 } else {
+                    var styleTeacher = "";
+                    if (item.funcao_id == 2) {
+                        styleTeacher = "background-color: rgba(59,52,52,0.73)"
+                    }
+                    var row = $(`<tr style="${styleTeacher}">`);
+                    row.append($('<td style="font-size: 1em">').text(item.pessoa_nome));
+                    row.append($('<td style="font-size: 1em">').text(item.funcao_nome));
                     if (item.dados_presenca.sala_id == selectSala.value) {
-                        var styleTeacher = "";
-                        if (item.funcao_id == 2) {
-                            styleTeacher = "background-color: rgba(59,52,52,0.73)"
-                        }
-                        var row = $(`<tr style="${styleTeacher}">`);
-                        var valueIdSelect = "presenca-"+item.pessoa_id;
-                        row.append($('<td style="font-size: 1em">').text(item.pessoa_nome));
-                        row.append($('<td style="font-size: 1em">').text(item.funcao_nome));
-
-                        var icon = $('<i>').addClass('fa fa-check');
-                        row.append($('<td style="font-size: 1em">').append(icon));
+                        var iconCheck = $('<i style="color: greenyellow; font-size: 1.3em">').addClass('fa fa-check');
+                        row.append($('<td style="font-size: 1em">').append(iconCheck));
+                    } else {
+                        var iconGroup = $('<i style="font-size: 1em; color: white">').addClass('fa fa-users');
+                        var iconCheck = $('<i style="color: greenyellow; margin-left: -3px; font-size: 1em">').addClass('fa fa-check');
+                        row.append($('<td style="font-size: 1em">').append(iconGroup, iconCheck));
                     }
                 }
-
 
                 $('#tbody-table-pessoas').append(row);
             });
         },
         error: data => {
             alert(data)
+        },
+        complete: function() {
+            $('#loading').hide();
         }
     })
 })
