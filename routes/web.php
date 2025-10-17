@@ -5,6 +5,7 @@ use App\Http\Controllers\ComumController;
 use App\Http\Controllers\PreCadastroController;
 use App\Http\Controllers\PresencaPessoaController;
 use App\Http\Controllers\UserController;
+use App\Models\PresencaPessoa;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\SuperMasterController;
 use App\Http\Controllers\ChamadaController;
 use App\Http\Controllers\PessoaController;
 use App\Http\Controllers\RelatorioController;
+use Carbon\Carbon;
 
 
 /*
@@ -186,6 +188,97 @@ Route::middleware(['auth', 'comum', 'status', 'resetPassword'])->group(function 
 
 Route::get('/teste-email', function() {
     return view('emails.pessoaCadastrada', ['pessoaNome' => 'Chrystian', 'congregacaoNome' => 'Tempolo Sede']);
+});
+
+//verificar se idade está compatível com a classe. Se não, sugerir classe correta de acordo com a idade
+Route::get('/planilha-transferencias', function() {
+
+    //TODO: preencher collection com todas as salas
+    $salasIdades = collect([
+       ['id' => 15, 'nome' => 'Pequeninos de Jesus', 'idadeMinima' => 3, 'idadeMaxima' => 4],
+       ['id' => 16, 'nome' => 'Débora', 'idadeMinima' => 5, 'idadeMaxima' => 6],
+       ['id' => 17, 'nome' => 'Amiguinhos de Jesus', 'idadeMinima' => 7, 'idadeMaxima' => 8],
+       ['id' => 18, 'nome' => 'Leão de Judá', 'idadeMinima' => 9, 'idadeMaxima' => 10],
+       ['id' => 9, 'nome' => 'El-Shaddai', 'idadeMinima' => 11, 'idadeMaxima' => 12],
+       ['id' => 3, 'nome' => 'Maranata', 'idadeMinima' => 18, 'idadeMaxima' => 24],
+       ['id' => 12, 'nome' => 'Gileade', 'idadeMinima' => 15, 'idadeMaxima' => 17],
+       ['id' => 13, 'nome' => 'Shekinah', 'idadeMinima' => 13, 'idadeMaxima' => 14]
+    ]);
+
+
+    $alunos = DB::table('pessoa_salas')
+        ->join('pessoas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id')
+        ->join('salas', 'salas.id', '=', 'pessoa_salas.sala_id')
+        ->where('pessoa_salas.funcao_id', 1)
+        ->where('pessoas.situacao', 1)
+        ->where('pessoas.deleted_at', null)
+        ->whereIn('pessoa_salas.sala_id', $salasIdades->pluck('id'))
+        ->select('pessoas.id', 'pessoas.nome', 'data_nasc', 'salas.nome as classe', 'pessoa_salas.sala_id as sala_id')
+        ->get();
+
+    $arrayTransferencias = [];
+    foreach ($alunos as $aluno) {
+        foreach ($salasIdades as $sala) {
+            $idade = floor((strtotime(Carbon::now()) - strtotime($aluno->data_nasc))/(60 * 60 * 24) /365.25);
+            if ($idade <= $sala['idadeMaxima'] && $idade >= $sala['idadeMinima']) {
+                if ($aluno->sala_id == $sala['id']) {
+                    break;
+                } else {
+                    $arrayTransferencias[] = [
+                        'id' => $aluno->id,
+                        'nome' => $aluno->nome,
+                        'idade' => $idade,
+                        'classe_atual' => $aluno->classe,
+                        'classe_recomendada' => $sala['nome']." (Faixa Etária: ".$sala['idadeMinima']." - ".$sala['idadeMaxima'].")",
+                    ];
+                }
+            }
+        }
+    }
+
+    return response()->json($arrayTransferencias);
+
+});
+
+Route::get('/planilha-inativos', function() {
+    $dataInicio = "2025-04-06";
+    $dataFim = "2025-09-28";
+
+    $salasId = [3,4,5,8,9,10,11,12,13,14,15,16,17,18,19,20,36,175];
+
+    $inativosPorSala = [];
+
+    for ($i = 0; $i < count($salasId); $i++) {
+        $presencaPessoa = PresencaPessoa::select('pessoa_id',
+            'pessoas.nome as pessoa_nome',
+            'funcaos.nome as funcao_nome',
+            'pessoas.telefone',
+            DB::raw('sum(presente) as presencas'),
+            DB::raw('(case when sum(presente) <= 12 and sum(presente) > 0 then "INATIVAR" ELSE "EXCLUIR" end) as acao')
+        )
+            ->join('pessoas', 'pessoas.id', '=', 'presenca_pessoas.pessoa_id')
+            ->join('funcaos', 'funcaos.id', '=', 'presenca_pessoas.funcao_id')
+            ->join('salas', 'salas.id', '=', 'presenca_pessoas.sala_id')
+            ->having('presencas', '<=', 12)
+            ->whereBetween('presenca_pessoas.created_at',  [$dataInicio, $dataFim])
+            ->where('presenca_pessoas.funcao_id', 1)
+            ->where('presenca_pessoas.sala_id', $salasId[$i])
+            ->where('pessoas.deleted_at', null)
+            ->where('pessoas.situacao', 1)
+            ->where('presenca_pessoas.sala_id', '<>', 8)
+            ->orderBy('presencas', 'desc')
+            ->groupBy('pessoa_id')
+            ->get();
+
+        $inativosPorSala[] = [
+            'sala' => \App\Models\Sala::findOrFail($salasId[$i])->nome,
+            'quantidade'=> $presencaPessoa->count(),
+            'alunos' => $presencaPessoa
+        ];
+
+    }
+
+    return response()->json($inativosPorSala);
 });
 
 
