@@ -207,7 +207,7 @@
                     </div>
                     <input type="submit" value="Atualizar" class="btn">
                 </form>
-                @if(auth()->user()->permissao_id == 2)
+                @if(auth()->user()->permissao_id == \App\Http\Utils\PermissaoEnum::SUPERMASTER->value || auth()->user()->permissao_id == \App\Http\Utils\PermissaoEnum::MASTER->value)
                     <hr>
                     <div>
                         <h3 style="color: red">Apagar pessoa do sistema</h3>
