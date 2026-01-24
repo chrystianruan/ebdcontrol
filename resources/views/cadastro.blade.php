@@ -4,7 +4,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Cadastro Geral - {{ $congregacao->congregacao_nome | $congregacao->setor_nome}}</title>
+    <title>Cadastro Geral - {{ $congregacao->congregacao_nome }} | {{$congregacao->setor_nome}}</title>
     <link rel="icon" type="imagem/png" href="/img/logo_ebd.png" />
     <link rel="stylesheet" href="/css/cadastroClasse.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
