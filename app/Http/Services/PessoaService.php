@@ -2,36 +2,25 @@
 
 namespace App\Http\Services;
 
-use App\Http\Controllers\Controller;
 use App\Http\Enums\FuncaoEnum;
 use App\Http\Enums\TipoDelete;
 use App\Http\Repositories\PessoaRepository;
-use App\Http\Repositories\PessoaSalaRepository;
-use App\Http\Requests\StorePessoaRequest;
+use App\Http\Repositories\PresencaPessoaRepository;
 use App\Http\Requests\UpdatePessoaRequest;
 use App\Http\Utils\GenerateMatricula;
 use App\Http\Utils\PermissaoEnum;
-use App\Mail\EmailToAdminSistema;
 use App\Mail\PessoaCadastradaMail;
 use App\Models\Congregacao;
-use App\Models\Formation;
 use App\Models\Funcao;
 use App\Models\LinkCadastroGeral;
 use App\Models\Pessoa;
 use App\Models\PessoaSala;
-use App\Models\Publico;
-use App\Models\Sala;
-use App\Models\Uf;
 use App\Models\User;
-use Dompdf\Exception;
-use FontLib\TrueType\Collection;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rules\Enum;
 
 class PessoaService
 {
@@ -39,12 +28,17 @@ class PessoaService
     private $linkCadastroGeral;
     private $pessoaRepository;
     private $generateMatricula;
-    public function __construct(LinkCadastroGeral $linkCadastroGeral,
-                                PessoaRepository $pessoaRepository,
-                                GenerateMatricula $generateMatricula) {
+    private $presencaPessoaRepository;
+    public function __construct(
+        LinkCadastroGeral $linkCadastroGeral,
+        PessoaRepository $pessoaRepository,
+        GenerateMatricula $generateMatricula,
+        PresencaPessoaRepository $presencaPessoaRepository
+    ) {
         $this->linkCadastroGeral = $linkCadastroGeral;
         $this->pessoaRepository = $pessoaRepository;
         $this->generateMatricula = $generateMatricula;
+        $this->presencaPessoaRepository = $presencaPessoaRepository;
     }
     public function liberarLinkGeral(int $congregacaoId) : JsonResponse {
         $linkExistente = $this->linkCadastroGeral->getLink($congregacaoId);
@@ -174,6 +168,7 @@ class PessoaService
     public function delete(int $id) {
         try {
             $this->clearPessoaSala($id, TipoDelete::SOFT->value);
+            $this->clearPresencas($id, TipoDelete::SOFT->value);
             $pessoa = Pessoa::findOrFail($id);
             $pessoa->delete();
 
@@ -261,6 +256,21 @@ class PessoaService
                     $pessoaSala->forceDelete();
                 } else {
                     $pessoaSala->delete();
+                }
+            }
+        } catch (\Exception $exception) {
+            throw $exception;
+        }
+    }
+
+    private function clearPresencas(int $pessoaId, int $tipoDelete) : void {
+        try {
+            $presencas = $this->presencaPessoaRepository->findByPessoaId($pessoaId);
+            foreach ($presencas as $p) {
+                if ($tipoDelete == TipoDelete::FORCE->value) {
+                    $p->forceDelete();
+                } else {
+                    $p->delete();
                 }
             }
         } catch (\Exception $exception) {
