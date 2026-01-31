@@ -5,6 +5,24 @@
 @section('content')
     <link rel="stylesheet" href="/css/filtrosPessoa.css">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+    <div class="dialog" id="modal-qrCode" style="display: none">
+        <div class="dialog-overlay" tabindex="-1"></div>
+        <div class="dialog-content" role="dialog">
+            <div role="document">
+                <button class="dialog-close" id="modal-qrCode" onclick="closeModalQrCode()">&times;</button>
+                <h1>QR Code cadastro</h1>
+                <hr>
+                <div class="row" style="margin: 2%">
+                    <div class="col-75">
+                        <div class="container">
+                            <div id="qrcode-container" style="display: flex; flex-direction: column; align-items: center; margin: 20px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div style="margin: 15px">
 
         <form action="/super-master/filters/congregacoes" method="POST">
@@ -106,6 +124,12 @@
                     </td>
                     <td>
                         <a href="/super-master/edit/congregacao/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
+                        <a
+                            style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left;cursor: pointer"
+                            onclick="openModalQrCode('{{ url('/cadastro')."/".base64_encode($c->id) }}', '{{ $c->nome }} ', '{{ $c -> setor_nome }} ')"
+                        >
+                            <i class="bx bx-scan" style="font-size: 1.8em;margin: 1px; float:left"></i>
+                        </a>
                     </td>
                 </tr>
 
@@ -114,7 +138,9 @@
             @endforeach
         </table>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
     <script>
         $('#setor').change(function () {
             let setorId = $('#setor').val();
@@ -165,6 +191,30 @@
             })
 
         });
+
+        function openModalQrCode(linkCadastro, nome, setor) {
+            $('#qrcode-container').empty();
+            $('#modal-qrCode').css('display', 'block');
+
+            // Título acima do QR Code
+            $('#qrcode-container').append('<p style="text-align: center; font-weight: bold; margin-bottom: 10px;">' + nome + ' | ' + setor + '</p>');
+
+            // Container para o QR Code
+            $('#qrcode-container').append('<div id="qrcode"></div>');
+
+            new QRCode(document.getElementById('qrcode'), {
+                text: linkCadastro,
+                width: 200,
+                height: 200
+            });
+            // Link abaixo do QR Code
+            $('#qrcode-container').append('<p style="text-align: center; margin-top: 10px; word-break: break-all; font-size: 12px;"><a href="' + linkCadastro + '" target="_blank">' + linkCadastro + '</a></p>');
+        }
+
+        function closeModalQrCode() {
+            $('#modal-qrCode').css('display', 'none');
+            $('#qrcode-container').empty();
+        }
 
     </script>
 
