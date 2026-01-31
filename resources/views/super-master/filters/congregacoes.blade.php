@@ -18,16 +18,12 @@
                 <div class="itens">
                     <input type="text" name="nome" placeholder="Nome do congregação">
 
-
                         <select name="setor" id="setor">
                             <option selected disabled value="">Setor</option>
                             @foreach($setores as $setor)
                                 <option value="{{ $setor->id }}">{{ $setor->nome }}</option>
                             @endforeach
                         </select>
-
-
-
 
                     <div class="btnFilter">
                         <button type="submit" class="filter">Filtrar</button>
@@ -104,8 +100,8 @@
                             <a href="{{ url('/cadastro')."/".base64_encode($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
                                 {{ url('/cadastro')."/".base64_encode($c->id) }}
                             </a>
-                            <i class="ico-active-inactive-link-cadastro bx bx-link icon" id="ico-link-cadastro-active-{{ $c->id }}" style="@if(!$c->linkCadastroGeral)display:none; @endif color: green; font-size: 1.7em; margin: 5px 10px;; cursor: pointer"> </i>
-                            <i class="ico-active-inactive-link-cadastro bx bx-unlink icon" id="ico-link-cadastro-inative-{{ $c->id }}" style="@if($c->linkCadastroGeral)display:none; @endif color: red; font-size: 1.7em; margin: 5px 10px; cursor: pointer"> </i>
+                            <i class="ico-active-inactive-link-cadastro bx bx-link icon" id="ico-link-cadastro-active-{{ $c->id }}" style="@if(!$c->linkCadastroGeral || !$c->linkCadastroGeral->active)display:none; @endif color: green; font-size: 1.7em; margin: 5px 10px;; cursor: pointer"> </i>
+                            <i class="ico-active-inactive-link-cadastro bx bx-unlink icon" id="ico-link-cadastro-inative-{{ $c->id }}" style="@if($c->linkCadastroGeral && $c->linkCadastroGeral->active)display:none; @endif color: red; font-size: 1.7em; margin: 5px 10px; cursor: pointer"> </i>
                         </div>
                     </td>
                     <td>

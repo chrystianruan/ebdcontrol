@@ -102,54 +102,55 @@
     @endif
 
 
+    <div style="overflow-x:auto; margin-right: 3%">
+        <table style="margin:3%">
 
-    <table style="margin:3%">
+            @if($users -> count() > 1)
+                <caption class="cont"><h4>Usuários: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$users -> count()}}</font></h4></caption>
+            @endif
 
-        @if($users -> count() > 1)
-            <caption class="cont"><h4>Usuários: <font style="color:red; background-color: black; border-radius: 5px; padding: 0 10px">{{$users -> count()}}</font></h4></caption>
-        @endif
+            <thead>
+            <tr>
+                <th>Nome
+                <th>Matrícula
+                <th>Senha Temporária </th>
+                <th>Reset</th>
+                <th>Permissão</th>
+                <th>Congregação/Setor
+                <th>Status
+                <th style="text-align: center">Ações
+            </thead>
+            @foreach($users as $u)
 
-        <thead>
-        <tr>
-            <th>Nome
-            <th>Matrícula
-            <th>Senha Temporária </th>
-            <th>Reset</th>
-            <th>Permissão</th>
-            <th>Congregação/Setor
-            <th>Status
-            <th style="text-align: center">Ações
-        </thead>
-        @foreach($users as $u)
+                <tbody>
+                <tr> <!-- <tr class="disabled">  -->
 
-            <tbody>
-            <tr> <!-- <tr class="disabled">  -->
+                    <td>@if($u->pessoa_id) @if ($u->pessoa) {{ $u->pessoa->nome }} @else Pessoa apagada @endif @else Sem dados @endif
+                    <td>{{ $u->matricula }}
+                    <td>{{ $u->password_temp }}</td>
+                    <td>
+                        @if($u->reset_password == false)
+                            <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: green" class="bx bx-user-check icon"></i>
+                        @else
+                            <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: red" class="bx bx-user-x icon"> </i>
+                        @endif
+                    </td>
+                    <td>
+                        <span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span>
+                    </td>
+                    <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}
+                    <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
+                    <td>
+                        <a href="/super-master/edit/user/{{$u->user_id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
+                        <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor:pointer;" id="btn-reset-password-{{ $u->user_id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
+                    </td>
+                </tr>
 
-                <td>@if($u->pessoa_id) @if ($u->pessoa) {{ $u->pessoa->nome }} @else Pessoa apagada @endif @else Sem dados @endif
-                <td>{{ $u->matricula }}
-                <td>{{ $u->password_temp }}</td>
-                <td>
-                    @if($u->reset_password == false)
-                        <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: green" class="bx bx-user-check icon"></i>
-                    @else
-                        <i style="padding: 2px; border-radius: 3px; font-size: 1.5em; background-color: red" class="bx bx-user-x icon"> </i>
-                    @endif
-                </td>
-                <td>
-                    <span style="padding: 2px; border-radius: 3px; background-color: #3498db">{{ $u->permissao->name }}</span>
-                </td>
-                <td>{{ $u->nome_congregacao }}/{{ $u->nome_setor }}
-                <td>@if($u->status == false) <font style="padding: 2px; border-radius: 3px; background-color: green">Ativo</font> @else <font style="padding: 2px; border-radius: 3px;background-color: red">Inativo</font>@endif
-                <td>
-                    <a href="/super-master/edit/user/{{$u->user_id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
-                    <a style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left; cursor:pointer;" id="btn-reset-password-{{ $u->user_id  }}" class="btn-reset-password"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-reset icon'></i> </a>
-                </td>
-            </tr>
+                </tbody>
 
-            </tbody>
-
-        @endforeach
-    </table>
+            @endforeach
+        </table>
+    </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <script>
         $('#setor').change(function () {
