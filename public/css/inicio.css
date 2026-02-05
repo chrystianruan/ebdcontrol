@@ -1,32 +1,51 @@
 .grid-container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
     max-width: 1200px;
-    margin: 1% auto;
     display: grid;
     gap: 1rem;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-
-  }
+}
 
   h2{
     text-align: center;
   }
 
-  .grid-container > div {
+@media screen and (max-width: 767px) {
+    .grid-container {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+        padding-bottom: 15%;
+    }
+}
 
-    border-radius: 10px;
-    color: white;
-    background-color: #7b4ea51a;
-    border: 0.2px solid #ccc;
-    box-shadow: 1px 0.5px #ccc;
+.grid-container > div {
+    background-color: #ffffff;
+    color: #222;
 
-    padding: 10px 20px;
-    font-size: 18px;
-  }
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.06);
+
+    padding: 16px 20px;
+    font-size: 16px;
+
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.grid-container > div:hover {
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
 
   .info {
     line-height: 2.2;
   }
-
 
 
 
@@ -39,7 +58,7 @@
 
 /* graficos Financeiro */
 .graficos2 {
-    margin: 2%;
+    margin: 1%;
     background-color: #7b4ea51a;
     padding: 10px;
     border: 1px solid #ccc;

@@ -34,7 +34,7 @@ $(document).ready(function() {
 });
 
 
-$('#btn-store').click(function () {
+$('#modalBtnStore').click(function () {
     $.ajax({
         url: $('#url-verify').val(),
         type: 'POST',

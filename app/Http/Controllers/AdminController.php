@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Enums\FuncaoEnum;
 use App\Http\Enums\StatusEnum;
+use App\Http\Enums\ViewEnum;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
+use App\Models\Congregacao;
 use App\Models\PreCadastro;
 use Illuminate\Http\Request;
 use App\Models\Formation;
@@ -108,7 +110,8 @@ class AdminController extends Controller
           'alunosInativos' => $alunosInativos,  'chamadaDia' => $chamadaDia,
           'chamadasMes' => $chamadasMes, 'chamadasMesTotal' => $chamadasMesTotal, 'chamadasAno' => $chamadasAno,
           'quantidadePais' => $quantidadePais, 'quantidadeMaes' => $quantidadeMaes,  'preCadastros' => $preCadastros,
-          'codigosClasse' => $codigosClasse]);
+          'codigosClasse' => $codigosClasse, 'blade' => ViewEnum::HOME->value
+        ]);
     }
 
     public function getArrayQuantidadePessoasPerFuncao() : array {
@@ -124,10 +127,55 @@ class AdminController extends Controller
         return $array;
     }
 
-    public function showFilterPessoa() {
-        $pessoas = Pessoa::orderBy('nome')
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->get();
+    public function showFilterPessoa(Request $request) {
+        $nome = request('nome');
+        $sexo = request('sexo');
+        $paternidade_maternidade = request('paternidade_maternidade');
+        $sala1 = request('sala');
+        $interesse = request('interesse');
+        $id_funcao = request('id_funcao');
+        $situacao = request('situacao');
+        $niver = request('niver');
+
+        $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
+        if ($request->nome) {
+            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
+        }
+
+        if ($request->sexo) {
+            $pessoas = $pessoas->where('sexo', $request->sexo);
+        }
+
+        if ($request->paternidade_maternidade) {
+            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
+        }
+
+        if ($request->sala) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
+        }
+
+        if($request->id_funcao) {
+            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
+        }
+
+        if($request->interesse) {
+            $pessoas = $pessoas->where('interesse', $request->interesse);
+        }
+
+        if ($request->situacao) {
+            $pessoas = $pessoas->where('situacao', $request->situacao);
+        }
+
+        if ($request->niver) {
+            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
+        }
+
+        $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('pessoas.nome')
+            ->groupBy('pessoa_id')
+            ->paginate(10)
+            ->withQueryString();
+
         $salas = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')
@@ -135,7 +183,40 @@ class AdminController extends Controller
         $funcoes = Funcao::orderBy('nome')->get();
         $dataAtual = date('Y-m-d');
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-        return view('/admin/filtro/pessoa',['pessoas' => $pessoas, 'meses_abv' => $meses_abv, 'salas' => $salas, 'dataAtual' => $dataAtual, 'funcoes' => $funcoes]);
+        $congregacao = Congregacao::select('*', DB::raw('congregacaos.id as congregacao_id'),DB::raw('setors.id as setor_id'), DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
+            ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
+            ->findOrFail(auth()->user()->congregacao_id);
+        $title = 'Cadastro Admin';
+        $publicos = Publico::all();
+        $formations = Formation::all();
+        $ufs = Uf::orderBy("nome")->get();
+        $classes = Sala::where('id', '>', 2)
+            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+            ->orderBy('nome')->get();
+        return view('/admin/filtro/pessoa',
+            [
+                'pessoas' => $pessoas,
+                'meses_abv' => $meses_abv,
+                'salas' => $salas,
+                'dataAtual' => $dataAtual,
+                'funcoes' => $funcoes,
+                'blade' => ViewEnum::PESSOAS->value,
+                'congregacao' => $congregacao,
+                'title' => $title,
+                'publicos' => $publicos,
+                'ufs' => $ufs,
+                'formations' => $formations,
+                'classes' => $classes,
+                'nome' => $nome,
+                'sexo' => $sexo,
+                'interesse' => $interesse,
+                'sala1' => $sala1,
+                'niver' => $niver,
+                'id_funcao' => $id_funcao,
+                'situacao' => $situacao,
+                'paternidade_maternidade' => $paternidade_maternidade,
+            ]
+        );
     }
 
 
@@ -643,18 +724,27 @@ class AdminController extends Controller
 
         }
 
-        $chamadas = $chamadas->orderBy('created_at', 'DESC')->get();
+        $chamadas = $chamadas->orderBy('created_at', 'DESC')->paginate(10)->withQueryString();;
 
         } else {
             $chamadas = Chamada::whereDate('created_at', Carbon::today())
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('created_at', 'DESC')
-            ->get();
+            ->paginate(10)->withQueryString();;
 
         }
 
-        return view('/admin/chamadas', ['chamadas' => $chamadas, 'salas' => $salas, 'meses_abv' => $meses_abv,
-        'classe' => $classe, 'mes' => $mes, 'ano' => $ano]);
+        return view('/admin/chamadas',
+            [
+                'chamadas' => $chamadas,
+                'salas' => $salas,
+                'meses_abv' => $meses_abv,
+                'classe' => $classe,
+                'mes' => $mes,
+                'ano' => $ano,
+                'blade' => ViewEnum::CHAMADAS->value
+            ]
+        );
 
     }
 

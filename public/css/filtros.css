@@ -7,49 +7,7 @@
 }
 
 body {
-
   font-family: 'Open Sans', sans-serif;
-}
-
-table {
-
-  background: #7b4ea51a;
-  border-radius: 0.40em;
-  border-collapse: collapse;
-  margin: 1em;
-  width: 95%;
-}
-th {
-  background-color: #7B4EA5;
-  border-bottom: 1px solid #364043;
-  color: white;
-  font-size: 0.85em;
-  font-weight: 600;
-  padding: 0.5em 1em;
-  text-align: left;
-}
-td {
-  color: white;
-  font-weight: 400;
-  padding: 0.65em 1em;
-}
-tbody tr {
-  border-bottom: 1px solid #dddddd;
-}
-
-tbody tr:nth-of-type(even) {
-  background-color: #141222;
-}
-
-.disabled td {
-  background-color: rgba(235, 229, 229, 0.11);
-  color: #4F5F64;
-}
-tbody tr {
-  transition: background 0.25s ease;
-}
-tbody tr:hover {
-  background: rgba(17, 16, 16, 0.877);
 }
 
 .orientation {
@@ -83,14 +41,11 @@ tbody tr:hover {
   border-radius: 5px;
 }
 
-button {
-  cursor: pointer;
-}
 
 .filter {
   background-color: blue;
   color: white;
-
+  padding: 10px;
 }
 
 .baixar {
@@ -142,11 +97,10 @@ tbody .disabled:hover  {
 }
 .itens .title {
     display: block;
-    margin-bottom: 2px;
     font-size: 16px;
     font-weight: 500;
     margin: 6px 0;
-    color: white;
+    color: black;
 }
 
 form .title{
@@ -155,22 +109,40 @@ form .title{
   font-size: 16px;
   font-weight: 500;
   margin: 6px 0;
-  color: white;
+  color: black;
 }
+
+.fields {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+}
+
+.div-buttons-filter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.div-btn-register {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
 
 .itens {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content:  baseline;
-  margin: 0.8%;
-
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 9px; /* ajuste como quiser */
 }
 
-.btnFilter {
-  float: left;
-  margin: 0.4%;
-  cursor: pointer;
 
+.btnFilter {
+  margin: 0.1%;
+  cursor: pointer;
 }
 
 .btnFilter2 {
@@ -181,10 +153,17 @@ form .title{
 
 }
 
+.btn-register-person {
+    margin: 5px 0;
+    padding: 7px 10px;
+    border: 1px solid #aaa;
+    border-radius: 5px;
+    background-color: #A6A6A6;
+}
+
 .btnFilter button {
-  height: 25px;
   margin: 5px 0;
-  padding: 0 12px;
+  padding: 7px 10px;
   border: 1px solid #aaa;
   border-radius: 5px;
 }
@@ -206,50 +185,49 @@ form .title{
 
 
 }
-.itens input {
-  width: 300px;
-}
-
-.itens input, select{
-  font-size: 14px;
-  font-weight: 400;
-  color: #002333;
-  background-color: #B4BEC9;
-  border-radius: 5px;
-  border: 1px solid #aaa;
-  padding: 0 15px;
-  height: 30px;
-  margin: 7px 3px;
-}
-
 
 .busca {
-  background-color: #7b4ea51a;
-  color: white;
-  float: left;
-  padding: 7px;
-  margin: 2%;
-  border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+
+    background-color: #7b4ea51a;
+    padding: 12px 16px;
+    border-radius: 12px;
+    margin: 16px 0;
 }
 
-.it {
-  margin: 0 20px;
+.tit {
+    font-weight: 600;
+    color: #5a3b7a;
+    margin-right: 10px;
 }
 
-.result{
-  color: rgb(9, 150, 115);
-  font-weight: 650;
-
+.result {
+    background-color: #7b4ea51a;
+    padding: 2px 8px;
+    border-radius: 12px;
 }
+
 i {
-  color: #7B4EA5;
   font-weight: 650;
 
 }
 
 .ponto {
-  float: left;
-  margin: 0 20px;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    background-color: #ffffff;
+    border: 1px solid #e2d8f0;
+    border-radius: 20px;
+    padding: 6px 12px;
+
+    font-size: 0.9rem;
+    color: #4a2f6b;
 }
 
 .cont {
@@ -281,7 +259,6 @@ table tbody tr:last-of-type {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 10px;
 }
 
 .wrapper {
@@ -366,4 +343,956 @@ table tbody tr:last-of-type {
 /* IE can just show/hide with no transition */
 .lte8 .wrapper .tooltip {
     display: none;
+}
+
+.container-intern {
+    display: flex;
+    flex-direction: column;
+}
+
+.div-table-filter {
+    overflow: auto;
+}
+@media screen and (max-width: 767px) {
+    .container-hideable {
+        display: none;
+    }
+    .container-intern {
+        padding-bottom: 15%;
+    }
+}
+
+/*=============== MODERN TABLE STYLES ===============*/
+
+/* Container da tabela */
+.table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    margin: 1.5rem 0;
+}
+
+/* Header da tabela com contador */
+.table-header {
+    background: linear-gradient(135deg, #7B4EA5 0%, #9B6EC7 100%);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.table-title {
+    color: #ffffff;
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.table-count {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+}
+
+/* Tabela moderna */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+}
+
+/* Cabeçalho da tabela */
+thead {
+    background: linear-gradient(135deg, #7B4EA5 0%, #9B6EC7 100%);
+}
+
+th {
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 1rem 1.5rem;
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: none;
+}
+
+/* Corpo da tabela */
+tbody {
+    background: #ffffff;
+}
+
+td {
+    color: #334155;
+    font-size: 0.9375rem;
+    font-weight: 400;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+/* Linhas da tabela */
+tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+tbody tr:hover {
+    background: #f8fafc;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(123, 78, 165, 0.08);
+}
+
+/* Linhas desabilitadas */
+tbody tr.disabled {
+    background-color: #f8fafc;
+    opacity: 0.6;
+}
+
+tbody tr.disabled td {
+    color: #94a3b8;
+}
+
+tbody tr.disabled:hover {
+    background-color: #f8fafc;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Botões de ação na tabela */
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.action-btn-view {
+    background: #ede9fe;
+    color: #7B4EA5;
+}
+
+.action-btn-view:hover {
+    background: #ddd6fe;
+    transform: translateY(-2px);
+}
+
+.action-btn-edit {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.action-btn-edit:hover {
+    background: #fde68a;
+    transform: translateY(-2px);
+}
+
+.action-btn-delete {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.action-btn-delete:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+}
+
+/* Badge de status */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.status-badge.active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge.inactive {
+    background: #fed7d7;
+    color: #991b1b;
+}
+
+.status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+/* Telefone formatado */
+.phone-number {
+    color: #7B4EA5;
+    font-weight: 500;
+    font-family: 'Courier New', monospace;
+}
+
+/* Botão "VER CLASSES" */
+.btn-ver-classes {
+    background: #f1f5f9;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-ver-classes:hover {
+    background: #7B4EA5;
+    color: #ffffff;
+    border-color: #7B4EA5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(123, 78, 165, 0.2);
+}
+
+/* Responsividade */
+@media screen and (max-width: 1024px) {
+    th, td {
+        padding: 0.875rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .table-container {
+        border-radius: 12px;
+        margin: 1rem 0;
+    }
+
+    .table-header {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    th, td {
+        padding: 0.75rem 0.875rem;
+        font-size: 0.8125rem;
+    }
+
+    .action-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+
+    /* Scroll horizontal em mobile */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        min-width: 600px;
+    }
+
+    .fields {
+        flex-direction: column;
+        gap: 15px;
+        align-items: start;
+    }
+
+}
+
+/* Animação de carregamento */
+@keyframes shimmer {
+    0% {
+        background-position: -468px 0;
+    }
+    100% {
+        background-position: 468px 0;
+    }
+}
+
+.table-loading {
+    animation: shimmer 1.2s ease-in-out infinite;
+    background: linear-gradient(to right, #f1f5f9 0%, #e2e8f0 20%, #f1f5f9 40%, #f1f5f9 100%);
+    background-size: 800px 104px;
+}
+
+/* Estado vazio */
+.table-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: #64748b;
+}
+
+.table-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.table-empty-text {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.table-empty-subtext {
+    font-size: 0.875rem;
+    color: #94a3b8;
+}
+
+/*=============== CLASSES LIST IN TABLE CELL ===============*/
+
+/* Container da lista de classes na célula */
+.classes-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    padding: 0.25rem 0;
+}
+
+/* Item individual da classe */
+.class-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+}
+
+/* Nome da classe */
+.class-name {
+    color: #1e293b;
+    font-weight: 500;
+}
+
+/* Tipo/função da classe entre parênteses */
+.class-type {
+    color: #7B4EA5;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* Variações de tipo */
+.class-type.professor {
+    color: #7B4EA5;
+}
+
+/* Estilo alternativo com badges */
+.class-item-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.25rem 0.625rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    transition: all 0.2s ease;
+}
+
+.class-item-badge:hover {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.class-item-badge .class-name {
+    color: #334155;
+    font-weight: 600;
+}
+
+.class-item-badge .class-type {
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+}
+
+/* Estilo com cores específicas por tipo */
+.class-badge-professor {
+    background: #f3e8ff;
+    border-color: #e9d5ff;
+}
+
+.class-badge-professor .class-type {
+    color: #7B4EA5;
+}
+
+
+/* Estilo compacto em linha */
+.classes-list-inline {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    align-items: flex-start;
+}
+
+/* Ícone de tipo */
+.class-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.625rem;
+    flex-shrink: 0;
+}
+
+.class-icon.professor {
+    background: #ede9fe;
+    color: #7B4EA5;
+}
+
+.class-icon.aluno {
+    background: #dbeafe;
+    color: #0284c7;
+}
+
+.class-icon.secretario {
+    background: #d1fae5;
+    color: #16a34a;
+}
+
+/* Ajuste da célula da tabela para comportar a lista */
+td.classes-cell {
+    vertical-align: top;
+    padding: 0.875rem 1rem;
+}
+
+/* Responsividade */
+@media screen and (max-width: 1024px) {
+    .classes-list {
+        gap: 0.25rem;
+    }
+
+    .class-item {
+        font-size: 0.75rem;
+    }
+
+    .class-type {
+        font-size: 0.6875rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .class-item-badge {
+        padding: 0.1875rem 0.5rem;
+        font-size: 0.6875rem;
+    }
+
+    .classes-list-inline {
+        gap: 0.25rem;
+    }
+}
+
+/* Estilo alternativo: lista numerada */
+.classes-list-numbered {
+    list-style: none;
+    counter-reset: class-counter;
+    padding-left: 0;
+}
+
+.classes-list-numbered .class-item {
+    counter-increment: class-counter;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.classes-list-numbered .class-item::before {
+    content: counter(class-counter) ".";
+    position: absolute;
+    left: 0;
+    color: #94a3b8;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* Estilo com separadores */
+.classes-list-separated .class-item {
+    padding-bottom: 0.375rem;
+    margin-bottom: 0.375rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.classes-list-separated .class-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Hover effect na linha inteira */
+tbody tr:hover .classes-list .class-item {
+    transform: translateX(2px);
+    transition: transform 0.2s ease;
+}
+
+/* Truncate para muitas classes */
+.classes-list-truncated {
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+.classes-list-truncated::-webkit-scrollbar {
+    width: 4px;
+}
+
+.classes-list-truncated::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.classes-list-truncated::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 2px;
+}
+
+/* Indicador de "mais classes" */
+.classes-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
+    padding: 0.1875rem 0.5rem;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.classes-more:hover {
+    background: #e2e8f0;
+    color: #475569;
+}
+
+/* Tooltip para classes longas */
+.class-item[title] {
+    cursor: help;
+}
+
+/* Animação ao carregar */
+@keyframes fadeInClass {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.class-item {
+    animation: fadeInClass 0.3s ease;
+}
+
+.class-item:nth-child(2) {
+    animation-delay: 0.05s;
+}
+
+.class-item:nth-child(3) {
+    animation-delay: 0.1s;
+}
+
+.class-item:nth-child(4) {
+    animation-delay: 0.15s;
+}
+
+.class-item:nth-child(5) {
+    animation-delay: 0.2s;
+}
+
+/* Container da paginação */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 0 0 16px 16px;
+    border-top: 1px solid #e2e8f0;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Informações da paginação */
+.pagination-info {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.pagination-info strong {
+    color: #1e293b;
+    font-weight: 600;
+}
+
+/* Wrapper da paginação */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Botões de paginação */
+.pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.pagination-btn:hover:not(:disabled):not(.active) {
+    background: #f8fafc;
+    border-color: #7B4EA5;
+    color: #7B4EA5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(123, 78, 165, 0.1);
+}
+
+.pagination-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+/* Página ativa */
+.pagination-btn.active {
+    background: linear-gradient(135deg, #7B4EA5 0%, #9B6EC7 100%);
+    color: #ffffff;
+    border-color: #7B4EA5;
+    font-weight: 600;
+    box-shadow: 0 4px 8px rgba(123, 78, 165, 0.25);
+}
+
+/* Botões desabilitados */
+.pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #f8fafc;
+    color: #94a3b8;
+}
+
+/* Botões Previous e Next */
+.pagination-btn-prev,
+.pagination-btn-next {
+    font-weight: 600;
+    gap: 0.5rem;
+}
+
+.pagination-btn-prev i,
+.pagination-btn-next i {
+    font-size: 0.75rem;
+}
+
+/* Ellipsis (reticências) */
+.pagination-ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    color: #94a3b8;
+    font-weight: 600;
+    user-select: none;
+}
+
+/* Seletor de itens por página */
+.pagination-per-page {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.pagination-per-page-label {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.pagination-per-page-select {
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.5rem center;
+    background-size: 16px;
+}
+
+.pagination-per-page-select:hover {
+    border-color: #7B4EA5;
+    box-shadow: 0 2px 4px rgba(123, 78, 165, 0.1);
+}
+
+.pagination-per-page-select:focus {
+    outline: none;
+    border-color: #7B4EA5;
+    box-shadow: 0 0 0 3px rgba(123, 78, 165, 0.1);
+}
+
+/* Variação compacta */
+.pagination-compact {
+    gap: 0.25rem;
+}
+
+.pagination-compact .pagination-btn {
+    min-width: 36px;
+    height: 36px;
+    font-size: 0.8125rem;
+}
+
+/* Variação com ícones */
+.pagination-btn i {
+    pointer-events: none;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    .pagination-container {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .pagination-info {
+        order: -1;
+        width: 100%;
+        text-align: center;
+    }
+
+    .pagination {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .pagination-per-page {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Esconde números no meio em mobile */
+    .pagination-btn.hide-mobile {
+        display: none;
+    }
+
+    .pagination-btn {
+        min-width: 36px;
+        height: 36px;
+        padding: 0 0.5rem;
+        font-size: 0.8125rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .pagination-btn-prev span,
+    .pagination-btn-next span {
+        display: none;
+    }
+
+    .pagination-btn-prev,
+    .pagination-btn-next {
+        min-width: 36px;
+        padding: 0;
+    }
+}
+
+/* Variação minimalista */
+.pagination-minimal .pagination-btn {
+    border: none;
+    background: transparent;
+}
+
+.pagination-minimal .pagination-btn:hover:not(:disabled):not(.active) {
+    background: #f8fafc;
+    border: none;
+}
+
+.pagination-minimal .pagination-btn.active {
+    background: #7B4EA5;
+}
+
+/* Variação arredondada */
+.pagination-rounded .pagination-btn {
+    border-radius: 50%;
+    min-width: 40px;
+    padding: 0;
+}
+
+.pagination-rounded .pagination-btn-prev,
+.pagination-rounded .pagination-btn-next {
+    border-radius: 50%;
+}
+
+/* Jump to page */
+.pagination-jump {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-jump-label {
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.pagination-jump-input {
+    width: 60px;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    color: #475569;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 8px;
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+.pagination-jump-input:focus {
+    outline: none;
+    border-color: #7B4EA5;
+    box-shadow: 0 0 0 3px rgba(123, 78, 165, 0.1);
+}
+
+.pagination-jump-btn {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #7B4EA5;
+    background: #7B4EA5;
+    color: #ffffff;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.pagination-jump-btn:hover {
+    background: #6a3d8f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(123, 78, 165, 0.2);
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.pagination-container {
+    animation: fadeIn 0.3s ease;
+}
+
+/* Loading state */
+.pagination-loading .pagination-btn {
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.pagination-loading::after {
+    content: '';
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #e2e8f0;
+    border-top-color: #7B4EA5;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-left: 0.5rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.phone-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: #25D366;
+    font-weight: 500;
+    font-size: 14px;
+
+    text-decoration: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.phone-link i {
+    font-size: 18px;
+}
+
+.phone-link:hover {
+    background-color: #eafaf1;
+    color: #128C7E;
+}
+
+.phone-link:active {
+    background-color: #d9f3e6;
+}
+
+.text-muted {
+    color: #9ca3af;
 }
