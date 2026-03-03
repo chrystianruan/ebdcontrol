@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/filtrosPessoa.css">
+<link rel="stylesheet" href="{{ cacheBust('css/filtrosPessoa.css') }}">
 <meta name="csrf-token" content="{{ csrf_token() }}" />
  <div style="margin: 15px">
 
@@ -166,7 +166,7 @@
         if ($('#select-permission').val() == 4) {
             $.ajax({
                 type: 'GET',
-                url: '{{ url('/api/salas/congregacao') }}/'+"{{ base64_encode(auth()->user()->congregacao_id) }}",
+                url: '{{ url('/api/salas') }}?congregacao_id='+"{{ encryptId(auth()->user()->congregacao_id) }}",
                 dataType: 'json',
                 success: dados => {
                     var option;

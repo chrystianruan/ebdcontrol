@@ -1,0 +1,231 @@
+/* ========== MODAL ========== */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+body:has(.modal-overlay.active) {
+    overflow: hidden;
+}
+
+.modal {
+    background: #ffffff;
+    width: 100%;
+    max-width: 720px;
+    border-radius: 18px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    max-height: 90vh;
+
+    transform: translateY(20px) scale(0.98);
+    transition: all 0.3s ease;
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+}
+
+/* Header */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #7B4EA5, #9B6EC7);
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.modal-header h2 {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.modal-close:hover {
+    transform: rotate(90deg);
+}
+
+/* Body */
+.modal-body {
+    padding: 22px;
+    overflow-y: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+/* Awesomplete */
+.awesomplete > ul {
+    z-index: 10000;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    padding: 6px 0;
+    margin-top: 4px;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.awesomplete > ul > li {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    color: #334155;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.awesomplete > ul > li:last-child {
+    border-bottom: none;
+}
+
+.awesomplete > ul > li:hover,
+.awesomplete > ul > li[aria-selected="true"] {
+    background: #f3f0ff;
+    color: #7B4EA5;
+}
+
+.awesomplete > ul > li mark {
+    background: transparent;
+    color: #7B4EA5;
+    font-weight: 700;
+}
+
+.awesomplete > ul::before {
+    display: none;
+}
+
+/* Footer */
+.modal-footer {
+    padding: 16px 22px;
+    background: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+/* Form Row - duas colunas */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+/* Form Section */
+.form-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.form-section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.form-section .form-row:last-child {
+    margin-bottom: 0;
+}
+
+/* Checkbox Label */
+.form-group-checkbox {
+    margin-bottom: 16px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: #334155;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    cursor: pointer;
+    accent-color: #7B4EA5;
+}
+
+.checkbox-label input[type="checkbox"]:checked {
+    background-color: #7B4EA5;
+    border-color: #7B4EA5;
+}
+
+.checkbox-label span {
+    user-select: none;
+}
+
+/* Required indicator */
+.required {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+    .modal {
+        margin: 0 12px;
+        max-height: 90vh;
+    }
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+}
+
+/* Modal largo */
+.modal-wide {
+    max-width: 960px;
+}
+
+.modal-wide .table-wrapper {
+    overflow-x: auto;
+}
+
+.modal-wide .table-wrapper table {
+    min-width: 700px;
+}
+
+
+
+
+

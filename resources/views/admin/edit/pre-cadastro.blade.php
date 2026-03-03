@@ -3,8 +3,8 @@
 @section('title', 'Início')
 
 @section('content')
-    <link rel="stylesheet" href="/css/cadastroClasse.css">
-    <input type="hidden" value="{{ base64_encode(auth()->user()->congregacao_id) }}" id="congregacao">
+    <link rel="stylesheet" href="{{ cacheBust('css/cadastroClasse.css') }}">
+    <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id) }}" id="congregacao">
     <div class="row" style="margin: 2%">
         <div class="col-75">
             <div class="container">
@@ -177,7 +177,7 @@
         </div>
     </div>
     @push('script-edit-pessoa')
-        <script src="/js/cadastroPessoa.js"></script>
-        <script src="/js/editPessoa.js"></script>
+        <script src="{{ cacheBust('js/cadastroPessoa.js') }}"></script>
+        <script src="{{ cacheBust('js/editPessoa.js') }}"></script>
     @endpush
 @endsection

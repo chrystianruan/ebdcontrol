@@ -4,7 +4,11 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/inicio.css">
+@push('dash.admin.css')
+    <link rel="stylesheet" href="{{ cacheBust('css/inicio.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
+@endpush
 
 <div class="grid-container">
     <div class="info">
@@ -12,142 +16,84 @@
     <hr>
     @if($chamadaDia->count() > 0)
         <h3>Matriculados: </h3>
-            <p><span style="font-weight: bold; color:
-            @if( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 80) chartreuse
-            @elseif( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 50
-            && ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') < 80) yellow
-            @else red
-            @endif
-            ">{{number_format((($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
+            <p><span class="@if( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 80) stat-good @elseif( ($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados') >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('presentes') * 100) / $chamadaDia -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
         <h3>Visitantes: </h3>
-        <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadaDia -> sum('visitantes') > 0)+@endif {{ $chamadaDia -> sum('visitantes') }}</span> visitante(s)</p>
+        <p>As salas receberam <span class="stat-highlight"> @if($chamadaDia -> sum('visitantes') > 0)+@endif {{ $chamadaDia -> sum('visitantes') }}</span> visitante(s)</p>
         <h3>Bíblias e revistas</h3>
 
-        <li>Bíblias: <span style="font-weight: bold; color:
-            @if( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 80) chartreuse
-                @elseif( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50
-                && ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) < 80) yellow
-                @else red
-                @endif
-                ">{{number_format((($chamadaDia -> sum('biblias') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes')) ), 1, ',')}}%</span> trouxeram</li>
-        <li>Revistas: <span style="font-weight: bold; color:
-            @if( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) > 80) chartreuse
-                @elseif( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50
-                && ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) < 80) yellow
-                @else red
-                @endif
-                ">{{number_format((($chamadaDia -> sum('revistas') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
+        Bíblias: <span class="@if( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 80) stat-good @elseif( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('biblias') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes')) ), 1, ',')}}%</span> trouxeram
+        Revistas: <span class="@if( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) > 80) stat-good @elseif( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('revistas') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes'))), 1, ',')}}%</span> trouxeram
     @else
-    <li>Nenhum Relatório</li>
+    Nenhum Relatório
     @endif
-</div>
+    </div>
 
 
-<div class="info">
-    <h2>Relatório do mês ({{date('m')}})</h2>
-    <hr>
-    @if($chamadasMes->count() > 0)
-    <h3>Matriculados: </h3>
-            <p><span style="font-weight: bold; color:
-            @if( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 80) chartreuse
-            @elseif( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 50
-            && ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') < 80) yellow
-            @else red
-            @endif
-            ">{{number_format((($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
-        <h3>Visitantes: </h3>
-        <p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadasMes -> sum('visitantes') > 0)+@endif{{$chamadasMes -> sum('visitantes')}}</span> visitante(s)</p>
-        <h3>Bíblias e revistas</h3>
+    <div class="info">
+        <h2>Relatório do mês ({{date('m')}})</h2>
+        <hr>
+        @if($chamadasMes->count() > 0)
+        <h3>Matriculados: </h3>
+                <p><span class="@if( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 80) stat-good @elseif( ($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados') >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasMes -> sum('presentes') * 100) / $chamadasMes -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
+            <h3>Visitantes: </h3>
+            <p>As salas receberam <span class="stat-highlight"> @if($chamadasMes -> sum('visitantes') > 0)+@endif{{$chamadasMes -> sum('visitantes')}}</span> visitante(s)</p>
+            <h3>Bíblias e revistas</h3>
 
-        <li>Bíblias: <span style="font-weight: bold; color:
-            @if( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 80) chartreuse
-                @elseif( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50
-                && ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) < 80) yellow
-                @else red
-                @endif
-                ">{{number_format((($chamadasMes -> sum('biblias') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
-        <li>Revistas: <span style="font-weight: bold; color:
-            @if( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) > 80) chartreuse
-                @elseif( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50
-                && ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) < 80) yellow
-                @else red
-                @endif
-                ">{{number_format((($chamadasMes -> sum('revistas') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
-    @else
-    <li>Nenhum Relatório</li>
-    @endif
-
-</div>
-
-<div class="info">
-    <h2>Relatório do ano ({{date('Y')}})</h2>
-    <hr>
-    @if($chamadasAno->count() > 0)
-    <h3>Matriculados: </h3>
-    <p><span style="font-weight: bold; color:
-    @if( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 80) chartreuse
-    @elseif( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 50
-    && ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') < 80) yellow
-    @else red
-    @endif
-    ">{{number_format((($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
-<h3>Visitantes: </h3>
-<p>As salas receberam <span style="font-weight: bold; color: chartreuse"> @if($chamadasAno -> sum('visitantes') > 0)+@endif{{$chamadasAno -> sum('visitantes')}}</span> visitante(s)</p>
-<h3>Bíblias e revistas</h3>
-
-<li>Bíblias: <span style="font-weight: bold; color:
-    @if( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 80) chartreuse
-        @elseif( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50
-        && ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) < 80) yellow
-        @else red
+            Bíblias: <span class="@if( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 80) stat-good @elseif( ($chamadasMes -> sum('biblias') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasMes -> sum('biblias') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram<br>
+            Revistas: <span class="@if( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) > 80) stat-good @elseif( ($chamadasMes -> sum('revistas') * 100) / ($chamadasMes->sum('presentes') + $chamadasMes->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasMes -> sum('revistas') * 100) / ($chamadasMes -> sum('presentes') + $chamadasMes -> sum('visitantes'))), 1, ',')}}%</span> trouxeram
+        @else
+        Nenhum Relatório
         @endif
-        ">{{number_format((($chamadasAno -> sum('biblias') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
-<li>Revistas: <span style="font-weight: bold; color:
-    @if( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) > 80) chartreuse
-        @elseif( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50
-        && ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) < 80) yellow
-        @else red
-        @endif
-        ">{{number_format((($chamadasAno -> sum('revistas') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram</li>
-    @else
-    <li>Nenhum Relatório</li>
-    @endif
-</div>
 
-<div class="info" >
-  <h2>Importante</h2> <hr  style="margin-bottom: 2%">
-  <h3>Aniversariantes do mês ({{date('m')}})</h3>
-  <li>@if($niverMes < 1) Nenhum aniversariante nesse mês @else <span style="font-weight: bold; color:chartreuse">{{$niverMes}}</span> nesse mês @endif <a style="color: deepskyblue" href="/admin/aniversariantes"> Aniversariantes </a> </li>
-  <h3>Códigos das Classes</h3>
-    <div class="wrapper" style="margin-top: 10px">
-        <span style="text-align: center"> Ver Códigos </span>
-        <div class="tooltip">
-            <div style="display: flex; flex-wrap: wrap; justify-content: space-between; flex-direction: row;">
-                @foreach($codigosClasse as $c)
-                    <p><strong>{{ $c->nome }}</strong>: {{ $c->hash }}</p>
-                @endforeach
+    </div>
+
+    <div class="info">
+        <h2>Relatório do ano ({{date('Y')}})</h2>
+        <hr>
+        @if($chamadasAno->count() > 0)
+        <h3>Matriculados: </h3>
+        <p><span class="@if( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 80) stat-good @elseif( ($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados') >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasAno -> sum('presentes') * 100) / $chamadasAno -> sum('matriculados')), 1, ',')}}% </span> se fizeram presentes </p>
+    <h3>Visitantes: </h3>
+    <p>As salas receberam <span class="stat-highlight"> @if($chamadasAno -> sum('visitantes') > 0)+@endif{{$chamadasAno -> sum('visitantes')}}</span> visitante(s)</p>
+    <h3>Bíblias e revistas</h3>
+
+    Bíblias: <span class="@if( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 80) stat-good @elseif( ($chamadasAno -> sum('biblias') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasAno -> sum('biblias') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram<br>
+    Revistas: <span class="@if( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) > 80) stat-good @elseif( ($chamadasAno -> sum('revistas') * 100) / ($chamadasAno->sum('presentes') + $chamadasAno->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadasAno -> sum('revistas') * 100) / ($chamadasAno -> sum('presentes') + $chamadasAno -> sum('visitantes'))), 1, ',')}}%</span> trouxeram
+        @else
+        Nenhum Relatório
+        @endif
+    </div>
+
+    <div class="info" >
+      <h2>Importante</h2> <hr  style="margin-bottom: 2%">
+      <h3>Aniversariantes do mês ({{date('m')}})</h3>
+      @if($niverMes < 1) Nenhum aniversariante nesse mês @else <span class="stat-highlight">{{$niverMes}}</span> nesse mês @endif <a style="color: #2563eb" href="/admin/aniversariantes"> Aniversariantes </a>
+      <h3>Códigos das Classes</h3>
+        <div class="wrapper" style="margin-top: 10px">
+            <span style="text-align: center"> Ver Códigos </span>
+            <div class="tooltip">
+                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; flex-direction: row;">
+                    @foreach($codigosClasse as $c)
+                        <p><strong>{{ $c->nome }}</strong>: {{ $c->hash }}</p>
+                    @endforeach
+                </div>
             </div>
         </div>
     </div>
-
-</div>
     <div class="info" >
         <h2>Dados Pessoas</h2> <hr  style="margin-bottom: 2%">
         <h3>Interessados em ser professor</h3>
-        <li>@if($interesseProf->count() < 1) Nenhum interessado @else <span style="font-weight: bold; color:chartreuse">{{$interesseProf->count()}}</span> interessado(s) @endif</li>
+        @if($interesseProf->count() < 1) Nenhum interessado @else <span class="stat-highlight">{{$interesseProf->count()}}</span> interessado(s) @endif
         <h3>Inativos</h3>
-        <li>@if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span style="font-weight: bold; color:chartreuse">{{ $alunosInativos->count() }}</span> inativo(s) @endif</li>
+        @if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span class="stat-highlight">{{ $alunosInativos->count() }}</span> inativo(s) @endif
         <h3>Pré-Cadastros</h3>
-        <li>
-            @if($preCadastros < 1)
-                Nenhum pré-cadastro
-            @else
-                <span style="font-weight: bold; color:chartreuse">
-                {{ $preCadastros }}
-            </span> registro(s)
-            @endif
-        </li>
-
+        @if($preCadastros < 1)
+            Nenhum pré-cadastro
+        @else
+            <span class="stat-highlight">
+            {{ $preCadastros }}
+        </span> registro(s)
+        @endif
     </div>
 
 
@@ -168,42 +114,41 @@
         <a id="a-visualizar-pdf" href="">
             <button class="btn-print">Gerar chamada física</button>
         </a>
-
     </div>
 
 
-<div class="graficoY" >
-<canvas id="myChart" width="1200" height="1200"></canvas>
-</div>
+    <div class="graficoY" >
+        <canvas id="myChart" width="1200" height="1200"></canvas>
+    </div>
 
 
-<div class="graficosY" >
-    <canvas id="myChartX"  width="1200" height="1200" ></canvas>
-</div>
+    <div class="graficosY" >
+        <canvas id="myChartX"  width="1200" height="1200" ></canvas>
+    </div>
 
 
 
-<div class="graficosY">
-<canvas id="myChart1"></canvas>
-</div>
+    <div class="graficosY">
+        <canvas id="myChart1"></canvas>
+    </div>
 
-<div class="graficosY">
-<canvas id="myChart2" ></canvas>
-</div>
+    <div class="graficosY">
+        <canvas id="myChart2" ></canvas>
+    </div>
 
 
-<div class="graficoY" >
-<canvas id="myChart3" ></canvas>
-</div>
+    <div class="graficoY" >
+        <canvas id="myChart3" ></canvas>
+    </div>
 
-<div class="graficoY" >
-    <canvas id="myChart4" ></canvas>
-</div>
+    <div class="graficoY" >
+        <canvas id="myChart4" ></canvas>
+    </div>
 </div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js"></script>
-<script src="/js/dashboard-admin.js"></script>
+<script src="{{ cacheBust('js/dashboard-admin.js') }}"></script>
 <script>
 
 const ctx = document.getElementById('myChart').getContext('2d');

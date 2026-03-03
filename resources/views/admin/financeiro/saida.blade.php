@@ -5,7 +5,7 @@
 @section('content')
 
 
-<link rel="stylesheet" href="/css/cadastro.css">
+<link rel="stylesheet" href="{{ cacheBust('css/cadastro.css') }}">
          
 <div class="container" style="margin-left:15%;width: 70% ">
        <header style="background-color: red; padding: 5px; border-radius: 5px 5px 0 0; box-shadow: 0 0 0.2em black  "> Saída(-) | {{$dataAtual}}<font style="float:right;">$</font></header>

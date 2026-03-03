@@ -1,0 +1,64 @@
+.input,
+.select {
+    width: 100%;
+    padding: 10px 14px;
+
+    font-size: 15px;
+    font-family: inherit;
+    color: #222;
+
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.input:focus,
+.select:focus {
+    outline: none;
+    background-color: #fff;
+
+    border-color: #7B4EA5;
+    box-shadow: 0 0 0 3px rgba(123, 78, 165, 0.2);
+}
+
+.input:hover,
+.select:hover {
+    background-color: #ffffff;
+}
+
+.input::placeholder {
+    color: #94a3b8;
+}
+
+.input:disabled,
+.select:disabled {
+    background-color: #f1f5f9;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+
+.select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8L10 12L14 8' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 38px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #475569;
+}

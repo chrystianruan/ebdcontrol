@@ -4,7 +4,7 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}" />
-<link rel="stylesheet" href="/css/inicioClasse.css">
+<link rel="stylesheet" href="{{ cacheBust('css/inicioClasse.css') }}">
 <div id="retorno" class="retorno">
     <p></p>
 </div>
@@ -143,7 +143,7 @@
 
     <div class="info">
         <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
-        <input type="hidden" id="classe" value="{{ base64_encode(auth()->user()->sala_id) }}">
+        <input type="hidden" id="classe" value="{{ encryptId(auth()->user()->sala_id) }}">
         <h2>Relatório de presenças</h2> <hr  style="margin-bottom: 2%">
 
         <h3>Data início</h3>
@@ -198,7 +198,7 @@
 <script>
     const { jsPDF } = window.jspdf;
 </script>
-<script src="/js/relatorio-presenca.js"></script>
+<script src="{{ cacheBust('js/relatorio-presenca.js') }}"></script>
 <script>
     const ctx = document.getElementById('myChart').getContext('2d');
     const myChart = new Chart(ctx, {

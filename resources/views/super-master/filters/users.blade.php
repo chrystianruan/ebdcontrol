@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <link rel="stylesheet" href="/css/filtrosPessoa.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/filtrosPessoa.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <input type="hidden" value="{{ url('/api/congregacoes') }}" id="route-congregacoes-api">
     <div style="margin: 15px">

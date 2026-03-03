@@ -3,8 +3,8 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/inicioClasse.css">
-<link rel="stylesheet" href="/css/supermaster.css">
+<link rel="stylesheet" href="{{ cacheBust('css/inicioClasse.css') }}">
+<link rel="stylesheet" href="{{ cacheBust('css/supermaster.css') }}">
 <div class="div-btn-modal" id="div-btn-modal">
     <button class="btn-modal" id="btn-modal-liberar-cadastro"> Link de cadastro Geral</button>
     <button class="btn-modal" id="btn-modal-liberar-chamada"> Liberar chamada </button>
@@ -21,7 +21,7 @@
 </div>
 </div>
 @push('master')
-<script src="/js/master.js"></script>
+<script src="{{ cacheBust('js/master.js') }}"></script>
 @endpush
 @push('graphs')
 <script>

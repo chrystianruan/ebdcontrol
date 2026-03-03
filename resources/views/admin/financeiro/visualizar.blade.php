@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/saberFinanceiro.css">
+<link rel="stylesheet" href="{{ cacheBust('css/saberFinanceiro.css') }}">
 <div class="card-container">
 	<span class="pro" @if($financeiro->situacao == 1) style="background-color: green;" @else style="background-color: red" @endif> @if($financeiro->situacao == 1)Ativo @else Inativo @endif</span>
     <span class="pro2" @if($financeiro->id_financeiro == 1) style="background-color: green;" @else  style="background-color: red" @endif>@if($financeiro->id_financeiro == 1) Entrada @else Saída @endif</span>

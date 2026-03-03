@@ -4,8 +4,8 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/cadastroAviso.css">
-         
+<link rel="stylesheet" href="{{ cacheBust('css/cadastroAviso.css') }}">
+
 <div class="container">
         <header>Cadastro de aviso - {{$dataAtual}}</header>
         <form action="/admin/cadastro/aviso" method="POST" style="min-height: 500px">
@@ -22,29 +22,29 @@
             @endif
                 <div class="details personal">
                     <span class="title">Informações</span>
-                    
+
                     <div class="fields">
 
                         <div class="input-field">
                             <label>Título<font style="color:red;font-weight: bold">*</font></label>
                             <input type="text" name="titulo" placeholder="Digite o título do aviso" required>
                         </div>
-                                    
+
                         <div class="input-field">
-                        
+
                             <label>Descrição <font style="color:red;font-weight: bold">*</font></label>
                             <textarea  name="descricao"  style="resize: none;height: auto!important" rows=7 required> </textarea>
-                          
+
                             </div>
 
 
-                           <div> 
+                           <div>
                             <div class="input-field" >
                                 <label>Data de Post<font style="color:red;font-weight: bold">*</font></label>
                                 <input type="date" name="data_post"  required>
                             </div>
 
-                        
+
                         <div class="input-field" >
                             <label>Destinatário <font style="color:red;font-weight: bold">*</font> </label>
                             <select name="destinatario" required>
@@ -60,7 +60,7 @@
                                     <option value="{{$d -> id}}">{{$d -> nome}}</option>
                                     @endif
                                 @endforeach
-                                
+
                             </select>
                         </div>
 
@@ -82,9 +82,9 @@
                         </button>
                     </div>
 
-            
-                </div> 
-            
+
+                </div>
+
 
 
         </form>
