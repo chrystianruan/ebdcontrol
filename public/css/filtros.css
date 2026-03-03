@@ -535,6 +535,16 @@ td:last-child {
     transform: translateY(-2px);
 }
 
+.action-btn-pdf {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.action-btn-pdf:hover {
+    background: #fecaca;
+    transform: translateY(-2px);
+}
+
 /* ========== CHECKBOX E AÇÕES EM LOTE ========== */
 
 .checkbox-cell {

@@ -121,35 +121,45 @@
       <tbody>
           @foreach($chamadas as $c)
             <tr>
-              <td style="font-weight: bold; color: yellow">
+              <td>
+                <strong>
                 @foreach($salas as $s)
                     @if($s -> id == $c -> id_sala)
                         {{$s -> nome}}
                     @endif
                 @endforeach
+                </strong>
               </td>
               <td>
                   @if(date('d/m/Y', strtotime($c -> created_at)) == date('d/m/Y'))
-                      <span style="background-color: red; padding: 3px; border-radius: 5px; font-weight: bold">Hoje!</span>
+                      <span class="status-badge active">Hoje!</span>
                   @else
                     {{date('d/m/Y', strtotime($c -> created_at))}}
                   @endif
               </td>
-              <td >{{$c -> matriculados}}</td>
+              <td>{{$c -> matriculados}}</td>
               <td>{{$c -> presentes}}</td>
-              <td >{{$c -> visitantes}}</td>
+              <td>{{$c -> visitantes}}</td>
               <td>{{ $c->presentes + $c->visitantes }}</td>
               <td>{{$c -> biblias}}</td>
               <td>{{$c -> revistas}}</td>
               <td>
                   @if($c->observacoes)
-                      <i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i>
+                      <span class="status-badge pending" title="{{ $c->observacoes }}">
+                          <i class='bx bx-message-error'></i>
+                      </span>
                   @endif
               </td>
-               <td>
-                   <a href="/admin/visualizar/chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>
-                   <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
-               </td>
+              <td>
+                  <div class="table-actions">
+                      <a href="/admin/visualizar/chamada/{{$c->id}}" class="action-btn action-btn-view" title="Visualizar">
+                          <i class='bx bx-show'></i>
+                      </a>
+                      <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" class="action-btn action-btn-pdf" title="Baixar PDF">
+                          <i class='bx bxs-file-pdf'></i>
+                      </a>
+                  </div>
+              </td>
             </tr>
           @endforeach
       </tbody>
