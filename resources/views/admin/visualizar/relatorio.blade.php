@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/filtros.css">
+<link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
 
   <table style="margin: 3% 3% 0 3%">
 

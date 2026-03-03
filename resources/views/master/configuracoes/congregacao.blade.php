@@ -6,12 +6,12 @@
     <style>
         #map { height: 350px }
     </style>
-<link rel="stylesheet" href="/css/supermaster.css">
+<link rel="stylesheet" href="{{ cacheBust('css/supermaster.css') }}">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin="" />
 
 <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 
-<link rel="stylesheet" href="/css/configuracaoMaster.css">
+<link rel="stylesheet" href="{{ cacheBust('css/configuracaoMaster.css') }}">
 @include('templates.modal-obter-localizacao')
 <div class="container-d">
     <div class="container-infos">
@@ -71,8 +71,8 @@
 
 
 </div>
-    <script src="/js/generateMap.js"></script>
-    <script src="/js/configuracaoCongregacao.js"></script>
-    <script src="/js/obterLocalizacao.js"></script>
+    <script src="{{ cacheBust('js/generateMap.js') }}"></script>
+    <script src="{{ cacheBust('js/configuracaoCongregacao.js') }}"></script>
+    <script src="{{ cacheBust('js/obterLocalizacao.js') }}"></script>
 
 @endsection

@@ -1,24 +1,21 @@
 $(document).ready(function () {
-    $.post( $('#url').val(),
-        {
-            congregacao_id: $('#congregacao').val()
-        })
-        .done(function( data ) {
-        let array = getOnlyNames(data)
-        $('#nome').autocomplete({
-            source: array
-        })
-    });
+    const nomeInput = document.getElementById('nome');
+    if (!nomeInput) return;
+
+    const url = document.getElementById('url')?.value;
+    const congregacaoId = document.getElementById('congregacao')?.value;
+
+    if (!url) return;
+
+    $.post(url, { congregacao_id: congregacaoId })
+        .done(function (data) {
+            const nomes = data.map(item => item.nome);
+
+            new Awesomplete(nomeInput, {
+                list: nomes,
+                minChars: 1,
+                maxItems: 10,
+                autoFirst: false
+            });
+        });
 });
-
-function getOnlyNames(fullArray) {
-    let array = [];
-    fullArray.forEach((item) =>{
-        array.push(item.nome)
-    });
-    return array;
-}
-
-
-
-

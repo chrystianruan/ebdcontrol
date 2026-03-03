@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-    <link rel="stylesheet" href="/css/filtrosPessoa.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/filtrosPessoa.css') }}">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
     <div class="dialog" id="modal-qrCode" style="display: none">
@@ -115,8 +115,8 @@
                     <td>{{$c -> setor_nome}} </td>
                     <td>
                         <div style="display: flex; flex-direction: row">
-                            <a href="{{ url('/cadastro')."/".base64_encode($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
-                                {{ url('/cadastro')."/".base64_encode($c->id) }}
+                            <a href="{{ url('/cadastro')."/".encryptId($c->id) }}" target="_blank" style="background-color: #0056b3; color: white; padding: 5px; border-radius: 5px">
+                                {{ url('/cadastro')."/".encryptId($c->id) }}
                             </a>
                             <i class="ico-active-inactive-link-cadastro bx bx-link icon" id="ico-link-cadastro-active-{{ $c->id }}" style="@if(!$c->linkCadastroGeral || !$c->linkCadastroGeral->active)display:none; @endif color: green; font-size: 1.7em; margin: 5px 10px;; cursor: pointer"> </i>
                             <i class="ico-active-inactive-link-cadastro bx bx-unlink icon" id="ico-link-cadastro-inative-{{ $c->id }}" style="@if($c->linkCadastroGeral && $c->linkCadastroGeral->active)display:none; @endif color: red; font-size: 1.7em; margin: 5px 10px; cursor: pointer"> </i>
@@ -126,7 +126,7 @@
                         <a href="/super-master/edit/congregacao/{{$c->id}}" style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-edit icon'></i> </a>
                         <a
                             style="text-decoration: none; color:#7B4EA5; margin: 5px;float: left;cursor: pointer"
-                            onclick="openModalQrCode('{{ url('/cadastro')."/".base64_encode($c->id) }}', '{{ $c->nome }} ', '{{ $c -> setor_nome }} ')"
+                            onclick="openModalQrCode('{{ url('/cadastro')."/".encryptId($c->id) }}', '{{ $c->nome }} ', '{{ $c -> setor_nome }} ')"
                         >
                             <i class="bx bx-scan" style="font-size: 1.8em;margin: 1px; float:left"></i>
                         </a>

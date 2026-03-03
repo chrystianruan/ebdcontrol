@@ -13,7 +13,6 @@ body {
 .orientation {
   display: flex;
   justify-content: center;
-
 }
 
 .aaa {
@@ -136,7 +135,7 @@ form .title{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
-    gap: 9px; /* ajuste como quiser */
+    gap: 9px;
 }
 
 
@@ -357,9 +356,6 @@ table tbody tr:last-of-type {
     .container-hideable {
         display: none;
     }
-    .container-intern {
-        padding-bottom: 15%;
-    }
 }
 
 /*=============== MODERN TABLE STYLES ===============*/
@@ -474,6 +470,16 @@ tbody tr.disabled:hover {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+/* Coluna de ações - garantir largura mínima */
+th:last-child,
+td:last-child {
+    min-width: 80px;
+    text-align: center;
+    white-space: nowrap;
 }
 
 .action-btn {
@@ -517,6 +523,93 @@ tbody tr.disabled:hover {
 .action-btn-delete:hover {
     background: #fecaca;
     transform: translateY(-2px);
+}
+
+.action-btn-approve {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.action-btn-approve:hover {
+    background: #bbf7d0;
+    transform: translateY(-2px);
+}
+
+/* ========== CHECKBOX E AÇÕES EM LOTE ========== */
+
+.checkbox-cell {
+    width: 40px;
+    text-align: center;
+}
+
+.checkbox-cell input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #7B4EA5;
+}
+
+.row-checkbox {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+.batch-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #f8f4fc, #f0e6f6);
+    border: 1px solid #e9d5f5;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.batch-info {
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.batch-info span {
+    color: #7B4EA5;
+    font-weight: 700;
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-success:hover {
+    background: #15803d;
+    transform: translateY(-1px);
 }
 
 /* Badge de status */
@@ -612,6 +705,7 @@ tbody tr.disabled:hover {
     .table-wrapper {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        padding-right: 1px; /* Evita cortar bordas */
     }
 
     table {
@@ -1296,3 +1390,52 @@ tbody tr:hover .classes-list .class-item {
 .text-muted {
     color: #9ca3af;
 }
+
+/* ========== ALERTA DE DUPLICATA ========== */
+
+/* Badge de alerta */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.badge-warning {
+    background-color: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fcd34d;
+}
+
+.badge-warning i {
+    font-size: 12px;
+}
+
+/* Linha da tabela com duplicata */
+.row-duplicata {
+    background-color: #fffbeb !important;
+    border-left: 3px solid #f59e0b;
+}
+
+.row-duplicata:hover {
+    background-color: #fef3c7 !important;
+}
+
+/* Célula do nome com badge */
+.nome-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nome-cell strong {
+    white-space: nowrap;
+}
+
+

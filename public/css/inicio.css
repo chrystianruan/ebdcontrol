@@ -109,13 +109,14 @@
     padding: 10px;
     font-size: 15px;
     font-weight: bolder;
-    background-color: greenyellow;
-    border: 1px solid #ccc;
+    background-color: #22c55e;
+    color: #fff;
+    border: 1px solid #16a34a;
     margin: 15px 0;
     border-radius: 5px;
 }
 .btn-print:hover {
-    background-color: #45a049;
+    background-color: #16a34a;
 }
 
 .wrapper {
@@ -201,3 +202,26 @@
 .lte8 .wrapper .tooltip {
     display: none;
 }
+
+/* Dashboard stat colors - optimized for white background */
+.stat-good {
+    color: #16a34a;
+    font-weight: bold;
+}
+.stat-warning {
+    color: #d97706;
+    font-weight: bold;
+}
+.stat-bad {
+    color: #dc2626;
+    font-weight: bold;
+}
+.stat-highlight {
+    color: #7c3aed;
+    font-weight: bold;
+}
+.stat-info {
+    color: #2563eb;
+    font-weight: bold;
+}
+

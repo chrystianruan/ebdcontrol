@@ -73,11 +73,11 @@ class PessoaController extends Controller
     }
 
     public function indexCadastroGeral($congregacaoId) {
-        if (!$this->linkCadastroGeral->getLinkActive(base64_decode($congregacaoId))) {
+        if (!$this->linkCadastroGeral->getLinkActive(decryptId($congregacaoId))) {
             return abort(404);
         }
         $classes = Sala::where('id', '>', 2)
-            ->where('congregacao_id', '=', base64_decode($congregacaoId))
+            ->where('congregacao_id', '=', decryptId($congregacaoId))
             ->orderBy('nome')->get();
         $title = "Cadastro Geral";
         $route = "cadastro.pessoa.geral";
@@ -85,7 +85,7 @@ class PessoaController extends Controller
 
         $congregacao = Congregacao::select('*', DB::raw('congregacaos.id as congregacao_id'),DB::raw('setors.id as setor_id'), DB::raw('congregacaos.nome as congregacao_nome'), DB::raw('setors.nome as setor_nome'))
             ->join('setors', 'setors.id', '=', 'congregacaos.setor_id')
-            ->findOrFail(base64_decode($congregacaoId));
+            ->findOrFail(decryptId($congregacaoId));
 
         return view('/cadastro', ['classes' => $classes, 'ufs' => $this->ufs, 'publicos' => $this->publicos,
             'formations' => $this->formations, 'check' => $check, 'congregacao' => $congregacao, 'title' => $title,

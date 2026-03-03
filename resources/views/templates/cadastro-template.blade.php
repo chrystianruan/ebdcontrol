@@ -1,6 +1,6 @@
 @push('cadastro-pessoa-css')
-    <link rel="stylesheet" href="/css/cadastroClasse.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/cadastroClasse.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">
 @endpush
 <div class="row" style="margin: 2%">
     <input type="hidden" id="url" value="{{ url('/api/pessoas') }}">
@@ -32,9 +32,9 @@
                 <label>
                     <input type="checkbox"  id="scales" @if(old('scales')) checked @endif name="scales"> Menor de idade
                 </label>
-                <div class="ui-widget">
+                <div class="input-autocomplete-wrapper">
                     <label for="nome" class="label"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
-                    <input type="text" class="input" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}">
+                    <input type="text" class="input" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}" autocomplete="off">
                 </div>
                 <div class="input-field" id="nomeResp" style="display:none">
 
@@ -182,7 +182,7 @@
 </div>
 
 @push('scripts-cadastro')
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="/js/pessoas.js"></script>
-    <script src="/js/cadastroPessoa.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
+    <script src="{{ cacheBust('js/pessoas.js') }}"></script>
+    <script src="{{ cacheBust('js/cadastroPessoa.js') }}"></script>
 @endpush

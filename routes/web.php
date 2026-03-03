@@ -115,7 +115,7 @@ Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function 
     Route::post('/admin/filtro/pre-cadastros', [PreCadastroController::class, 'list']);
     Route::post('/admin/approve/pre-cadastro/{id}', [PreCadastroController::class, 'approve']);
     Route::get('/admin/edit/pre-cadastro/{id}', [PreCadastroController::class, 'edit']);
-    Route::put('/admin/update/pre-cadastro/{id}', [PreCadastroController::class, 'update']);
+    Route::put('/admin/update/pre-cadastro/{id}', [PreCadastroController::class, 'update'])->name('update.preregister');
     Route::delete('/admin/remove/pre-cadastro/{id}', [PreCadastroController::class, 'destroy']);
 
     Route::get('/admin/financeiro/geral', [AdminController::class, 'indexFinanceiroGeral']);

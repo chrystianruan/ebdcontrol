@@ -4,7 +4,7 @@
 
 {{--@section('content')--}}
 
-{{--<link rel="stylesheet" href="/css/filtros.css">--}}
+{{--<link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">--}}
 
 
 {{--@if(date('w') == 0)--}}

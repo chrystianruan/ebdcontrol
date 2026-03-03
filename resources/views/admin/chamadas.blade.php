@@ -6,10 +6,10 @@
 
 
 @push('chamadas.admin.css')
-    <link rel="stylesheet" href="/css/filtros.css">
-    <link rel="stylesheet" href="/css/formGroup.css">
-    <link rel="stylesheet" href="/css/buttonsAdmin.css">
-    <link rel="stylesheet" href="/css/modalAdmin.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
 @endpush
 
 
@@ -63,8 +63,8 @@
           </div>
       </div>
       </form>
-    </div>
 </div>
+
 
 <div class="busca">
     @if(isset($classe) || isset($mes) || isset($ano))
@@ -108,51 +108,51 @@
         <tr>
           <th>Classe</th>
           <th>Data</th>
-          <th style="text-align:center">Matriculados</th>
-          <th style="text-align:center">Presentes</th>
-          <th style="text-align:center">Visitantes</th>
-          <th style="text-align:center">Assist. Total</th>
-          <th style="text-align:center">Bíblias</th>
-          <th style="text-align:center">Revistas</th>
-          <th style="text-align:center">Observações</th>
+          <th>Matriculados</th>
+          <th>Presentes</th>
+          <th>Visitantes</th>
+          <th>Assist. Total</th>
+          <th>Bíblias</th>
+          <th>Revistas</th>
+          <th>Observações</th>
           <th>Ação</th>
         </tr>
       </thead>
-    @foreach($chamadas as $c)
       <tbody>
-        <tr>
-          <td style="font-weight: bold; color: yellow">
-            @foreach($salas as $s)
-                @if($s -> id == $c -> id_sala)
-                    {{$s -> nome}}
-                @endif
-            @endforeach
-          </td>
-          <td>
-              @if(date('d/m/Y', strtotime($c -> created_at)) == date('d/m/Y'))
-                  <span style="background-color: red; padding: 3px; border-radius: 5px; font-weight: bold">Hoje!</span>
-              @else
-                {{date('d/m/Y', strtotime($c -> created_at))}}
-              @endif
-          </td>
-          <td style="text-align:center">{{$c -> matriculados}}</td>
-          <td style="text-align:center">{{$c -> presentes}}</td>
-          <td style="text-align:center">{{$c -> visitantes}}</td>
-          <td style="text-align:center">{{ $c->presentes + $c->visitantes }}</td>
-          <td style="text-align:center">{{$c -> biblias}}</td>
-          <td style="text-align:center">{{$c -> revistas}}</td>
-          <td style="text-align:center">
-              @if($c->observacoes)
-                  <i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i>
-              @endif
-          </td>
-           <td>
-               <a href="/admin/visualizar/chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>
-               <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
-           </td>
-        </tr>
+          @foreach($chamadas as $c)
+            <tr>
+              <td style="font-weight: bold; color: yellow">
+                @foreach($salas as $s)
+                    @if($s -> id == $c -> id_sala)
+                        {{$s -> nome}}
+                    @endif
+                @endforeach
+              </td>
+              <td>
+                  @if(date('d/m/Y', strtotime($c -> created_at)) == date('d/m/Y'))
+                      <span style="background-color: red; padding: 3px; border-radius: 5px; font-weight: bold">Hoje!</span>
+                  @else
+                    {{date('d/m/Y', strtotime($c -> created_at))}}
+                  @endif
+              </td>
+              <td >{{$c -> matriculados}}</td>
+              <td>{{$c -> presentes}}</td>
+              <td >{{$c -> visitantes}}</td>
+              <td>{{ $c->presentes + $c->visitantes }}</td>
+              <td>{{$c -> biblias}}</td>
+              <td>{{$c -> revistas}}</td>
+              <td>
+                  @if($c->observacoes)
+                      <i class='bx bx-message-error' style="color:red; font-size: 1.3em"></i>
+                  @endif
+              </td>
+               <td>
+                   <a href="/admin/visualizar/chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bx-show icon'></i> </a>
+                   <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" style="text-decoration: none; color:black; margin: 5px;"><i style="font-size: 1.8em;margin: 1px;" class='bx bxs-file-pdf'></i> </a>
+               </td>
+            </tr>
+          @endforeach
       </tbody>
-    @endforeach
     </table>
   </div>
     <div class="pagination-container">

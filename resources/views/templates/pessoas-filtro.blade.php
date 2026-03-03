@@ -1,12 +1,15 @@
 @push('pessoas.admin.css')
-    <link rel="stylesheet" href="/css/filtros.css">
-    <link rel="stylesheet" href="/css/formGroup.css">
-    <link rel="stylesheet" href="/css/buttonsAdmin.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/modalPessoa.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">
 @endpush
 
 <div class="container-intern">
     <div>
         <form action="/admin/filtro/pessoa" method="GET">
+            <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
             <div class="fields">
                 <div class="filter-header">
                     <span class="title">Filtros: </span>
@@ -14,7 +17,7 @@
 
                 <div class="itens">
                     <div>
-                        <input type="text" name="nome" class="input" placeholder="Digite o nome da pessoa">
+                        <input type="text" name="nome" id="nome" class="input" placeholder="Digite o nome da pessoa" autocomplete="off">
                     </div>
 
                     <div>
@@ -45,15 +48,6 @@
                         </select>
                     </div>
 
-                    <div>
-                        <select name="niver" class="select">
-                            <option selected disabled value="">Aniversário</option>
-                            @foreach($meses_abv as $val => $name)
-                                <option value="{{$val}}">{{$val}} - {{$name}}</option>
-                            @endforeach
-
-                        </select>
-                    </div>
 
                     <div>
                         <select name="id_funcao" class="select">
@@ -83,7 +77,9 @@
 
                         </select>
                     </div>
+
                 </div>
+
                 <div class="div-buttons-filter">
                     <div class="btnFilter">
                         <button type="submit" class="btn btn-secondary">Filtrar</button>
@@ -93,6 +89,7 @@
                         <button type="reset" class="btn btn-danger">Limpar</button>
                     </div>
                 </div>
+
             </div>
         </form>
     </div>
@@ -100,7 +97,7 @@
 
 <div class="busca">
 
-    @if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($sala1) || isset($niver) || isset($paternidade_maternidade) || isset($interesse))
+    @if(isset($nome) || isset($sexo) || isset($id_funcao) || isset($situacao) || isset($sala1) || isset($paternidade_maternidade) || isset($interesse))
         <p class="tit">Buscando por:</p>
         @if(isset($nome))
             <li class="ponto">Nome: <i class="result">{{ $nome }}</i></li>
@@ -144,10 +141,6 @@
 
         @if(isset($situacao) && empty($nome))
             <li class="ponto">Situação: <i class="result">@if($situacao == 1) Ativo @else Inativo @endif</i></li>
-        @endif
-
-        @if(isset($niver) && empty($nome))
-            <li class="ponto">Aniversário: <i class="result">@foreach($meses_abv as $num => $month) @if($niver == $num) {{ $num }} - {{ $month }} @endif @endforeach</i></li>
         @endif
 
 
@@ -212,12 +205,12 @@
                             </div>
                         </td>
 
-                        <td >
+                        <td>
                             <div class="table-actions">
-                                <button class="action-btn action-btn-view" title="Visualizar">
+                                <button class="action-btn action-btn-view" title="Visualizar" data-id="{{ $pessoa->id }}" onclick="openViewPessoaModal({{ $pessoa->id }})">
                                     <i class="bx bx-show icon"></i>
                                 </button>
-                                <button class="action-btn action-btn-edit" title="Editar">
+                                <button class="action-btn action-btn-edit" title="Editar" data-id="{{ $pessoa->id }}" onclick="openEditPessoaModal({{ $pessoa->id }})">
                                     <i class="bx bx-edit icon"></i>
                                 </button>
 {{--                                <a href="/admin/visualizar/pessoa/{{$pessoa->id}}" style="text-decoration: none; color:black; margin: 5px;float: left"><i style="font-size: 1.8em;margin: 1px; float:left" class='bx bx-show icon'></i> </a>--}}
@@ -318,19 +311,55 @@
     'modalBody' => 'templates.cadastro-template',
     'routeModal' => 'cadastro.pessoa.admin',
     'closeModal' => 'closeModalRegister()',
+    'actionButton' => 'savePessoa()'
+])
+
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalBirthday',
+    'modalTitle' => 'Aniversariantes',
+    'modalBody' => 'templates.aniversariantes-lista',
+    'closeModal' => 'closeModalBirthday()',
+    'modalClass' => 'modal-wide',
 ])
 
 @include('templates.modal-admin-template', [
     'modalId' => 'modalPreRegister',
     'modalTitle' => 'Pré-Cadastros',
-    'modalBody' => 'loremipsum',
+    'modalBody' => 'templates.pre-cadastros-lista',
     'closeModal' => 'closeModalPreRegister()',
+])
+
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalEditPreCadastro',
+    'modalTitle' => 'Editar Pré-Cadastro',
+    'modalBody' => 'templates.pre-cadastro-template',
+    'routeModal' => 'update.preregister',
+    'closeModal' => 'closeEditModal()',
+    'actionButton' => 'savePreCadastro()'
+])
+
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalViewPessoa',
+    'modalTitle' => 'Visualizar Pessoa',
+    'modalBody' => 'templates.pessoa-view-template',
+    'closeModal' => 'closeViewPessoaModal()',
+    'modalClass' => 'modal-wide',
+])
+
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalEditPessoa',
+    'modalTitle' => 'Editar Pessoa',
+    'modalBody' => 'templates.pessoa-edit-template',
+    'closeModal' => 'closeEditPessoaModal()',
+    'actionButton' => 'saveEditPessoa()',
+    'modalClass' => 'modal-wide',
 ])
 
 @push('pessoas-filtro.admin.script')
     <script>
         const modalRegister = document.getElementById('modalRegister');
         const modalPreRegister = document.getElementById('modalPreRegister');
+        const modalBirthday = document.getElementById('modalBirthday');
 
 
         function openModalRegister() {
@@ -339,6 +368,32 @@
 
         function closeModalRegister() {
             modalRegister.classList.remove('active');
+            const form = document.getElementById('form-store');
+            if (form) {
+                form.reset();
+                $('#registerp').hide();
+                $('.inputprof').removeAttr('required');
+                $('#nomeResp').hide();
+                $('#numeroResp').hide();
+                $('#numero_pessoa').show();
+                $('#nome_responsavel').removeAttr('required');
+                $('#telefone_responsavel').removeAttr('required');
+            }
+            const btnSave = modalRegister.querySelector('#btnSaveEdit');
+            if (btnSave) {
+                btnSave.disabled = false;
+                btnSave.innerHTML = 'Salvar';
+            }
+        }
+
+        function openModalBirthday() {
+            modalBirthday.classList.add('active');
+            initAniversariantes();
+            getAniversariantes();
+        }
+
+        function closeModalBirthday() {
+            modalBirthday.classList.remove('active');
         }
 
         function openModalPreRegister() {
@@ -350,3 +405,32 @@
         }
     </script>
 @endpush
+
+@push('pessoas-filtro.admin.script')
+    <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const nomeInput = document.getElementById('nome');
+            if (!nomeInput) return;
+
+            const congregacaoId = document.getElementById('congregacao-input')?.value;
+
+            $.ajax({
+                url: '/api/pessoas',
+                type: 'POST',
+                data: { congregacao_id: congregacaoId },
+                success: function (data) {
+                    const nomes = data.map(item => item.nome);
+                    new Awesomplete(nomeInput, {
+                        list: nomes,
+                        minChars: 1,
+                        maxItems: 10,
+                        autoFirst: false
+                    });
+                }
+            });
+        });
+    </script>
+@endpush
+

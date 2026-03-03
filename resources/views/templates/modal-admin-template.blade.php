@@ -1,9 +1,9 @@
 @push('modal.admin.css')
-    <link rel="stylesheet" href="/css/modalAdmin.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
 @endpush
 
 <div class="modal-overlay" id="{{ $modalId }}">
-    <div class="modal">
+    <div class="modal {{ $modalClass ?? '' }}">
         <div class="modal-header">
             <h2 id="modalTitle">{{ $modalTitle }}</h2>
             <button class="modal-close" onclick="{{ $closeModal }}">
@@ -19,7 +19,9 @@
 
         <div class="modal-footer" id="modalFooter">
             <button class="btn btn-secondary" onclick="{{ $closeModal }}">Cancelar</button>
-            <button class="btn btn-primary" id="modalBtnStore">Salvar</button>
+            @if(!empty($actionButton))
+                <button class="btn btn-primary" onclick="{{ $actionButton }}" id="btnSaveEdit">Salvar</button>
+            @endif
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/filtros.css">
+<link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
 <div style="margin: 15px">
 <form action="/admin/relatorios/todos" method="POST">
     @csrf

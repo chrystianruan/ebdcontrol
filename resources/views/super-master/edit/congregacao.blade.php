@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-    <link rel="stylesheet" href="/css/supermaster.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/supermaster.css') }}">
     <div class="row" style="margin: 2%">
     <div class="col-75">
         <div class="container">

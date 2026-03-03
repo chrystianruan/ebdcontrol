@@ -11,7 +11,7 @@
                         <input type="hidden" id="link-ativo" value="@if($linkAtivo)1 @else 0 @endif">
                         <input type="hidden" id="url-cadastro" value="{{url('/master/liberar-cadastro')}}">
                         <input type="hidden" id="congregacao-cadastro" value="{{auth()->user()->congregacao_id}}">
-                        <input type="text" readonly value="{{url('/cadastro')}}/{{base64_encode(auth()->user()->congregacao_id)}}">
+                        <input type="text" readonly value="{{url('/cadastro')}}/{{encryptId(auth()->user()->congregacao_id)}}">
                         <button id="liberar-link-cadastro" class="btn-liberar" > <span id="string-liberar-bloquear">Liberar</span> link </button>
                     </div>
                 </div>
