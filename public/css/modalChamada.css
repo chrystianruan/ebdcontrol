@@ -1,0 +1,299 @@
+/* ========== MODAL CHAMADA ========== */
+
+/* Wrapper da tabela de presença no modal */
+.chamada-modal-table-wrapper {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    max-height: 320px;
+    overflow-y: auto;
+    overflow-x: hidden !important;
+}
+
+/* Tabela de presença no modal */
+.chamada-modal-table {
+    width: 100% !important;
+    min-width: unset !important;
+    margin: 0 !important;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+}
+
+.chamada-modal-table thead th {
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    position: static;
+}
+
+.chamada-modal-table tbody td {
+    padding: 10px 14px;
+    font-size: 0.85rem;
+}
+
+/* Anular min-width da última coluna que vem do filtros.css */
+.chamada-modal-table th:last-child,
+.chamada-modal-table td:last-child {
+    min-width: unset !important;
+}
+
+.chamada-modal-table tbody tr:hover {
+    transform: none;
+    box-shadow: none;
+    background: #f8f5ff;
+}
+
+.chamada-modal-table tbody tr.is-professor {
+    background: #f3f0ff;
+}
+
+.chamada-modal-table tbody tr.is-professor:hover {
+    background: #ebe5ff;
+}
+
+
+/* Toggle de presença */
+.presenca-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.presenca-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.presenca-toggle-label {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    background: #e2e8f0;
+    border-radius: 26px;
+    cursor: pointer;
+    transition: background 0.25s ease;
+}
+
+.presenca-toggle-label::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    transition: transform 0.25s ease;
+}
+
+.presenca-toggle input[type="checkbox"]:checked + .presenca-toggle-label {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.presenca-toggle input[type="checkbox"]:checked + .presenca-toggle-label::after {
+    transform: translateX(20px);
+}
+
+/* Badge de presença já marcada */
+.presenca-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.presenca-badge.presente {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.presenca-badge.presente-outra {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+/* Função badge */
+.funcao-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.funcao-badge.professor {
+    background: #f3f0ff;
+    color: #7B4EA5;
+}
+
+/* Loading */
+.chamada-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 40px 20px;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.chamada-loading-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #e2e8f0;
+    border-top-color: #7B4EA5;
+    border-radius: 50%;
+    animation: chamada-spin 0.7s linear infinite;
+}
+
+@keyframes chamada-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Empty state */
+.chamada-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.chamada-empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: #dcfce7;
+    color: #16a34a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin-bottom: 8px;
+}
+
+.chamada-empty-icon.warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.chamada-empty-state h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.chamada-empty-state p {
+    font-size: 0.88rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Errors */
+#modal-chamada-errors {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+#modal-chamada-errors ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#modal-chamada-errors ul li {
+    padding: 2px 0;
+}
+
+#modal-chamada-errors ul li::before {
+    content: '•';
+    margin-right: 6px;
+    color: #ef4444;
+}
+
+
+/* Responsivo - garantir 3 colunas visíveis no mobile */
+@media (max-width: 768px) {
+    .chamada-modal-table-wrapper {
+        max-height: 280px;
+        overflow-x: hidden !important;
+    }
+
+    .chamada-modal-table {
+        min-width: unset !important;
+        width: 100% !important;
+        table-layout: fixed;
+    }
+
+    .chamada-modal-table thead th {
+        padding: 8px 6px;
+        font-size: 0.7rem;
+        letter-spacing: 0;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .chamada-modal-table tbody td {
+        padding: 8px 6px;
+        font-size: 0.78rem;
+    }
+
+    /* Distribuição das colunas: Nome maior, Função e Presente menores */
+    .chamada-modal-table th:nth-child(1),
+    .chamada-modal-table td:nth-child(1) {
+        width: 45%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .chamada-modal-table th:nth-child(2),
+    .chamada-modal-table td:nth-child(2) {
+        width: 28%;
+    }
+
+    .chamada-modal-table th:nth-child(3),
+    .chamada-modal-table td:nth-child(3) {
+        width: 27%;
+        text-align: center;
+        min-width: unset !important;
+    }
+
+    .presenca-toggle-label {
+        width: 38px;
+        height: 22px;
+    }
+
+    .presenca-toggle-label::after {
+        width: 16px;
+        height: 16px;
+    }
+
+    .presenca-toggle input[type="checkbox"]:checked + .presenca-toggle-label::after {
+        transform: translateX(16px);
+    }
+
+    .funcao-badge {
+        padding: 2px 6px;
+        font-size: 0.65rem;
+    }
+
+    .presenca-badge {
+        padding: 3px 6px;
+        font-size: 0.65rem;
+    }
+}
+

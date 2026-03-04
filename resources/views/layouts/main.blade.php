@@ -84,6 +84,7 @@
 @stack('pessoas-filtro.admin.script')
 @stack('preRegister.admin.js')
 @stack('aniversariantes.admin.js')
+@stack('chamadas.admin.script')
 
 </body>
 </html>

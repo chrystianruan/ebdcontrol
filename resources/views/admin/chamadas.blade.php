@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/modalChamada.css') }}">
 @endpush
 
 
@@ -93,7 +94,10 @@
 </div>
 
 <div class="div-btn-register">
-  <button class="btn btn-primary" onclick="openModalRegister()">Realizar Chamada <i class="bx bx-list-plus" style="font-size: 1.5em; padding-left: 10px"></i> </button>
+  <button class="btn btn-primary" onclick="openModalRealizarChamada()">
+      <i class="bx bx-list-check" style="font-size: 1.3em;"></i>
+      Realizar Chamada
+  </button>
 </div>
 
 <div class="table-container">
@@ -247,4 +251,24 @@
 
 @endif
 </div>
+
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalRealizarChamada',
+    'modalTitle' => 'Realizar Chamada',
+    'modalBody' => 'templates.realizar-chamada-modal-template',
+    'closeModal' => 'closeModalRealizarChamada()',
+    'actionButton' => ($isDiaChamada && count($classesFaltantes) > 0) ? 'submitRealizarChamada()' : '',
+    'modalClass' => 'modal-wide',
+])
+
+@push('chamadas.admin.script')
+    <script src="{{ cacheBust('js/modalChamada.js') }}"></script>
+    @if(session('msg'))
+        <script>alert('{{ session('msg') }}');</script>
+    @endif
+    @if(session('msg2'))
+        <script>alert('{{ session('msg2') }}');</script>
+    @endif
+@endpush
+
 @endsection
