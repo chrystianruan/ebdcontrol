@@ -734,6 +734,22 @@ class AdminController extends Controller
 
         }
 
+        // Dados para o modal de realizar chamada
+        $dateChamadaDia = null;
+        $chamadaDiaCongregacaoRepository = app(\App\Http\Repositories\ChamadaDiaCongregacaoRepository::class);
+        $chamadaDiaBD = $chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        }
+
+        $chamadasHoje = Chamada::where('congregacao_id', auth()->user()->congregacao_id)
+            ->whereDate('created_at', Carbon::today())
+            ->where('chamada_padrao', true)
+            ->get();
+        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadasHoje);
+
+        $isDiaChamada = (date('w') == 0 || date('Y-m-d') == $dateChamadaDia);
+
         return view('/admin/chamadas',
             [
                 'chamadas' => $chamadas,
@@ -742,7 +758,10 @@ class AdminController extends Controller
                 'classe' => $classe,
                 'mes' => $mes,
                 'ano' => $ano,
-                'blade' => ViewEnum::CHAMADAS->value
+                'blade' => ViewEnum::CHAMADAS->value,
+                'classesFaltantes' => $classesFaltantes,
+                'isDiaChamada' => $isDiaChamada,
+                'dateChamadaDia' => $dateChamadaDia,
             ]
         );
 
