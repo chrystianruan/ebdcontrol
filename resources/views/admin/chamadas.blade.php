@@ -100,6 +100,10 @@
       <i class="bx bx-list-check" style="font-size: 1.3em;"></i>
       Realizar Chamada
   </button>
+  <button class="btn btn-secondary" onclick="openModalChamadaFisica()">
+      <i class="bx bx-printer" style="font-size: 1.3em;"></i>
+      Gerar Chamada Física
+  </button>
 </div>
 
 <div class="table-container">
@@ -161,7 +165,7 @@
                       <button class="action-btn action-btn-view" title="Visualizar" onclick="openModalVisualizarChamada({{ $c->id }})">
                           <i class='bx bx-show'></i>
                       </button>
-                      <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" class="action-btn action-btn-pdf" title="Baixar PDF">
+                      <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" target="_blank" class="action-btn action-btn-pdf" title="Baixar PDF">
                           <i class='bx bxs-file-pdf'></i>
                       </a>
                   </div>
@@ -272,9 +276,20 @@
     'modalClass' => 'modal-wide',
 ])
 
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalChamadaFisica',
+    'modalTitle' => 'Gerar Chamada Física',
+    'modalBody' => 'templates.chamada-fisica-modal-template',
+    'closeModal' => 'closeModalChamadaFisica()',
+    'actionButton' => 'gerarChamadaFisica()',
+    'actionButtonLabel' => '<i class="bx bx-printer" style="font-size: 1.2em;"></i> Gerar',
+    'modalClass' => '',
+])
+
 @push('chamadas.admin.script')
     <script src="{{ cacheBust('js/modalChamada.js') }}"></script>
     <script src="{{ cacheBust('js/modalVisualizarChamada.js') }}"></script>
+    <script src="{{ cacheBust('js/modalChamadaFisica.js') }}"></script>
     @if(session('msg'))
         <script>alert('{{ session('msg') }}');</script>
     @endif

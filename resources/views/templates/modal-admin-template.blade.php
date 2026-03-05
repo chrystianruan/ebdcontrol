@@ -20,7 +20,7 @@
         <div class="modal-footer" id="modalFooter">
             <button class="btn btn-secondary" onclick="{{ $closeModal }}">Cancelar</button>
             @if(!empty($actionButton))
-                <button class="btn btn-primary" onclick="{{ $actionButton }}" id="btnSaveEdit">Salvar</button>
+                <button class="btn btn-primary" onclick="{{ $actionButton }}" id="btnSaveEdit">{!! $actionButtonLabel ?? 'Salvar' !!}</button>
             @endif
         </div>
     </div>
