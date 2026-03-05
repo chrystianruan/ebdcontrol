@@ -8,8 +8,9 @@
 
 <div class="container-intern">
     <div>
+        <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
+
         <form action="/admin/filtro/pessoa" method="GET">
-            <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
             <div class="fields">
                 <div class="filter-header">
                     <span class="title">Filtros: </span>

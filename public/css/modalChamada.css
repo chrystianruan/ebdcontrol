@@ -224,6 +224,98 @@
     color: #ef4444;
 }
 
+/* ========== MODAL VISUALIZAR CHAMADA ========== */
+
+/* Stats grid */
+.view-chamada-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.view-chamada-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+}
+
+.view-chamada-stat-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.view-chamada-stat-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.view-chamada-stat-value.highlight-green {
+    color: #16a34a;
+}
+
+.view-chamada-stat-value.highlight-purple {
+    color: #7B4EA5;
+}
+
+/* Observações */
+.view-chamada-obs {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.88rem;
+    color: #334155;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+/* Badge ausente */
+.presenca-badge.ausente {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* Erro do modal de visualização */
+#view-chamada-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    color: #dc2626;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* Responsivo stats */
+@media (max-width: 768px) {
+    .view-chamada-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .view-chamada-stat {
+        padding: 10px 6px;
+    }
+
+    .view-chamada-stat-label {
+        font-size: 0.65rem;
+    }
+
+    .view-chamada-stat-value {
+        font-size: 1.1rem;
+    }
+}
+
 
 /* Responsivo - garantir 3 colunas visíveis no mobile */
 @media (max-width: 768px) {
@@ -254,15 +346,15 @@
     /* Distribuição das colunas: Nome maior, Função e Presente menores */
     .chamada-modal-table th:nth-child(1),
     .chamada-modal-table td:nth-child(1) {
-        width: 45%;
+        width: 50%;
         overflow: hidden;
         text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .chamada-modal-table th:nth-child(2),
     .chamada-modal-table td:nth-child(2) {
         width: 28%;
+        text-align: center;
     }
 
     .chamada-modal-table th:nth-child(3),
