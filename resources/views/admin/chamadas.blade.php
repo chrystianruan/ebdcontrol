@@ -15,6 +15,8 @@
 
 
 <div class="container-intern">
+    <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
+
     <div>
       <form action="/admin/chamadas" method="GET">
 
@@ -156,9 +158,9 @@
               </td>
               <td>
                   <div class="table-actions">
-                      <a href="/admin/visualizar/chamada/{{$c->id}}" class="action-btn action-btn-view" title="Visualizar">
+                      <button class="action-btn action-btn-view" title="Visualizar" onclick="openModalVisualizarChamada({{ $c->id }})">
                           <i class='bx bx-show'></i>
-                      </a>
+                      </button>
                       <a href="/admin/visualizar/pdf-chamada/{{$c->id}}" class="action-btn action-btn-pdf" title="Baixar PDF">
                           <i class='bx bxs-file-pdf'></i>
                       </a>
@@ -261,8 +263,18 @@
     'modalClass' => 'modal-wide',
 ])
 
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalVisualizarChamada',
+    'modalTitle' => 'Visualizar Chamada',
+    'modalBody' => 'templates.visualizar-chamada-modal-template',
+    'closeModal' => 'closeModalVisualizarChamada()',
+    'actionButton' => '',
+    'modalClass' => 'modal-wide',
+])
+
 @push('chamadas.admin.script')
     <script src="{{ cacheBust('js/modalChamada.js') }}"></script>
+    <script src="{{ cacheBust('js/modalVisualizarChamada.js') }}"></script>
     @if(session('msg'))
         <script>alert('{{ session('msg') }}');</script>
     @endif
