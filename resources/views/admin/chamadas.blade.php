@@ -15,10 +15,10 @@
 
 
 <div class="container-intern">
+    <div>
     <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
 
-    <div>
-      <form action="/admin/chamadas" method="GET">
+    <form action="/admin/chamadas" method="GET">
 
       <div class="fields">
           <div class="filter-header">
@@ -243,17 +243,17 @@
         </ul>
     </div>
 @else
-            <div class="table-header">
-                <h3 class="table-title">Chamadas</h3>
-                <span class="table-count">0 registros</span>
-            </div>
-            <div class="table-empty">
-                <div class="table-empty-icon">
-                    <i class="fas fa-users"></i>
-                </div>
-                <div class="table-empty-text">Nenhuma chamada encontrada</div>
-                <div class="table-empty-subtext">Tente ajustar os filtros ou esperar alguma chamada ser realizada</div>
-            </div>
+    <div class="table-header">
+        <h3 class="table-title">Chamadas</h3>
+        <span class="table-count">0 registros</span>
+    </div>
+    <div class="table-empty">
+        <div class="table-empty-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <div class="table-empty-text">Nenhuma chamada encontrada</div>
+        <div class="table-empty-subtext">Tente ajustar os filtros ou esperar alguma chamada ser realizada</div>
+    </div>
 
 @endif
 </div>

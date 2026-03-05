@@ -115,6 +115,12 @@ form .title{
     display: flex;
     align-items: center;
     gap: 50px;
+    background-color: #fff;
+    padding: 20px 24px;
+    border-radius: 14px;
+    box-shadow: 0 1px 8px rgba(123, 78, 165, 0.08), 0 0 1px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(123, 78, 165, 0.08);
+    margin-bottom: 4px;
 }
 
 .div-buttons-filter {
@@ -191,10 +197,11 @@ form .title{
     align-items: center;
     gap: 10px;
 
-    background-color: #7b4ea51a;
-    padding: 12px 16px;
-    border-radius: 12px;
-    margin: 16px 0;
+    background-color: transparent;
+    padding: 10px 16px;
+    border-left: 3px solid var(--first-color, #7B4EA5);
+    border-radius: 0;
+    margin: 12px 0;
 }
 
 .tit {
@@ -205,8 +212,10 @@ form .title{
 
 .result {
     background-color: #7b4ea51a;
-    padding: 2px 8px;
+    padding: 2px 10px;
     border-radius: 12px;
+    font-style: italic;
+    color: #7B4EA5;
 }
 
 i {
@@ -726,6 +735,34 @@ td:last-child {
         flex-direction: column;
         gap: 15px;
         align-items: start;
+    }
+
+    /* ===== ESPAÇAMENTO ENTRE SEÇÕES NO MOBILE ===== */
+    .fields {
+        margin-bottom: 8px;
+    }
+
+    .busca {
+        margin: 20px 0;
+        padding: 14px 16px;
+        background-color: #f8f6fb;
+        border-left: 3px solid #7B4EA5;
+        border-radius: 0 8px 8px 0;
+    }
+
+    .div-btn-register {
+        margin: 24px 0;
+        gap: 12px;
+        padding-top: 16px;
+        border-top: 1px solid #e8e0f0;
+    }
+
+    .table-container {
+        margin-top: 8px;
+    }
+
+    .container-intern {
+        gap: 0;
     }
 
 }
