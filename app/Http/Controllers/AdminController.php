@@ -128,13 +128,13 @@ class AdminController extends Controller
     }
 
     public function showFilterPessoa(Request $request) {
-        $nome = request('nome');
-        $sexo = request('sexo');
-        $paternidade_maternidade = request('paternidade_maternidade');
-        $sala1 = request('sala');
-        $interesse = request('interesse');
-        $id_funcao = request('id_funcao');
-        $situacao = request('situacao');
+        $nome = request('filter-nome');
+        $sexo = request('filter-sexo');
+        $paternidade_maternidade = request('filter-paternidade_maternidade');
+        $sala1 = request('filter-sala');
+        $interesse = request('filter-interesse');
+        $id_funcao = request('filter-id_funcao');
+        $situacao = request('filter-situacao');
         $niver = request('niver');
 
         $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');

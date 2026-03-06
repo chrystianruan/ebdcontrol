@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    const nomeInput = document.getElementById('nome');
+    const nomeInput = document.getElementById('filter-nome');
     if (!nomeInput) return;
 
     const url = document.getElementById('url')?.value;

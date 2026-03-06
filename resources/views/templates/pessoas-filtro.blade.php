@@ -18,11 +18,13 @@
 
                 <div class="itens">
                     <div>
-                        <input type="text" name="nome" id="nome" class="input" placeholder="Digite o nome da pessoa" autocomplete="off">
+                        <div class="input-autocomplete-wrapper">
+                            <input type="text" name="nome" id="filter-nome" class="input" placeholder="Digite o nome da pessoa" autocomplete="off">
+                        </div>
                     </div>
 
                     <div>
-                        <select name="sexo" class="select">
+                        <select name="filter-sexo" class="select">
                             <option selected disabled value="">Sexo</option>
                             <option value="1">Masculino</option>
                             <option value="2">Feminino</option>
@@ -30,7 +32,7 @@
                     </div>
 
                     <div>
-                        <select name="paternidade_maternidade" class="select">
+                        <select name="filter-paternidade_maternidade" class="select">
                             <option selected disabled value="">Paternidade/Maternidade</option>
                             <option value="Pai">Pai</option>
                             <option value="Mãe">Mãe</option>
@@ -39,7 +41,7 @@
                     </div>
 
                     <div>
-                        <select name="sala" class="select">
+                        <select name="filter-sala" class="select">
                             <option selected disabled value="">Classe</option>
                             @foreach($salas as $sala)
                                 @if($sala -> id > 2)
@@ -51,7 +53,7 @@
 
 
                     <div>
-                        <select name="id_funcao" class="select">
+                        <select name="filter-id_funcao" class="select">
                             <option selected disabled value="">Função</option>
                             @foreach($funcoes as $func)
                                 <option value="{{ $func->id }}">{{ $func->nome }}</option>
@@ -61,7 +63,7 @@
                     </div>
 
                     <div>
-                        <select name="interesse" class="select">
+                        <select name="filter-interesse" class="select">
                             <option selected disabled value="">Interesse</option>
                             <option value="1">Sim</option>
                             <option value="2">Não</option>
@@ -71,7 +73,7 @@
                     </div>
 
                     <div>
-                        <select name="situacao" class="select">
+                        <select name="filter-situacao" class="select">
                             <option selected disabled value="">Situação</option>
                             <option value="1">Ativo</option>
                             <option value="2">Inativo</option>
@@ -408,28 +410,5 @@
 @push('pessoas-filtro.admin.script')
     <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            const nomeInput = document.getElementById('nome');
-            if (!nomeInput) return;
-
-            const congregacaoId = document.getElementById('congregacao-input')?.value;
-
-            $.ajax({
-                url: '/api/pessoas',
-                type: 'POST',
-                data: { congregacao_id: congregacaoId },
-                success: function (data) {
-                    const nomes = data.map(item => item.nome);
-                    new Awesomplete(nomeInput, {
-                        list: nomes,
-                        minChars: 1,
-                        maxItems: 10,
-                        autoFirst: false
-                    });
-                }
-            });
-        });
-    </script>
 @endpush
 

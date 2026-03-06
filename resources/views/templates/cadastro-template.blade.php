@@ -32,7 +32,7 @@
                 <label>
                     <input type="checkbox"  id="scales" @if(old('scales')) checked @endif name="scales"> Menor de idade
                 </label>
-                <div class="input-autocomplete-wrapper">
+                <div class="input-field">
                     <label for="nome" class="label"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
                     <input type="text" class="input" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}" autocomplete="off">
                 </div>
