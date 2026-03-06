@@ -100,10 +100,43 @@ class RelatorioController extends Controller {
         return view('admin.visualizar.relatorio', compact(['chamadas', 'relatorio']));
     }
 
+    /**
+     * Retorna os dados completos do relatório para o modal (AJAX).
+     */
+    public function getModalRelatorio(string $date) {
+        try {
+            $dados = $this->classeDestaqueService->getDadosModalRelatorio($date, auth()->user()->congregacao_id);
+
+            if (!empty($dados['vazio'])) {
+                return response()->json(['vazio' => true, 'mensagem' => 'Nenhum dado encontrado para esta data.'], 200);
+            }
+
+            return response()->json($dados, 200);
+        } catch (\Exception $e) {
+            Log::error('Erro ao carregar modal de relatório: ' . $e->getMessage());
+            return response()->json(['erro' => 'Erro ao carregar os dados do relatório.'], 500);
+        }
+    }
+
     public function generatePdfRelatorioChamada(string $date) : Response {
         $chamadas = $this->chamadaRepository->findByCreatedAtAndCongregacao(auth()->user()->congregacao_id, $date);
         $relatorio = $this->chamadaRepository->getSumOfChamadasFindByCreatedAt($date);
-        return Pdf::loadView('/admin/visualizar/pdf-relatorio', compact(['relatorio', 'chamadas']))
+
+        $chamadasComSala = Chamada::with('sala')
+            ->where('congregacao_id', auth()->user()->congregacao_id)
+            ->whereDate('created_at', $date)
+            ->get();
+
+        $destaques   = $this->classeDestaqueService->calcularDestaques($chamadasComSala);
+        $piores      = $this->classeDestaqueService->calcularPioresIndices($chamadasComSala);
+        $comparativo = $this->classeDestaqueService->calcularComparativo($date, auth()->user()->congregacao_id);
+
+        $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
+        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadasComSala);
+
+        return Pdf::loadView('/admin/visualizar/pdf-relatorio', compact([
+                'relatorio', 'chamadas', 'destaques', 'piores', 'comparativo', 'classesFaltantes'
+            ]))
             ->setPaper('a4', 'landscape')
             ->stream('relatorio.pdf');
     }

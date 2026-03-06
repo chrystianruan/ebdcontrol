@@ -8,6 +8,8 @@
 <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/tabs-relatorios.css') }}">
+<link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
+<link rel="stylesheet" href="{{ cacheBust('css/modalRelatorio.css') }}">
 <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
 
 <div class="container-intern">
@@ -114,10 +116,10 @@
                                 @endif
                             </span>
                             <div class="list-card-actions">
-                                <a href="/admin/visualizar/relatorio/{{ $dateParam }}" class="card-action-view" title="Ver relatório">
+                                <button type="button" class="card-action-view btn-abrir-modal-relatorio" data-date="{{ $dateParam }}" title="Ver relatório">
                                     <i class='bx bx-show'></i>
-                                </a>
-                                <a href="/admin/visualizar/pdf-relatorio/{{ $dateParam }}" class="card-action-pdf" title="Baixar PDF">
+                                </button>
+                                <a href="/admin/visualizar/pdf-relatorio/{{ $dateParam }}" target="_blank" class="card-action-pdf" title="Baixar PDF">
                                     <i class='bx bxs-file-pdf'></i>
                                 </a>
                             </div>
@@ -332,6 +334,26 @@
 @if(session('msg2'))
     <script>alert('{{ session('msg2') }}');</script>
 @endif
+
+{{-- ===== Modal de Visualizar Relatório ===== --}}
+<div class="modal-overlay" id="modalVisualizarRelatorio">
+    <div class="modal modal-wide">
+        <div class="modal-header">
+            <h2>Visualizar Relatório</h2>
+            <button class="modal-close" onclick="fecharModalRelatorio()">
+                <i class="bx bx-x"></i>
+            </button>
+        </div>
+        <div class="modal-body" id="relatorio-modal-body">
+            {{-- Conteúdo carregado via JS --}}
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="fecharModalRelatorio()">Fechar</button>
+        </div>
+    </div>
+</div>
+
+<script src="{{ cacheBust('js/modalRelatorio.js') }}"></script>
 
 @endsection
 

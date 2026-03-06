@@ -147,6 +147,7 @@ Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function 
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
     Route::get('/admin/relatorios', [RelatorioController::class, 'gerarRelatorio']);
     Route::get('/admin/visualizar/relatorio/{date}', [RelatorioController::class, 'show']);
+    Route::get('/admin/api/relatorio-modal/{date}', [RelatorioController::class, 'getModalRelatorio'])->name('relatorio.modal.data');
     Route::get('/admin/visualizar/pdf-relatorio/{date}', [RelatorioController::class, 'generatePdfRelatorioChamada']);
 
     Route::get('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'showRelatorioPresenca'])->name('relatorios.presenca-classe');

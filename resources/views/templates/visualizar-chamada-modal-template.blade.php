@@ -69,6 +69,22 @@
             </div>
         </div>
 
+        {{-- Métricas de porcentagem --}}
+        <div class="view-chamada-stats" style="margin-top: 10px;">
+            <div class="view-chamada-stat">
+                <span class="view-chamada-stat-label">% Presentes</span>
+                <span class="view-chamada-stat-value highlight-green" id="view-chamada-perc-presentes">-</span>
+            </div>
+            <div class="view-chamada-stat">
+                <span class="view-chamada-stat-label">% Bíblias</span>
+                <span class="view-chamada-stat-value" id="view-chamada-perc-biblias">-</span>
+            </div>
+            <div class="view-chamada-stat">
+                <span class="view-chamada-stat-label">% Revistas</span>
+                <span class="view-chamada-stat-value" id="view-chamada-perc-revistas">-</span>
+            </div>
+        </div>
+
         <div id="view-chamada-obs-section" style="display:none; margin-top: 12px;">
             <label class="label" style="margin-bottom: 4px;">
                 <i class='bx bx-message-detail' style="margin-right: 4px;"></i>Observações

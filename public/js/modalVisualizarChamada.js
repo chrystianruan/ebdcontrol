@@ -58,6 +58,14 @@ $(document).ready(function () {
                 $('#view-chamada-biblias').text(chamada.biblias);
                 $('#view-chamada-revistas').text(chamada.revistas);
 
+                // Preencher percentuais
+                var fmtPerc = function(val) {
+                    return String(Number(val).toFixed(1)).replace('.', ',') + '%';
+                };
+                $('#view-chamada-perc-presentes').text(fmtPerc(chamada.perc_presentes));
+                $('#view-chamada-perc-biblias').text(fmtPerc(chamada.perc_biblias));
+                $('#view-chamada-perc-revistas').text(fmtPerc(chamada.perc_revistas));
+
                 // Observações
                 if (chamada.observacoes) {
                     $('#view-chamada-obs').text(chamada.observacoes);

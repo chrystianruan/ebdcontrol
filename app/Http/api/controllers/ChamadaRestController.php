@@ -43,6 +43,8 @@ class ChamadaRestController extends Controller
             ];
         });
 
+        $assistTotal = $chamada->presentes + $chamada->visitantes;
+
         return response()->json([
             'chamada' => [
                 'classe' => $chamada->sala->nome,
@@ -50,10 +52,13 @@ class ChamadaRestController extends Controller
                 'matriculados' => $chamada->matriculados,
                 'presentes' => $chamada->presentes,
                 'visitantes' => $chamada->visitantes,
-                'assist_total' => $chamada->presentes + $chamada->visitantes,
+                'assist_total' => $assistTotal,
                 'biblias' => $chamada->biblias,
                 'revistas' => $chamada->revistas,
                 'observacoes' => $chamada->observacoes,
+                'perc_presentes' => $chamada->matriculados > 0 ? round(100 * $chamada->presentes / $chamada->matriculados, 1) : 0,
+                'perc_biblias' => $assistTotal > 0 ? round(100 * $chamada->biblias / $assistTotal, 1) : 0,
+                'perc_revistas' => $assistTotal > 0 ? round(100 * $chamada->revistas / $assistTotal, 1) : 0,
             ],
             'presencas' => $presencasFormatted,
         ]);
