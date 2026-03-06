@@ -47,7 +47,7 @@
                 </li>
 
                 <li class="nav__item">
-                    <a href="#skills" class="nav__link @if($blade == "relatorios") active-link @endif">
+                    <a href="/admin/relatorios" class="nav__link @if($blade == App\Http\Enums\ViewEnum::RELATORIOS) active-link @endif">
                         <i class='bx bx-trending-up nav__icon'></i>
                         <span class="nav__name">Relatórios</span>
                     </a>

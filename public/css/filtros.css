@@ -11,21 +11,29 @@ body {
 }
 
 .orientation {
-  display: flex;
-  justify-content: center;
+    display: flex;
 }
 
 .aaa {
-  font-size: 20px;
-  text-align: center;
-  padding: 10px 20px;
-  background-color: #3652f4; /* Red */
-  color: white;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    padding: 12px 18px;
+    background: #fef3c7;
+    color: #92400e;
+    border-left: 3px solid #f59e0b;
+    border-radius: 0 8px 8px 0;
+    line-height: 1.5;
+}
 
-  margin: 10px;
-  border-radius: 5px;
-  border-color: black;
+.aaa p {
+    margin: 0;
+}
 
+.aaa span {
+    color: #b45309;
 }
 
 .link-wpp {

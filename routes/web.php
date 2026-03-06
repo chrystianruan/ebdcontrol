@@ -145,8 +145,7 @@ Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function 
     Route::get('/admin/visualizar/pdf-folha-frequencia/{id}/{date}', [ChamadaAdminController::class, 'printFolhaFrequencia']);
     Route::get('/admin/relatorios/cadastro', [AdminController::class, 'indexRelatorioToday']);
     Route::post('/admin/relatorios/cadastro', [AdminController::class, 'storeRelatorioToday']);
-    Route::get('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
-    Route::post('/admin/relatorios/todos', [RelatorioController::class, 'gerarRelatorio']);
+    Route::get('/admin/relatorios', [RelatorioController::class, 'gerarRelatorio']);
     Route::get('/admin/visualizar/relatorio/{date}', [RelatorioController::class, 'show']);
     Route::get('/admin/visualizar/pdf-relatorio/{date}', [RelatorioController::class, 'generatePdfRelatorioChamada']);
 

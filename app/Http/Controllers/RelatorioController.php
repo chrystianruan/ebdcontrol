@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Http\Enums\ViewEnum;
 use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\ChamadaRepository;
 use App\Http\Repositories\SalaRepository;
@@ -39,18 +40,38 @@ class RelatorioController extends Controller {
             if ($chamadaDiaBD) {
                 $dateChamadaDia = $chamadaDiaBD->date;
             }
-            $relatorios = $this->chamadaRepository->getSumOfChamadasFindByMesOrYear($request->mes, $request->ano);
+
+            if ($request->mes && $request->ano) {
+                $mes = $request->mes;
+                $ano = $request->ano;
+            } else {
+                $mes = (int) date('n');
+                $ano = (int) date('Y');
+            }
+
+            $relatorios = $this->chamadaRepository->getSumOfChamadasFindByMesOrYear($mes, $ano);
             $chamadas = Chamada::where('congregacao_id', auth()->user()->congregacao_id)
                 ->whereDate('created_at', Carbon::today())
                 ->where('chamada_padrao', true)
                 ->get();
             $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
             $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);
+            $blade = ViewEnum::RELATORIOS;
 
-            return view('/admin/relatorios/todos', compact(['relatorios', 'meses_abv', 'chamadas', 'salas', 'classesFaltantes', 'dateChamadaDia']));
+            return view('/admin/relatorios/todos', compact([
+                'relatorios',
+                'meses_abv',
+                'chamadas',
+                'salas',
+                'classesFaltantes',
+                'dateChamadaDia',
+                'blade',
+                'mes',
+                'ano'
+            ]));
         } catch (\Exception $e) {
             Log::error($e->getMessage());
-            return redirect('/admin/relatorios/todos')->with('msg2', 'Erro ao gerar relatório');
+            return redirect('/admin/relatorios')->with('msg2', 'Erro ao gerar relatório');
         }
     }
 

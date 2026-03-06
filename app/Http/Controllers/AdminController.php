@@ -706,33 +706,29 @@ class AdminController extends Controller
             ->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        if ($request->classe || $request->mes || $request->ano) {
+        if ($request->mes && $request->ano) {
 
-        $chamadas = Chamada::where('congregacao_id', '=', auth()->user()->congregacao_id);
+            $chamadas = Chamada::where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->whereMonth('created_at', '=', $request->mes)
+                ->whereYear('created_at', '=', $request->ano);
 
-        if(isset($request -> classe)) {
-            $chamadas = $chamadas->where('id_sala', '=', $request -> classe);
+            if(isset($request->classe)) {
+                $chamadas = $chamadas->where('id_sala', '=', $request->classe);
+            }
 
-        }
-        if(isset($request -> mes))  {
-            $chamadas = $chamadas->whereMonth('created_at', '=', $request -> mes);
-
-        }
-
-        if(isset($request -> ano))  {
-            $chamadas = $chamadas->whereYear('created_at', '=', $request -> ano);
-
-        }
-
-        $chamadas = $chamadas->orderBy('created_at', 'DESC')->paginate(10)->withQueryString();;
+            $chamadas = $chamadas->orderBy('created_at', 'DESC')->get();
 
         } else {
-            $chamadas = Chamada::whereDate('created_at', Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(10)->withQueryString();;
+            $classe = null;
+            $mes = null;
+            $ano = null;
 
+            $chamadas = Chamada::whereDate('created_at', Carbon::today())
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
         }
+        $groupedChamadas = $this->groupByDate($chamadas);
 
         // Dados para o modal de realizar chamada
         $dateChamadaDia = null;
@@ -752,7 +748,7 @@ class AdminController extends Controller
 
         return view('/admin/chamadas',
             [
-                'chamadas' => $chamadas,
+                'chamadas' => $groupedChamadas,
                 'salas' => $salas,
                 'meses_abv' => $meses_abv,
                 'classe' => $classe,
@@ -765,6 +761,18 @@ class AdminController extends Controller
             ]
         );
 
+    }
+
+    private function groupByDate($chamadas) {
+        $grouped = [];
+        foreach ($chamadas as $chamada) {
+            $date = Carbon::parse($chamada->created_at)->format('d-m-Y');
+            if (!isset($grouped[$date])) {
+                $grouped[$date] = [];
+            }
+            $grouped[$date][] = $chamada;
+        }
+        return $grouped;
     }
 
     public function indexRelatorioToday() {
