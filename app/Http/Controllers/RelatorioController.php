@@ -5,6 +5,7 @@ use App\Http\Repositories\ChamadaDiaCongregacaoRepository;
 use App\Http\Repositories\ChamadaRepository;
 use App\Http\Repositories\SalaRepository;
 use App\Http\Services\ChamadaService;
+use App\Http\Services\ClasseDestaqueService;
 use App\Models\Chamada;
 use App\Models\Funcao;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,16 +21,19 @@ class RelatorioController extends Controller {
     private $salaRepository;
     private $chamadaService;
     private $chamadaDiaCongregacaoRepository;
+    private $classeDestaqueService;
     public function __construct(ChamadaRepository $chamadaRepository,
                                 SalaRepository $salaRepository,
                                 ChamadaService  $chamadaService,
-                                ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository
+                                ChamadaDiaCongregacaoRepository $chamadaDiaCongregacaoRepository,
+                                ClasseDestaqueService $classeDestaqueService
     )
     {
         $this->chamadaRepository = $chamadaRepository;
         $this->salaRepository = $salaRepository;
         $this->chamadaService = $chamadaService;
         $this->chamadaDiaCongregacaoRepository = $chamadaDiaCongregacaoRepository;
+        $this->classeDestaqueService = $classeDestaqueService;
     }
 
     public function gerarRelatorio(Request $request) {
@@ -50,6 +54,18 @@ class RelatorioController extends Controller {
             }
 
             $relatorios = $this->chamadaRepository->getSumOfChamadasFindByMesOrYear($mes, $ano);
+
+            // Calcular destaques por data
+            $destaquesPorData = [];
+            foreach ($relatorios as $r) {
+                $dateKey = date('Y-m-d', strtotime($r->created_at));
+                $chamadasDoDia = Chamada::with('sala')
+                    ->where('congregacao_id', auth()->user()->congregacao_id)
+                    ->whereDate('created_at', $dateKey)
+                    ->get();
+                $destaquesPorData[$dateKey] = $this->classeDestaqueService->calcularDestaques($chamadasDoDia);
+            }
+
             $chamadas = Chamada::where('congregacao_id', auth()->user()->congregacao_id)
                 ->whereDate('created_at', Carbon::today())
                 ->where('chamada_padrao', true)
@@ -60,6 +76,7 @@ class RelatorioController extends Controller {
 
             return view('/admin/relatorios/todos', compact([
                 'relatorios',
+                'destaquesPorData',
                 'meses_abv',
                 'chamadas',
                 'salas',

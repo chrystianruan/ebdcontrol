@@ -103,6 +103,7 @@
                         $isToday = date('d/m/Y', strtotime($r->created_at)) == date('d/m/Y');
                         $dateFormatted = date('d/m/Y', strtotime($r->created_at));
                         $dateParam = date('Y-m-d', strtotime($r->created_at));
+                        $destaques = $destaquesPorData[$dateParam] ?? null;
                     @endphp
                     <div class="list-card">
                         <div class="list-card-header">
@@ -144,6 +145,60 @@
                                 <span class="card-metric-label">Assist. Total</span>
                             </div>
                         </div>
+
+                        @if($destaques)
+                        <div class="card-destaques">
+                            <div class="card-destaques-title">
+                                <i class='bx bx-star'></i> Destaques
+                            </div>
+                            <div class="card-destaques-list">
+                                @if($destaques['maior_presenca'])
+                                <div class="card-destaque-item">
+                                    <i class='bx bx-user-check destaque-icon presenca'></i>
+                                    <div class="destaque-info">
+                                        <span class="destaque-label">Presença</span>
+                                        <span class="destaque-value">{{ $destaques['maior_presenca']['sala'] }} <em>({{ number_format($destaques['maior_presenca']['valor'], 1, ',', '.') }}%)</em></span>
+                                    </div>
+                                </div>
+                                @endif
+                                @if($destaques['maior_visitantes'])
+                                <div class="card-destaque-item">
+                                    <i class='bx bx-group destaque-icon visitantes'></i>
+                                    <div class="destaque-info">
+                                        <span class="destaque-label">Visitantes</span>
+                                        <span class="destaque-value">{{ $destaques['maior_visitantes']['sala'] }} <em>({{ $destaques['maior_visitantes']['valor'] }})</em></span>
+                                    </div>
+                                </div>
+                                @endif
+                                @if($destaques['maior_biblias'])
+                                <div class="card-destaque-item">
+                                    <i class='bx bx-book-open destaque-icon biblias'></i>
+                                    <div class="destaque-info">
+                                        <span class="destaque-label">Bíblias</span>
+                                        <span class="destaque-value">{{ $destaques['maior_biblias']['sala'] }} <em>({{ number_format($destaques['maior_biblias']['valor'], 1, ',', '.') }}%)</em></span>
+                                    </div>
+                                </div>
+                                @endif
+                                @if($destaques['maior_revistas'])
+                                <div class="card-destaque-item">
+                                    <i class='bx bx-news destaque-icon revistas'></i>
+                                    <div class="destaque-info">
+                                        <span class="destaque-label">Revistas</span>
+                                        <span class="destaque-value">{{ $destaques['maior_revistas']['sala'] }} <em>({{ number_format($destaques['maior_revistas']['valor'], 1, ',', '.') }}%)</em></span>
+                                    </div>
+                                </div>
+                                @endif
+                            </div>
+
+                            @if($destaques['destaque_geral'])
+                            <div class="card-destaque-geral">
+                                <i class='bx bx-trophy'></i>
+                                <span>{{ $destaques['destaque_geral']['sala'] }}</span>
+                                <em>{{ $destaques['destaque_geral']['pontos'] }}/4 categorias</em>
+                            </div>
+                            @endif
+                        </div>
+                        @endif
                     </div>
                 @endforeach
             </div>
