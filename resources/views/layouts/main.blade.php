@@ -85,6 +85,7 @@
 @stack('preRegister.admin.js')
 @stack('aniversariantes.admin.js')
 @stack('chamadas.admin.script')
+@stack('scripts-relatorio-presenca')
 
 </body>
 </html>

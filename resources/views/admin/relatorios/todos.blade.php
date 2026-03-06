@@ -7,138 +7,249 @@
 <link rel="stylesheet" href="{{ cacheBust('css/cards-list.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
+<link rel="stylesheet" href="{{ cacheBust('css/tabs-relatorios.css') }}">
+<input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
+
 <div class="container-intern">
-    <div>
-        <form action="/admin/relatorios" method="GET" id="form-filtro-relatorios">
-            <div class="fields">
-                <div class="filter-header">
-                    <span class="title">Filtros: </span>
-                </div>
-                <div class="itens">
-                    <div>
-                        <select name="mes" class="select" id="filtro-rel-mes" required>
-                            <option selected disabled value="">Mês *</option>
-                            @foreach($meses_abv as $num => $nome)
-                                <option value="{{$num}}">{{$nome}} ({{$num}})</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <select name="ano" class="select" id="filtro-rel-ano" required>
-                            <option selected disabled value="">Ano *</option>
-                            @for($i = 2022; $i <= date('Y'); $i++)
-                                <option value="{{$i}}">{{$i}}</option>
-                            @endfor
-                        </select>
-                    </div>
-                </div>
-                <div class="div-buttons-filter">
-                    <div class="btnFilter">
-                        <button type="submit" class="btn btn-secondary">Filtrar</button>
-                    </div>
 
-                    <div class="btnFilter">
-                        <button type="reset" class="btn btn-danger">Limpar</button>
+    {{-- ===== TABS HEADER ===== --}}
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-btn active" data-tab="tab-chamadas">
+                <i class='bx bx-trending-up'></i> Relatórios de chamadas
+            </button>
+            <button class="tab-btn" data-tab="tab-presenca">
+                <i class='bx bx-user-check'></i> Presença por classe
+            </button>
+        </div>
+    </div>
+
+    {{-- ===== TAB 1: Relatórios de chamadas ===== --}}
+    <div class="tab-content active" id="tab-chamadas">
+        <div>
+            <form action="/admin/relatorios" method="GET" id="form-filtro-relatorios">
+                <div class="fields">
+                    <div class="filter-header">
+                        <span class="title">Filtros: </span>
+                    </div>
+                    <div class="itens">
+                        <div>
+                            <select name="mes" class="select" id="filtro-rel-mes" required>
+                                <option selected disabled value="">Mês *</option>
+                                @foreach($meses_abv as $num => $nome)
+                                    <option value="{{$num}}">{{$nome}} ({{$num}})</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <select name="ano" class="select" id="filtro-rel-ano" required>
+                                <option selected disabled value="">Ano *</option>
+                                @for($i = 2022; $i <= date('Y'); $i++)
+                                    <option value="{{$i}}">{{$i}}</option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
+                    <div class="div-buttons-filter">
+                        <div class="btnFilter">
+                            <button type="submit" class="btn btn-secondary">Filtrar</button>
+                        </div>
+
+                        <div class="btnFilter">
+                            <button type="reset" class="btn btn-danger">Limpar</button>
+                        </div>
                     </div>
                 </div>
+            </form>
+        </div>
+
+        <div class="busca">
+            <p class="tit">Buscando por:
+                <i class="result">
+                    @foreach($meses_abv as $num => $nome)
+                        @if($mes == $num) {{$nome}} @endif
+                    @endforeach
+                    / {{$ano}}
+                </i>
+            </p>
+        </div>
+
+        @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
+            @if($chamadas->count() != $salas->count())
+                <div class="orientation">
+                    <div class="aaa">
+                        @if($salas->count() - $chamadas->count() == $salas->count())
+                            <p><i class='bx bx-info-circle' style="font-size: 1.1em; vertical-align: middle;"></i> Nenhuma classe enviou a chamada hoje.</p>
+                        @elseif($salas->count() - $chamadas->count() != $salas->count() && $salas->count() - $chamadas->count() != 0)
+                            <p><i class='bx bx-info-circle' style="font-size: 1.1em; vertical-align: middle;"></i> Faltam {{ count($classesFaltantes) }} {{ count($classesFaltantes) == 1 ? 'classe' : 'classes' }}: @for($i = 0; $i < count($classesFaltantes); $i++)<span>{{ $classesFaltantes[$i]['nome'] }}@if($i+1 != count($classesFaltantes)), @endif</span>@endfor</p>
+                        @endif
+                    </div>
+                </div>
+            @endif
+        @endif
+
+        <div class="table-container">
+        @if($relatorios -> count() > 0)
+
+            <div class="cards-list-header">
+                <h3>{{ $relatorios->count() }} {{ $relatorios->count() == 1 ? 'relatório encontrado' : 'relatórios encontrados' }}</h3>
             </div>
-        </form>
-    </div>
 
-    <div class="busca">
-        <p class="tit">Buscando por:
-            <i class="result">
-                @foreach($meses_abv as $num => $nome)
-                    @if($mes == $num) {{$nome}} @endif
+            <div class="cards-grid">
+                @foreach($relatorios as $r)
+                    @php
+                        $percentual = $r->matriculados > 0 ? round(100 * $r->presentes / $r->matriculados, 1) : 0;
+                        $barClass = $percentual >= 70 ? 'high' : ($percentual >= 40 ? 'medium' : 'low');
+                        $isToday = date('d/m/Y', strtotime($r->created_at)) == date('d/m/Y');
+                        $dateFormatted = date('d/m/Y', strtotime($r->created_at));
+                        $dateParam = date('Y-m-d', strtotime($r->created_at));
+                    @endphp
+                    <div class="list-card">
+                        <div class="list-card-header">
+                            <span class="list-card-title">
+                                {{ $dateFormatted }}
+                                @if($isToday)
+                                    <span class="badge-hoje">Hoje</span>
+                                @endif
+                            </span>
+                            <div class="list-card-actions">
+                                <a href="/admin/visualizar/relatorio/{{ $dateParam }}" class="card-action-view" title="Ver relatório">
+                                    <i class='bx bx-show'></i>
+                                </a>
+                                <a href="/admin/visualizar/pdf-relatorio/{{ $dateParam }}" class="card-action-pdf" title="Baixar PDF">
+                                    <i class='bx bxs-file-pdf'></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="card-bar-container">
+                            <div class="card-bar {{ $barClass }}" style="width: {{ $percentual }}%"></div>
+                        </div>
+
+                        <div class="list-card-body">
+                            <div class="card-metric">
+                                <span class="card-metric-value presenca">{{ number_format($percentual, 1, ',', '.') }}%</span>
+                                <span class="card-metric-label">Presença</span>
+                            </div>
+                            <div class="card-metric">
+                                <span class="card-metric-value">{{ $r->presentes }}/{{ $r->matriculados }}</span>
+                                <span class="card-metric-label">Presentes</span>
+                            </div>
+                            <div class="card-metric">
+                                <span class="card-metric-value visitantes">+{{ $r->visitantes }}</span>
+                                <span class="card-metric-label">Visitantes</span>
+                            </div>
+                            <div class="card-metric">
+                                <span class="card-metric-value">{{ $r->presentes + $r->visitantes }}</span>
+                                <span class="card-metric-label">Assist. Total</span>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
-                / {{$ano}}
-            </i>
-        </p>
-    </div>
+            </div>
 
-    @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
-        @if($chamadas->count() != $salas->count())
-            <div class="orientation">
-                <div class="aaa">
-                    @if($salas->count() - $chamadas->count() == $salas->count())
-                        <p><i class='bx bx-info-circle' style="font-size: 1.1em; vertical-align: middle;"></i> Nenhuma classe enviou a chamada hoje.</p>
-                    @elseif($salas->count() - $chamadas->count() != $salas->count() && $salas->count() - $chamadas->count() != 0)
-                        <p><i class='bx bx-info-circle' style="font-size: 1.1em; vertical-align: middle;"></i> Faltam {{ count($classesFaltantes) }} {{ count($classesFaltantes) == 1 ? 'classe' : 'classes' }}: @for($i = 0; $i < count($classesFaltantes); $i++)<span>{{ $classesFaltantes[$i]['nome'] }}@if($i+1 != count($classesFaltantes)), @endif</span>@endfor</p>
-                    @endif
-                </div>
+        @else
+            <div class="cards-empty">
+                <i class='bx bx-search-alt'></i>
+                <p>Nenhum relatório encontrado</p>
             </div>
         @endif
-    @endif
-
-    <div class="table-container">
-    @if($relatorios -> count() > 0)
-
-        <div class="cards-list-header">
-            <h3>{{ $relatorios->count() }} {{ $relatorios->count() == 1 ? 'relatório encontrado' : 'relatórios encontrados' }}</h3>
         </div>
-
-        <div class="cards-grid">
-            @foreach($relatorios as $r)
-                @php
-                    $percentual = $r->matriculados > 0 ? round(100 * $r->presentes / $r->matriculados, 1) : 0;
-                    $barClass = $percentual >= 70 ? 'high' : ($percentual >= 40 ? 'medium' : 'low');
-                    $isToday = date('d/m/Y', strtotime($r->created_at)) == date('d/m/Y');
-                    $dateFormatted = date('d/m/Y', strtotime($r->created_at));
-                    $dateParam = date('Y-m-d', strtotime($r->created_at));
-                @endphp
-                <div class="list-card">
-                    <div class="list-card-header">
-                        <span class="list-card-title">
-                            {{ $dateFormatted }}
-                            @if($isToday)
-                                <span class="badge-hoje">Hoje</span>
-                            @endif
-                        </span>
-                        <div class="list-card-actions">
-                            <a href="/admin/visualizar/relatorio/{{ $dateParam }}" class="card-action-view" title="Ver relatório">
-                                <i class='bx bx-show'></i>
-                            </a>
-                            <a href="/admin/visualizar/pdf-relatorio/{{ $dateParam }}" class="card-action-pdf" title="Baixar PDF">
-                                <i class='bx bxs-file-pdf'></i>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div class="card-bar-container">
-                        <div class="card-bar {{ $barClass }}" style="width: {{ $percentual }}%"></div>
-                    </div>
-
-                    <div class="list-card-body">
-                        <div class="card-metric">
-                            <span class="card-metric-value presenca">{{ number_format($percentual, 1, ',', '.') }}%</span>
-                            <span class="card-metric-label">Presença</span>
-                        </div>
-                        <div class="card-metric">
-                            <span class="card-metric-value">{{ $r->presentes }}/{{ $r->matriculados }}</span>
-                            <span class="card-metric-label">Presentes</span>
-                        </div>
-                        <div class="card-metric">
-                            <span class="card-metric-value visitantes">+{{ $r->visitantes }}</span>
-                            <span class="card-metric-label">Visitantes</span>
-                        </div>
-                        <div class="card-metric">
-                            <span class="card-metric-value">{{ $r->presentes + $r->visitantes }}</span>
-                            <span class="card-metric-label">Assist. Total</span>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </div>
-
-    @else
-        <div class="cards-empty">
-            <i class='bx bx-search-alt'></i>
-            <p>Nenhum relatório encontrado</p>
-        </div>
-    @endif
     </div>
 
+    {{-- ===== TAB 2: Presença por classe ===== --}}
+    <div class="tab-content" id="tab-presenca">
+        <div class="fields">
+            <div class="filter-header">
+                <span class="title">Filtros: </span>
+            </div>
+
+            <div>
+                <select id="classe" class="select">
+                    <option selected disabled value="">Classe</option>
+                    @foreach($salas as $c)
+                        <option value="{{ encryptId($c->id) }}">{{ $c->nome }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <input type="text" class="input" placeholder="Data início" id="initial_date" onfocus="(this.type='date')">
+            </div>
+            <div>
+                <input type="text" class="input" placeholder="Data fim" id="final_date" onfocus="(this.type='date')">
+            </div>
+            <div class="div-buttons-filter">
+                <div class="btnFilter">
+                    <button type="button" class="btn btn-secondary" id="gerar-relatorio">
+                        <i class='bx bx-bar-chart-alt-2'></i> Gerar
+                    </button>
+                </div>
+                <div class="btnFilter">
+                    <button type="button" class="btn btn-download" id="baixar-relatorio">
+                        <i class='bx bxs-file-pdf'></i> Baixar PDF
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- Área de feedback --}}
+        <div id="presenca-feedback" style="display: none;"></div>
+
+        {{-- Estado inicial --}}
+        <div class="presenca-empty-state" id="presenca-empty-state">
+            <i class='bx bx-user-check'></i>
+            <p>Nenhum relatório gerado</p>
+            <span class="presenca-empty-sub">Selecione a classe e o período desejado para gerar o relatório de presenças</span>
+        </div>
+
+        {{-- Tabela oculta para gerar PDF --}}
+        <div style="display: none" class="table-wrapper">
+            <table id="hidden-table">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Função</th>
+                        <th>Data de nascimento</th>
+                        <th>Presenças</th>
+                    </tr>
+                </thead>
+                <tbody id="hidden-tbody-data"></tbody>
+            </table>
+        </div>
+
+        <div class="table-container" id="container-table" style="display: none;">
+            <table id="table-render">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Função</th>
+                        <th>Data de nascimento</th>
+                        <th>Presenças</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody-data"></tbody>
+            </table>
+        </div>
+
+        <div class="presenca-loader" id="loader">
+            <div class="loader"></div>
+        </div>
+    </div>
+
+</div>
+
 <script>
+    // === Tabs ===
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.tab).classList.add('active');
+        });
+    });
+
+    // === Validação filtro de chamadas ===
     document.getElementById('form-filtro-relatorios').addEventListener('submit', function(e) {
         var mes = document.getElementById('filtro-rel-mes');
         var ano = document.getElementById('filtro-rel-ano');
@@ -168,3 +279,13 @@
 @endif
 
 @endsection
+
+@push('scripts-relatorio-presenca')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" integrity="sha512-2/YdOMV+YNpanLCF5MdQwaoFRVbTmrJ4u4EpqS/USXAQNUDgI5uwYi6J98WVtJKcfe1AbgerygzDFToxAlOGEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    const { jsPDF } = window.jspdf;
+</script>
+<script src="{{ cacheBust('js/relatorio-presenca.js') }}"></script>
+@endpush
+
