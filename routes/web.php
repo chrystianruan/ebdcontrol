@@ -151,6 +151,7 @@ Route::middleware(['auth', 'admin', 'status', 'resetPassword'])->group(function 
     Route::get('/admin/visualizar/pdf-relatorio/{date}', [RelatorioController::class, 'generatePdfRelatorioChamada']);
 
     Route::get('/admin/relatorios/presenca-classe',[\App\Http\Controllers\PresencaPessoaController::class, 'showRelatorioPresenca'])->name('relatorios.presenca-classe');
+    Route::get('/admin/about', [AdminController::class, 'about']);
 
 
 

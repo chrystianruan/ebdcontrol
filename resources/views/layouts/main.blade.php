@@ -55,7 +55,7 @@
 
 
                 <li class="nav__item">
-                    <a href="#sobre" class="nav__link @if($blade == "about") active-link @endif">
+                    <a href="/admin/about" class="nav__link @if($blade == "about") active-link @endif">
                         <i class='bx bx-info-circle nav__icon'></i>
                         <span class="nav__name">Sobre</span>
                     </a>

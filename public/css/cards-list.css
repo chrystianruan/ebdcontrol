@@ -338,9 +338,10 @@
 }
 
 .card-destaques-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 10px; /* aumenta o espaço entre linhas, mantém colunas sem gap */
+    justify-items: start;
 }
 
 .card-destaque-item {
@@ -418,6 +419,7 @@
     background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
     padding: 8px 12px;
     border-radius: 8px;
+    margin-top: 10px;
     border: 1px solid #fde68a;
 }
 

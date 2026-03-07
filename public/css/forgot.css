@@ -1,30 +1,264 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-body {
-	background-color: #1d1b31;
-    font-size: 22px;
-    color: white;
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap');
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-*{
-    font-family: 'Poppins', sans-serif;
-  }
+:root {
+    --accent:       #7B4EA5;
+    --accent-light: rgba(123,78,165,0.1);
+    --bg:           #f4f6fb;
+    --surface:      #ffffff;
+    --border:       rgba(0,0,0,0.08);
+    --text:         #1e1b2e;
+    --text-muted:   rgba(30,27,46,0.45);
+}
 
-.forgot {
-    margin: 5%;
-    padding: 15px;
-    background-color: #7B4EA5;
-    border: 1px solid white;
+html, body {
+    min-height: 100vh;
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* ===== BACKGROUND (mesmo do login) ===== */
+.login-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.login-bg-glow {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+}
+
+.login-bg-glow--1 {
+    width: 500px;
+    height: 500px;
+    top: -120px;
+    left: -100px;
+    background: radial-gradient(circle, rgba(123,78,165,0.13), transparent 70%);
+}
+
+.login-bg-glow--2 {
+    width: 400px;
+    height: 400px;
+    bottom: -100px;
+    right: -80px;
+    background: radial-gradient(circle, rgba(59,130,246,0.09), transparent 70%);
+}
+
+.login-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(0,0,0,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+/* ===== LAYOUT ===== */
+.forgot-main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1.25rem;
+}
+
+/* ===== CARD ===== */
+.forgot-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2rem;
+    border: 1px solid var(--border);
+    box-shadow:
+        0 4px 6px rgba(0,0,0,0.04),
+        0 20px 60px rgba(123,78,165,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    border-radius: 15px;
-
-}
-a {
-    text-decoration: none;
-    color: white;
-    font-size: 50px;
+    animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) both;
 }
 
-i {
-    margin: 1% 4%;
-    font-size: 1.2em;
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== ÍCONE ===== */
+.forgot-icon-wrap {
+    width: 64px;
+    height: 64px;
+    border-radius: 1.25rem;
+    background: var(--accent-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.forgot-icon-wrap i {
+    font-size: 1.8rem;
+    color: var(--accent);
+}
+
+/* ===== TEXTO ===== */
+.forgot-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.6rem;
+}
+
+.forgot-desc {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.65;
+    margin-bottom: 1.75rem;
+    max-width: 320px;
+}
+
+/* ===== CONTATOS ===== */
+.forgot-contacts {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+}
+
+.forgot-contact {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    padding: 0.875rem 1rem;
+    border-radius: 0.875rem;
+    border: 1.5px solid transparent;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    text-align: left;
+}
+
+.forgot-contact:hover {
+    transform: translateX(4px);
+}
+
+.forgot-contact-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.forgot-contact-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.forgot-contact-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.forgot-contact-hint {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+}
+
+.forgot-contact-arrow {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    transition: transform 0.2s ease;
+}
+
+.forgot-contact:hover .forgot-contact-arrow {
+    transform: translateX(3px);
+}
+
+/* WhatsApp */
+.forgot-contact--whatsapp {
+    background: rgba(37,211,102,0.07);
+    border-color: rgba(37,211,102,0.18);
+}
+.forgot-contact--whatsapp:hover {
+    background: rgba(37,211,102,0.12);
+    box-shadow: 0 4px 16px rgba(37,211,102,0.12);
+}
+.forgot-contact--whatsapp .forgot-contact-icon {
+    background: rgba(37,211,102,0.12);
+    color: #128C7E;
+}
+
+/* Instagram */
+.forgot-contact--instagram {
+    background: rgba(225,48,108,0.06);
+    border-color: rgba(225,48,108,0.15);
+}
+.forgot-contact--instagram:hover {
+    background: rgba(225,48,108,0.1);
+    box-shadow: 0 4px 16px rgba(225,48,108,0.1);
+}
+.forgot-contact--instagram .forgot-contact-icon {
+    background: rgba(225,48,108,0.1);
+    color: #C13584;
+}
+
+/* Email */
+.forgot-contact--email {
+    background: rgba(123,78,165,0.06);
+    border-color: rgba(123,78,165,0.15);
+}
+.forgot-contact--email:hover {
+    background: var(--accent-light);
+    box-shadow: 0 4px 16px rgba(123,78,165,0.1);
+}
+.forgot-contact--email .forgot-contact-icon {
+    background: var(--accent-light);
+    color: var(--accent);
+}
+
+/* ===== VOLTAR ===== */
+.forgot-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    padding: 0.4rem 0.875rem;
+    border-radius: 2rem;
+    border: 1px solid var(--border);
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.forgot-back:hover {
+    color: var(--accent);
+    border-color: var(--accent-light);
+    background: var(--accent-light);
+}
+
+/* ===== RESPONSIVO ===== */
+@media (max-width: 480px) {
+    .forgot-card { padding: 2rem 1.25rem; }
 }

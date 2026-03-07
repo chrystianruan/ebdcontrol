@@ -8,4 +8,5 @@ enum ViewEnum : string
     CASE PESSOAS = "pessoas";
     CASE CHAMADAS = "chamadas";
     CASE RELATORIOS = "relatorios";
+    CASE ABOUT = "about";
 }

@@ -9,6 +9,7 @@ use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Models\Congregacao;
 use App\Models\PreCadastro;
+use App\Models\PresencaPessoa;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Pessoa;
@@ -890,8 +891,19 @@ class AdminController extends Controller
         'funcoes' => $funcoes, 'function' => $function]);
     }
 
-    public function sobre() {
-        return view('/admin/sobre');
+    public function about() {
+
+        $stats = [
+            'pessoas'  => Pessoa::all()->count(),
+            'chamadas' => Chamada::all()->count(),
+            'classes'  => Sala::where('id', '>', 2)->count(),
+            'presencas' => PresencaPessoa::all()->count()
+        ];
+
+        return view('/admin/about', [
+            'blade' => ViewEnum::ABOUT->value,
+            'stats' => $stats,
+        ]);
     }
 
 }
