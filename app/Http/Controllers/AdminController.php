@@ -193,6 +193,8 @@ class AdminController extends Controller
         $classes = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')->get();
+        $preRegisters = PreCadastro::where('congregacao', auth()->user()->congregacao_id)->count();
+        $birthdays = $this->pessoaRepository->getAniversariantesMes()->count();
         return view('/admin/filtro/pessoa',
             [
                 'pessoas' => $pessoas,
@@ -215,6 +217,8 @@ class AdminController extends Controller
                 'id_funcao' => $id_funcao,
                 'situacao' => $situacao,
                 'paternidade_maternidade' => $paternidade_maternidade,
+                'preRegisters' => $preRegisters,
+                'birthdays' => $birthdays
             ]
         );
     }

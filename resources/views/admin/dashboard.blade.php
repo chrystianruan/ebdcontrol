@@ -64,78 +64,21 @@
         @endif
     </div>
 
-    <div class="info" >
-      <h2>Importante</h2> <hr  style="margin-bottom: 2%">
-      <h3>Aniversariantes do mês ({{date('m')}})</h3>
-      @if($niverMes < 1) Nenhum aniversariante nesse mês @else <span class="stat-highlight">{{$niverMes}}</span> nesse mês @endif <a style="color: #2563eb" href="/admin/aniversariantes"> Aniversariantes </a>
-      <h3>Códigos das Classes</h3>
-        <div class="wrapper" style="margin-top: 10px">
-            <span style="text-align: center"> Ver Códigos </span>
-            <div class="tooltip">
-                <div style="display: flex; flex-wrap: wrap; justify-content: space-between; flex-direction: row;">
-                    @foreach($codigosClasse as $c)
-                        <p><strong>{{ $c->nome }}</strong>: {{ $c->hash }}</p>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="info" >
-        <h2>Dados Pessoas</h2> <hr  style="margin-bottom: 2%">
-        <h3>Interessados em ser professor</h3>
-        @if($interesseProf->count() < 1) Nenhum interessado @else <span class="stat-highlight">{{$interesseProf->count()}}</span> interessado(s) @endif
-        <h3>Inativos</h3>
-        @if($alunosInativos->count() < 1) Nenhum aluno inativo @else <span class="stat-highlight">{{ $alunosInativos->count() }}</span> inativo(s) @endif
-        <h3>Pré-Cadastros</h3>
-        @if($preCadastros < 1)
-            Nenhum pré-cadastro
-        @else
-            <span class="stat-highlight">
-            {{ $preCadastros }}
-        </span> registro(s)
-        @endif
-    </div>
-
-
-    <div class="info" >
-        <h2>Chamadas Físicas</h2> <hr  style="margin-bottom: 2%">
-        <h3>Classe</h3>
-       <select class="select-classe" name="classe" id="select-classe" required>
-            <option selected disabled value="">Selecionar</option>
-           @foreach($salas as $sala)
-               <option value="{{ $sala->id }}"> {{ $sala->nome }}</option>
-           @endforeach
-       </select>
-
-        <h3>Data</h3>
-
-        <input type="date" class="input-date" name="date" id="date" required>
-        <h3></h3>
-        <a id="a-visualizar-pdf" href="">
-            <button class="btn-print">Gerar chamada física</button>
-        </a>
-    </div>
-
-
-    <div class="graficoY" >
-        <canvas id="myChart" width="1200" height="1200"></canvas>
-    </div>
-
-
     <div class="graficosY" >
         <canvas id="myChartX"  width="1200" height="1200" ></canvas>
     </div>
 
-
-
-    <div class="graficosY">
-        <canvas id="myChart1"></canvas>
+    <div class="graficoY" >
+        <canvas id="myChart" width="1200" height="1200"></canvas>
     </div>
 
     <div class="graficosY">
         <canvas id="myChart2" ></canvas>
     </div>
 
+    <div class="graficosY">
+        <canvas id="myChart1"></canvas>
+    </div>
 
     <div class="graficoY" >
         <canvas id="myChart3" ></canvas>

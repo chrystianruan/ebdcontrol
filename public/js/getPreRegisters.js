@@ -262,6 +262,7 @@ function batchApprove() {
         success: function(response) {
             getPreRegisterList();
             alert(response.message || `${ids.length} pré-cadastro(s) aprovado(s) com sucesso!`);
+            window.location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Erro ao aprovar em lote:', error);
@@ -292,6 +293,7 @@ function batchDelete() {
         success: function(response) {
             getPreRegisterList();
             alert(response.message || `${ids.length} pré-cadastro(s) excluído(s) com sucesso!`);
+            window.location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Erro ao excluir em lote:', error);

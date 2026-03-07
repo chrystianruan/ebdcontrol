@@ -55,12 +55,68 @@
 
 
                 <li class="nav__item">
-                    <a href="#contactme" class="nav__link @if($blade == "configuracoes") active-link @endif">
-                        <i class='bx bx-cog nav__icon'></i>
-                        <span class="nav__name">Configurações</span>
+                    <a href="#sobre" class="nav__link @if($blade == "about") active-link @endif">
+                        <i class='bx bx-info-circle nav__icon'></i>
+                        <span class="nav__name">Sobre</span>
                     </a>
                 </li>
             </ul>
+        </div>
+        <div class="nav__user" id="nav-user">
+            <button class="nav__user-btn" id="userDropdownBtn">
+                <div class="nav__user-avatar">
+                    <i class='bx bx-user'></i>
+                </div>
+                <div class="nav__user-info">
+                    <span class="nav__user-name">{{ auth()->user()->formattedNome() }}</span>
+                    <span class="nav__user-role">{{ auth()->user()->matricula }}</span>
+                </div>
+                <i class='bx bx-chevron-down nav__user-chevron'></i>
+            </button>
+
+            <div class="nav__user-dropdown" id="userDropdown">
+                <div class="nav__user-dropdown-header">
+                    <strong>{{ auth()->user()->pessoa->nome }}</strong>
+                    <span>{{ auth()->user()->matricula }}</span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <div class="nav__user-roles">
+                    <span class="nav__user-roles-label">Permissões</span>
+                    @if (auth()->user()->permissao_id == 1) <span class="nav__user-role-badge"> Supermaster </span> @endif
+                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 ) <span class="nav__user-role-badge">Master</span> @endif
+                    <span class="nav__user-role-badge"> Comum</span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <a href="/logout" class="nav__user-dropdown-item nav__user-logout">
+                    <i class='bx bx-log-out'></i> Sair
+                </a>
+            </div>
+        </div>
+
+        {{-- Bottom Sheet (mobile) --}}
+        <div class="bottom-sheet-overlay" id="bottomSheetOverlay"></div>
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-header">
+                <div class="nav__user-avatar nav__user-avatar--lg">
+                    <i class='bx bx-user'></i>
+                </div>
+                <div>
+                    <strong>{{ auth()->user()->pessoa->nome }}</strong>
+                    <span>{{ auth()->user()->matricula }}</span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <div class="bottom-sheet-section">
+                <span class="bottom-sheet-label">Permissões</span>
+                <div class="bottom-sheet-roles">
+                    <span class="nav__user-role-badge">{{ auth()->user()->permissao->nome }}</span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <a href="/logout" class="bottom-sheet-logout">
+                <i class='bx bx-log-out'></i> Sair
+            </a>
         </div>
 
 {{--        <img src="assets/img/perfil.png" alt="" class="nav__img">--}}
@@ -87,5 +143,53 @@
 @stack('chamadas.admin.script')
 @stack('scripts-relatorio-presenca')
 
+<script>
+    const userBtn = document.getElementById('userDropdownBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const bottomSheet = document.getElementById('bottomSheet');
+    const overlay = document.getElementById('bottomSheetOverlay');
+
+    const isMobile = () => window.innerWidth < 767;
+
+    function openBottomSheet() {
+        overlay.style.display = 'block';
+        requestAnimationFrame(() => {
+            bottomSheet.classList.add('open');
+            overlay.classList.add('open');
+        });
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeBottomSheet() {
+        bottomSheet.classList.remove('open');
+        overlay.classList.remove('open');
+        setTimeout(() => overlay.style.display = 'none', 300);
+        document.body.style.overflow = '';
+    }
+
+    userBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isMobile()) {
+            openBottomSheet();
+        } else {
+            userBtn.classList.toggle('open');
+            userDropdown.classList.toggle('open');
+        }
+    });
+
+    overlay.addEventListener('click', closeBottomSheet);
+
+    document.addEventListener('click', () => {
+        userBtn.classList.remove('open');
+        userDropdown.classList.remove('open');
+    });
+
+    // Swipe down para fechar
+    let startY = 0;
+    bottomSheet.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+    bottomSheet.addEventListener('touchend', e => {
+        if (e.changedTouches[0].clientY - startY > 80) closeBottomSheet();
+    });
+</script>
 </body>
 </html>

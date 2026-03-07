@@ -153,8 +153,20 @@
 </div>
     <div class="div-btn-register">
         <button class="btn btn-primary" onclick="openModalRegister()">Cadastrar Pessoa <i class="bx bx-user-plus" style="font-size: 1.5em; padding-left: 10px"></i> </button>
-        <button class="btn btn-secondary" onclick="openModalBirthday()">Aniversariantes <i class="bx bx-cake" style="font-size: 1.5em; padding-left: 10px"></i> </button>
-        <button class="btn btn-secondary" onclick="openModalPreRegister()">Pré-Cadastros <i class="bx bx-list-ul" style="font-size: 1.5em; padding-left: 10px"></i> </button>
+        <button class="btn btn-secondary btn-notification" onclick="openModalBirthday()">
+            Aniversariantes
+            <i class="bx bx-cake" style="font-size: 1.5em; padding-left: 10px"></i>
+            @if($birthdays > 0)
+                <span class="notification-badge">{{ $birthdays }}</span>
+            @endif
+        </button>
+        <button class="btn btn-secondary btn-notification" onclick="openModalPreRegister()">
+            Pré-Cadastros
+            <i class="bx bx-list-ul" style="font-size: 1.5em; padding-left: 10px"></i>
+            @if($preRegisters > 0)
+                <span class="notification-badge">{{ $preRegisters }}</span>
+            @endif
+        </button>
     </div>
     <div class="table-container">
 

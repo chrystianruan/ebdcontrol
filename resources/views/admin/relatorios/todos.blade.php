@@ -18,10 +18,10 @@
     <div class="tabs-container">
         <div class="tabs-header">
             <button class="tab-btn active" data-tab="tab-chamadas">
-                <i class='bx bx-trending-up'></i> Relatórios de chamadas
+                <i class='bx bx-trending-up'></i> Chamadas
             </button>
             <button class="tab-btn" data-tab="tab-presenca">
-                <i class='bx bx-user-check'></i> Presença por classe
+                <i class='bx bx-user-check'></i> Presenças
             </button>
         </div>
     </div>
