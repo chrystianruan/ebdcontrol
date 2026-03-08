@@ -182,9 +182,15 @@
                 <td class="logo-cell">
                     <img src="img/logo-nova-adpar.jpg" width="90" alt="Logo">
                 </td>
+                <td class="logo-cell">
+                    <img src="img/logo_denec_full.jpg" width="90" alt="Logo">
+                </td>
                 <td class="title-cell">
                     <h3>Igreja Evangélica Assembleia de Deus em Parnamirim/RN</h3>
                     <span>Departamento de Ensino e Educação Cristã (DENEC)</span>
+                </td>
+                <td class="logo-cell">
+
                 </td>
                 <td class="logo-cell">
                     <img src="img/logo_ebd.jpg" width="65" alt="Logo EBD">
@@ -303,13 +309,13 @@
                     <td class="dp-col-melhor">
                         @if($destaques['maior_biblias'])
                             {{ $destaques['maior_biblias']['sala'] }}
-                            <span class="txt-green">({{ number_format($destaques['maior_biblias']['valor'], 1, ',', '.') }}%)</span>
+                            <span class="txt-green">({{ $destaques['maior_biblias']['quantidade'] }} ➔ {{ number_format($destaques['maior_biblias']['valor'], 1, ',', '.') }}%)</span>
                         @else - @endif
                     </td>
                     <td class="dp-col-pior">
                         @if($piores['pior_biblias'])
                             {{ $piores['pior_biblias']['sala'] }}
-                            <span class="txt-red">({{ number_format($piores['pior_biblias']['valor'], 1, ',', '.') }}%)</span>
+                            <span class="txt-red">({{ $piores['pior_biblias']['quantidade'] }} ➔ {{ number_format($piores['pior_biblias']['valor'], 1, ',', '.') }}%)</span>
                         @else - @endif
                     </td>
                 </tr>
@@ -318,13 +324,13 @@
                     <td class="dp-col-melhor">
                         @if($destaques['maior_revistas'])
                             {{ $destaques['maior_revistas']['sala'] }}
-                            <span class="txt-green">({{ number_format($destaques['maior_revistas']['valor'], 1, ',', '.') }}%)</span>
+                            <span class="txt-green">({{ $destaques['maior_revistas']['quantidade'] }} ➔ {{ number_format($destaques['maior_revistas']['valor'], 1, ',', '.') }}%)</span>
                         @else - @endif
                     </td>
                     <td class="dp-col-pior">
                         @if($piores['pior_revistas'])
                             {{ $piores['pior_revistas']['sala'] }}
-                            <span class="txt-red">({{ number_format($piores['pior_revistas']['valor'], 1, ',', '.') }}%)</span>
+                            <span class="txt-red">({{ $piores['pior_revistas']['quantidade'] }} ➔ {{ number_format($piores['pior_revistas']['valor'], 1, ',', '.') }}%)</span>
                         @else - @endif
                     </td>
                 </tr>

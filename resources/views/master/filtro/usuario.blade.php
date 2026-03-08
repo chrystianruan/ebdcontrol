@@ -144,7 +144,6 @@
 
     $('.btn-reset-password').click(function () {
         var response = confirm('Deseja realmente resetar a senha do usuário?');
-        console.log(this);
         if (response) {
             let userId = this.id.replace("btn-reset-password-", "");
             $.ajax({

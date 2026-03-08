@@ -53,7 +53,6 @@
                     </a>
                 </li>
 
-
                 <li class="nav__item">
                     <a href="/admin/about" class="nav__link @if($blade == "about") active-link @endif">
                         <i class='bx bx-info-circle nav__icon'></i>
@@ -81,15 +80,33 @@
                 </div>
                 <div class="nav__user-dropdown-divider"></div>
                 <div class="nav__user-roles">
-                    <span class="nav__user-roles-label">Permissões</span>
-                    @if (auth()->user()->permissao_id == 1) <span class="nav__user-role-badge"> Supermaster </span> @endif
-                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 ) <span class="nav__user-role-badge">Master</span> @endif
-                    <span class="nav__user-role-badge"> Comum</span>
+                    <span class="nav__user-roles-label">Permissão Atual</span>
+                    <span class="nav__user-role-badge nav__user-role-badge--active">Admin</span>
                 </div>
                 <div class="nav__user-dropdown-divider"></div>
-                <a href="/logout" class="nav__user-dropdown-item nav__user-logout">
-                    <i class='bx bx-log-out'></i> Sair
-                </a>
+                <div class="nav__user-roles">
+                    <span class="nav__user-roles-label">Permissões Disponíveis</span>
+                    @if (auth()->user()->permissao_id == 1)
+                        <span class="nav__user-role-badge">
+                            <a href="/super-master"> Supermaster </a>
+                        </span>
+                    @endif
+                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 )
+                        <span class="nav__user-role-badge">
+                            <a href="/master">Master</a>
+                        </span>
+                    @endif
+                    <span class="nav__user-role-badge">
+                        <a href="/comum">Comum</a>
+                    </span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <form action="/logout" method="POST">
+                    @csrf
+                    <button class="nav__user-dropdown-item nav__user-logout">
+                        <i class='bx bx-log-out'></i> Sair
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -108,15 +125,40 @@
             </div>
             <div class="bottom-sheet-divider"></div>
             <div class="bottom-sheet-section">
-                <span class="bottom-sheet-label">Permissões</span>
+                <span class="bottom-sheet-label">Permissão Atual</span>
                 <div class="bottom-sheet-roles">
-                    <span class="nav__user-role-badge">{{ auth()->user()->permissao->nome }}</span>
+                    <span class="nav__user-role-badge">
+                        Admin
+                    </span>
                 </div>
             </div>
             <div class="bottom-sheet-divider"></div>
-            <a href="/logout" class="bottom-sheet-logout">
-                <i class='bx bx-log-out'></i> Sair
-            </a>
+            <div class="bottom-sheet-section">
+                <span class="bottom-sheet-label">Permissões Disponíveis</span>
+                <div class="bottom-sheet-roles">
+                    @if (auth()->user()->permissao_id == 1)
+                        <span class="nav__user-role-badge">
+                            <a href="/super-master"> Supermaster </a>
+                        </span>
+                    @endif
+                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 )
+                        <span class="nav__user-role-badge">
+                            <a href="/master">Master</a>
+                        </span>
+                    @endif
+                    <span class="nav__user-role-badge">
+                        <a href="/comum">Comum</a>
+                    </span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <form action="/logout" method="POST">
+                @csrf
+                <button class="bottom-sheet-logout">
+                    <i class='bx bx-log-out'></i>
+                    Sair
+                </button>
+            </form>
         </div>
 
 {{--        <img src="assets/img/perfil.png" alt="" class="nav__img">--}}

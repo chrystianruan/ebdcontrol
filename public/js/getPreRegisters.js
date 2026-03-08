@@ -51,7 +51,6 @@ function getPreRegisterList(page = 1) {
             'Accept': 'application/json',
         },
         success: function(response) {
-            console.log('Pessoas:', response);
             renderList(response);
         },
         error: function(xhr, status, error) {

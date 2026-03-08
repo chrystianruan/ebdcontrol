@@ -25,6 +25,7 @@
         {{-- LOGOS --}}
         <div class="login-logos">
             <img src="/img/logo-nova-adpar.png" alt="ADPAR" height="48">
+            <img src="/img/logo_denec_full.png" alt="DENEC" height="80">
             <div class="login-logos-divider"></div>
             <img src="/img/logo_ebd_extend.png" alt="EBDControl" height="32">
         </div>

@@ -81,7 +81,6 @@ function getAniversariantes() {
         dataType: 'json',
         headers: { 'Accept': 'application/json' },
         success: function (response) {
-            console.log(response)
             renderAniversariantes(response);
         },
         error: function (xhr, status, error) {

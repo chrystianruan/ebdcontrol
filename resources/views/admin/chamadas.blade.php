@@ -91,12 +91,12 @@
 
     <div class="div-btn-register">
       <button class="btn btn-primary" onclick="openModalRealizarChamada()">
-          <i class="bx bx-list-check" style="font-size: 1.3em;"></i>
           Realizar Chamada
+          <i class="bx bx-list-check" style="font-size: 1.3em;"></i>
       </button>
       <button class="btn btn-secondary" onclick="openModalChamadaFisica()">
-          <i class="bx bx-printer" style="font-size: 1.3em;"></i>
           Gerar Chamada Física
+          <i class="bx bx-printer" style="font-size: 1.3em;"></i>
       </button>
     </div>
 

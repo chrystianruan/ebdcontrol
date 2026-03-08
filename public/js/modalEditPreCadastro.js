@@ -284,7 +284,6 @@ function savePreCadastro() {
     btnSave.disabled = true;
     btnSave.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Salvando...';
 
-    console.log(data)
 
     $.ajax({
         url: `/api/pre-cadastros/${pessoaId}`,

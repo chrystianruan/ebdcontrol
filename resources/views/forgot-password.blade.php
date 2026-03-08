@@ -30,13 +30,13 @@
         {{-- HEADER --}}
         <h1 class="forgot-title">Esqueceu a senha?</h1>
         <p class="forgot-desc">
-            Sem problemas! Entre em contato com a secretaria da EBD por um dos canais abaixo e ela irá te ajudar a recuperar o acesso.
+            Sem problemas! Entre em contato com o DENEC Parnamirim por um dos canais abaixo e iremos te ajudar a recuperar o acesso.
         </p>
 
         {{-- CONTATOS --}}
         <div class="forgot-contacts">
 
-            <a href="https://api.whatsapp.com/send?phone=55SEU_NUMERO" target="_blank" class="forgot-contact forgot-contact--whatsapp">
+            <a href="https://api.whatsapp.com/send?phone=5584981203938" target="_blank" class="forgot-contact forgot-contact--whatsapp">
                 <div class="forgot-contact-icon">
                     <i class='bx bxl-whatsapp'></i>
                 </div>
@@ -47,7 +47,7 @@
                 <i class='bx bx-chevron-right forgot-contact-arrow'></i>
             </a>
 
-            <a href="https://instagram.com/SEU_INSTAGRAM" target="_blank" class="forgot-contact forgot-contact--instagram">
+            <a href="https://instagram.com/denec.parnamirim" target="_blank" class="forgot-contact forgot-contact--instagram">
                 <div class="forgot-contact-icon">
                     <i class='bx bxl-instagram'></i>
                 </div>
@@ -58,13 +58,13 @@
                 <i class='bx bx-chevron-right forgot-contact-arrow'></i>
             </a>
 
-            <a href="mailto:SEU_EMAIL" class="forgot-contact forgot-contact--email">
+            <a href="mailto:suporte@ebdcontrol.com" class="forgot-contact forgot-contact--email">
                 <div class="forgot-contact-icon">
                     <i class='bx bx-envelope'></i>
                 </div>
                 <div class="forgot-contact-body">
                     <span class="forgot-contact-name">E-mail</span>
-                    <span class="forgot-contact-hint">secretaria@exemplo.com</span>
+                    <span class="forgot-contact-hint">suporte@ebdcontrol.com</span>
                 </div>
                 <i class='bx bx-chevron-right forgot-contact-arrow'></i>
             </a>

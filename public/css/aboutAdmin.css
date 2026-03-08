@@ -3,7 +3,7 @@
    =================================================== */
 
 .sobre-wrapper {
-    max-width: 900px;
+    max-width: 90%;
     margin: 0 auto;
     padding: 2rem 1rem 4rem;
 }
@@ -342,6 +342,16 @@
     box-shadow: 0 4px 16px rgba(225, 48, 108, 0.13);
 }
 
+.sobre-contact-btn--email {
+    background: rgba(123,78,165,0.06);
+    border-color: rgba(123,78,165,0.15);
+    color: #7B4EA5;
+}
+.sobre-contact-btn--email:hover {
+    background: rgba(123,78,165,0.1);
+    box-shadow: 0 4px 16px rgba(123,78,165,0.1);
+}
+
 /* ===== AGRADECIMENTOS ===== */
 .sobre-agradecimentos-list {
     display: flex;
@@ -378,6 +388,9 @@
 
 /* ===== RESPONSIVO ===== */
 @media screen and (max-width: 640px) {
+    .sobre-wrapper {
+        max-width: 100%;
+    }
     .sobre-grid {
         grid-template-columns: 1fr;
     }

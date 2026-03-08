@@ -126,9 +126,12 @@
 
     {{-- FOOTER --}}
     <div class="start-footer" style="animation-delay: 0.45s">
-        <a href="/logout" class="start-logout">
-            <i class='bx bx-log-out'></i> Sair da conta
-        </a>
+        <form action="/logout" method="POST">
+            @csrf
+            <button class="start-logout" type="submit">
+                <i class='bx bx-log-out'></i> Sair da conta
+            </button>
+        </form>
     </div>
 
 </main>

@@ -177,7 +177,7 @@
                                     <i class='bx bx-book-open destaque-icon biblias'></i>
                                     <div class="destaque-info">
                                         <span class="destaque-label">Bíblias</span>
-                                        <span class="destaque-value">{{ $destaques['maior_biblias']['sala'] }} <em>({{ number_format($destaques['maior_biblias']['valor'], 1, ',', '.') }}%)</em></span>
+                                        <span class="destaque-value">{{ $destaques['maior_biblias']['sala'] }} <em>({{ $destaques['maior_biblias']['quantidade'] }} ➔ {{ number_format($destaques['maior_biblias']['valor'], 1, ',', '.') }}%)</em></span>
                                     </div>
                                 </div>
                                 @endif
@@ -186,7 +186,7 @@
                                     <i class='bx bx-news destaque-icon revistas'></i>
                                     <div class="destaque-info">
                                         <span class="destaque-label">Revistas</span>
-                                        <span class="destaque-value">{{ $destaques['maior_revistas']['sala'] }} <em>({{ number_format($destaques['maior_revistas']['valor'], 1, ',', '.') }}%)</em></span>
+                                        <span class="destaque-value">{{ $destaques['maior_revistas']['sala'] }} <em>({{ $destaques['maior_revistas']['quantidade'] }} ➔ {{ number_format($destaques['maior_revistas']['valor'], 1, ',', '.') }}%)</em></span>
                                     </div>
                                 </div>
                                 @endif
@@ -220,7 +220,6 @@
             <div class="filter-header">
                 <span class="title">Filtros: </span>
             </div>
-
             <div>
                 <select id="classe" class="select">
                     <option selected disabled value="">Classe</option>
@@ -238,12 +237,14 @@
             <div class="div-buttons-filter">
                 <div class="btnFilter">
                     <button type="button" class="btn btn-secondary" id="gerar-relatorio">
-                        <i class='bx bx-bar-chart-alt-2'></i> Gerar
+                        Gerar
+                        <i class='bx bx-bar-chart-alt-2'></i>
                     </button>
                 </div>
                 <div class="btnFilter">
                     <button type="button" class="btn btn-download" id="baixar-relatorio">
-                        <i class='bx bxs-file-pdf'></i> Baixar PDF
+                        Baixar PDF
+                        <i class='bx bxs-file-pdf'></i>
                     </button>
                 </div>
             </div>
@@ -275,17 +276,19 @@
         </div>
 
         <div class="table-container" id="container-table" style="display: none;">
-            <table id="table-render">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>Função</th>
-                        <th>Data de nascimento</th>
-                        <th>Presenças</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody-data"></tbody>
-            </table>
+            <div class="table-wrapper">
+                <table id="table-render">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Função</th>
+                            <th>Data de nascimento</th>
+                            <th>Presenças</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-data"></tbody>
+                </table>
+            </div>
         </div>
 
         <div class="presenca-loader" id="loader">

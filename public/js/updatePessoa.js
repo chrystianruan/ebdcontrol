@@ -13,7 +13,6 @@ $(document).on("change", ".select-classe", function() {
         }
         classes.push(classe)
     }
-    console.log(classes)
     $('#list-salas').val(JSON.stringify(classes));
 });
 
@@ -46,7 +45,6 @@ $(document).on("click", ".btn-tr-tbody-delete-classe", function() {
                 $('#list-salas').val(JSON.stringify(classes));
             }
         }
-        console.log(classes)
     }
 });
 

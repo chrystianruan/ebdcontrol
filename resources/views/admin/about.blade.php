@@ -12,11 +12,11 @@
         <div class="sobre-hero">
             <div class="sobre-hero-glow"></div>
             <img src="/img/logo_ebd_extend.png" alt="EBDControl" class="sobre-hero-logo">
-            <div class="sobre-hero-version">v1.0.0</div>
+            <div class="sobre-hero-version">v2.0.0</div>
             <p class="sobre-hero-tagline">Gestão inteligente para sua Escola Bíblica Dominical</p>
             <div class="sobre-hero-since">
                 <i class='bx bx-calendar-heart'></i>
-                Desenvolvido com dedicação desde 2023
+                Desenvolvido com dedicação e excelência desde 2022
             </div>
         </div>
 
@@ -30,15 +30,17 @@
                 </div>
                 <h2 class="sobre-card-title">Nossa História</h2>
                 <p class="sobre-card-text">
-                    O EBDControl nasceu em 2023 da necessidade real de organizar e modernizar a gestão da
-                    Escola Bíblica Dominical. O que começou como uma solução simples para controle de chamadas
-                    evoluiu para uma plataforma completa, reunindo cadastro de pessoas, controle de classes,
-                    relatórios de presença e muito mais — tudo pensado para facilitar o trabalho de líderes
-                    e secretários da EBD.
+                    O EBDControl nasceu da necessidade de auxiliar o Templo Sede da IEADERN Parnamirim em suas atividades
+                    durante a EBD. Visto que, àquela época, eram utilizados meios manuais e planilhas para controle de presenças,
+                    cadastros e análises de dados. Desenvolvido em 2022, o sistema passou por diversas fases de testes e melhorias,
+                    até que chegou em produção no ano de 2023, trazendo uma solução simples para os problemas existentes na época.
+                    Pouco tempo depois, o EBDControl foi disponibilizado para outras congregações, e hoje é utilizado por
+                    algumas igrejas do campo de Parnamirim.
                 </p>
                 <p class="sobre-card-text">
-                    Cada funcionalidade foi desenvolvida ouvindo quem usa no dia a dia, com foco em
-                    simplicidade, agilidade e confiabilidade.
+                    Trabalhamos sempre que possível para aprimorar o sistema, visando sempre oferecer um software eficiente,
+                    intuitivo e poderoso para a gestão da Escola Bíblica Dominical. Nosso propósito sempre foi e sempre
+                    será servir com dedicação e qualidade!
                 </p>
             </div>
 
@@ -63,7 +65,7 @@
                     </div>
                     <div class="sobre-stat-item">
                         <span class="sobre-stat-value" data-count="{{ $stats['presencas'] }}">0</span>
-                        <span class="sobre-stat-label"><i class='bx bx-shield-alt-2'></i> Presenças</span>
+                        <span class="sobre-stat-label"><i class='bx bx-user-check'></i> Presenças</span>
                     </div>
                 </div>
             </div>
@@ -74,27 +76,19 @@
                     <i class='bx bx-code-alt'></i>
                 </div>
                 <h2 class="sobre-card-title">Versão Atual</h2>
-                <div class="sobre-version-badge">v1.0.0</div>
+                <div class="sobre-version-badge">v2.0.0</div>
                 <ul class="sobre-changelog">
                     <li class="sobre-changelog-item sobre-changelog-item--new">
                         <span class="sobre-changelog-tag new">Novo</span>
-                        Cadastro e gestão completa de pessoas
+                        Nova estilização de todo ambiente admin, com design moderno e responsivo.
                     </li>
                     <li class="sobre-changelog-item sobre-changelog-item--new">
                         <span class="sobre-changelog-tag new">Novo</span>
-                        Controle de chamadas por classe
+                        Melhoria visual e adição de novas métricas aos relatórios e chamadas.
                     </li>
                     <li class="sobre-changelog-item sobre-changelog-item--new">
                         <span class="sobre-changelog-tag new">Novo</span>
-                        Relatórios de presença com gráficos
-                    </li>
-                    <li class="sobre-changelog-item sobre-changelog-item--new">
-                        <span class="sobre-changelog-tag new">Novo</span>
-                        Pré-cadastros e aniversariantes
-                    </li>
-                    <li class="sobre-changelog-item sobre-changelog-item--new">
-                        <span class="sobre-changelog-tag new">Novo</span>
-                        Geração de chamada física em PDF
+                        Nova estilização da página de login e início.
                     </li>
                 </ul>
             </div>
@@ -158,23 +152,31 @@
                 </div>
                 <h2 class="sobre-card-title">Contato & Suporte</h2>
                 <p class="sobre-card-text">
-                    Encontrou um bug, tem uma sugestão ou quer saber mais sobre o sistema?
-                    Fale diretamente com o desenvolvedor.
+                    Encontrou um bug, tem uma sugestão ou deseja ser voluntário nesse projeto?
+                    Fale diretamente com o desenvolvedor ou DENEC.
                 </p>
                 <div class="sobre-contact-links">
-                    <a href="https://api.whatsapp.com/send?phone=55SEU_NUMERO" target="_blank" class="sobre-contact-btn sobre-contact-btn--whatsapp">
+                    <a href="https://api.whatsapp.com/send?phone=5584981203938" target="_blank" class="sobre-contact-btn sobre-contact-btn--whatsapp">
                         <i class='bx bxl-whatsapp'></i>
                         <div>
                             <strong>WhatsApp</strong>
-                            <span>Suporte e dúvidas</span>
+                            <span>Contato direto com o desenvolvedor</span>
                         </div>
                         <i class='bx bx-chevron-right sobre-contact-arrow'></i>
                     </a>
-                    <a href="https://instagram.com/SEU_INSTAGRAM" target="_blank" class="sobre-contact-btn sobre-contact-btn--instagram">
+                    <a href="https://instagram.com/denec.parnamirim" target="_blank" class="sobre-contact-btn sobre-contact-btn--instagram">
                         <i class='bx bxl-instagram'></i>
                         <div>
                             <strong>Instagram</strong>
-                            <span>Acompanhe as novidades</span>
+                            <span>Perfil do DENEC</span>
+                        </div>
+                        <i class='bx bx-chevron-right sobre-contact-arrow'></i>
+                    </a>
+                    <a href="mailto:suporte@ebdcontrol.com" target="_blank" class="sobre-contact-btn sobre-contact-btn--email">
+                        <i class='bx bx-envelope'></i>
+                        <div>
+                            <strong>Email</strong>
+                            <span>suporte@ebdcontrol.com</span>
                         </div>
                         <i class='bx bx-chevron-right sobre-contact-arrow'></i>
                     </a>
@@ -182,27 +184,39 @@
             </div>
 
             {{-- AGRADECIMENTOS --}}
-            <div class="sobre-card sobre-card--agradecimentos">
+            <div class="sobre-card sobre-card--full">
                 <div class="sobre-card-icon">
                     <i class='bx bx-heart'></i>
                 </div>
                 <h2 class="sobre-card-title">Agradecimentos</h2>
                 <p class="sobre-card-text">
-                    Este sistema só existe graças às pessoas que acreditaram na ideia e contribuíram
-                    com feedback, testes e sugestões desde o início.
+                    Expressamos nossa sincera gratidão a todos que, direta ou indiretamente,
+                    contribuíram para a realização, desenvolvimento e aprimoramento deste sistema. Este projeto é fruto
+                    de apoio, colaboração e dedicação de muitas pessoas ao longo do tempo. Portanto, somos imensamente
+                    gratos a:
                 </p>
                 <div class="sobre-agradecimentos-list">
                     <div class="sobre-agradecimento-item">
+                        <i class='bx bx-bible'></i>
+                        <span>
+                            A Deus, em primeiro lugar, pelo Seu infinito amor, misericórdia e cuidado. A Ele somos gratos
+                            pela força, criatividade e capacidade concedidas para que possamos servir com dedicação e excelência!
+                        </span>
+                    </div>
+                    <div class="sobre-agradecimento-item">
                         <i class='bx bx-church'></i>
-                        <span>À nossa congregação, por ser a motivação de tudo</span>
+                        <span>
+                            A nossa IEADERN Parnamirim, pelo apoio constante, pela confiança e por proporcionar o
+                            ambiente e os recursos necessários para que este sistema pudesse ser desenvolvido e utilizado.
+                        </span>
                     </div>
                     <div class="sobre-agradecimento-item">
                         <i class='bx bx-group'></i>
-                        <span>A todos que testaram e sugeriram melhorias</span>
-                    </div>
-                    <div class="sobre-agradecimento-item">
-                        <i class='bx bx-coffee-togo'></i>
-                        <span>E muito café ☕</span>
+                        <span>
+                            Aos irmãos em Cristo que colaboraram e apoiaram este projeto ao longo do tempo, seja com
+                            ideias, incentivo ou contribuição direta. Por ordem cronológica: Abner Irineu, Ev. Assis Irineu, Pb. Domingos José,
+                            Pr. Elinaldo Renovato, Hartur e Pr. Abdênego Xavier.
+                        </span>
                     </div>
                 </div>
             </div>
@@ -210,7 +224,7 @@
         </div>
 
         <div class="sobre-footer">
-            <p>EBDControl &copy; {{ date('Y') }} &mdash; Feito com <i class='bx bxs-heart' style="color:#e05"></i> para a obra de Deus</p>
+            <p>EBDControl &copy; {{ date('Y') }} &mdash; Feito com dedicação e excelência para a obra de Deus</p>
         </div>
 
     </div>

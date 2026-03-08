@@ -13,13 +13,19 @@
         margin-bottom: 3%;
         position: relative;
     }
+    /* ===== Cabecalho ===== */
+    .header-table { width: 100%; border: none;}
+    .header-table td { border: none; vertical-align: middle; padding: 0; }
+    .header-table .logo-cell { width: 70px; text-align: center; }
+    .header-table .title-cell { text-align: center; }
+    .header-table .title-cell h3 { font-size: 14px; margin: 0; }
+    .header-table .title-cell span { font-size: 11px; font-weight: normal; }
     .center {
         text-align: center;
         font-size: 12px;
-
     }
     .center-item {
-        margin-left: 5%;
+        margin-left: 2%;
         float: left;
     }
 
@@ -36,7 +42,7 @@
 
 
     .infos {
-        margin: 15% 0;
+        margin: 5% 0;
         border: 1px solid black;
         padding: 5px 12px;
         font-size: 11px;
@@ -129,14 +135,11 @@
         border: 1px solid;
         border-radius: 15px;
         padding: 0px 2px;
-
     }
 
     .normal-table {
         width: 100%;
-
         border-collapse: collapse;
-
     }
 
     .footer-fixed {
@@ -162,12 +165,26 @@
 
 <div class="container">
 
-    <div class="center">
-        <img src="img/logo-nova-adpar.jpg" class="center-item" width="100">
-        <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Ensino e Educação Cristã (DENEC) </span></h3>
-        <img class="center-item" src="img/logo_ebd.jpg" width="70">
+    <table class="header-table">
+        <tr>
+            <td class="logo-cell">
+                <img src="img/logo-nova-adpar.jpg" width="80" alt="Logo">
+            </td>
+            <td class="logo-cell">
+                <img src="img/logo_denec_full.jpg" width="75" alt="Logo">
+            </td>
+            <td class="title-cell">
+                <h3>Igreja Evangélica Assembleia de Deus em Parnamirim/RN</h3>
+                <span>Departamento de Ensino e Educação Cristã (DENEC)</span>
+            </td>
+            <td class="logo-cell">
 
-    </div>
+            </td>
+            <td class="logo-cell">
+                <img src="img/logo_ebd.jpg" width="55" alt="Logo EBD">
+            </td>
+        </tr>
+    </table>
 
     <div class="infos">
         <p>Frequência da classe: <span style="font-weight: bolder">{{ $chamada->nome }}</span>

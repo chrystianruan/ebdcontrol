@@ -299,6 +299,7 @@ class ClasseDestaqueService
     {
         $melhor = null;
         $melhorValor = -1;
+        $melhorQuantidade = -1;
 
         foreach ($chamadas as $chamada) {
             $assistTotal = $chamada->presentes + $chamada->visitantes;
@@ -306,13 +307,16 @@ class ClasseDestaqueService
                 continue;
             }
 
+            $quantidade = $chamada->biblias;
             $percentual = round(($chamada->biblias / $assistTotal) * 100, 1);
 
-            if ($percentual > $melhorValor) {
+            if ($quantidade > $melhorQuantidade && $percentual >= $melhorValor) {
+                $melhorQuantidade = $quantidade;
                 $melhorValor = $percentual;
                 $melhor = [
                     'sala'  => $this->getNomeSala($chamada),
                     'valor' => $percentual,
+                    'quantidade' => $quantidade,
                 ];
             }
         }
@@ -327,6 +331,7 @@ class ClasseDestaqueService
     {
         $melhor = null;
         $melhorValor = -1;
+        $melhorQuantidade = -1;
 
         foreach ($chamadas as $chamada) {
             $assistTotal = $chamada->presentes + $chamada->visitantes;
@@ -334,13 +339,16 @@ class ClasseDestaqueService
                 continue;
             }
 
+            $quantidade = $chamada->revistas;
             $percentual = round(($chamada->revistas / $assistTotal) * 100, 1);
 
-            if ($percentual > $melhorValor) {
+            if ($quantidade > $melhorQuantidade && $percentual >= $melhorValor) {
                 $melhorValor = $percentual;
+                $melhorQuantidade = $quantidade;
                 $melhor = [
                     'sala'  => $this->getNomeSala($chamada),
                     'valor' => $percentual,
+                    'quantidade' => $quantidade,
                 ];
             }
         }
@@ -453,18 +461,21 @@ class ClasseDestaqueService
     {
         $pior = null;
         $piorValor = PHP_FLOAT_MAX;
+        $piorQuantidade = PHP_INT_MAX;
 
         foreach ($chamadas as $chamada) {
             $assistTotal = $chamada->presentes + $chamada->visitantes;
             if ($assistTotal <= 0) {
                 continue;
             }
+            $quantidade = $chamada->biblias;
             $percentual = round(($chamada->biblias / $assistTotal) * 100, 1);
-            if ($percentual < $piorValor) {
+            if ($quantidade < $piorQuantidade && $percentual < $piorValor) {
                 $piorValor = $percentual;
                 $pior = [
                     'sala'  => $this->getNomeSala($chamada),
                     'valor' => $percentual,
+                    'quantidade' => $quantidade,
                 ];
             }
         }
@@ -479,18 +490,21 @@ class ClasseDestaqueService
     {
         $pior = null;
         $piorValor = PHP_FLOAT_MAX;
+        $piorQuantidade = PHP_INT_MAX;
 
         foreach ($chamadas as $chamada) {
             $assistTotal = $chamada->presentes + $chamada->visitantes;
             if ($assistTotal <= 0) {
                 continue;
             }
+            $quantidade = $chamada->revistas;
             $percentual = round(($chamada->revistas / $assistTotal) * 100, 1);
-            if ($percentual < $piorValor) {
+            if ($quantidade < $piorQuantidade && $percentual < $piorValor) {
                 $piorValor = $percentual;
                 $pior = [
                     'sala'  => $this->getNomeSala($chamada),
                     'valor' => $percentual,
+                    'quantidade' => $quantidade,
                 ];
             }
         }

@@ -51,7 +51,14 @@
           @if(auth()->user()->pessoa_id)<a href="/comum">Comum</a>@endif
       </div>
     </div>
-    <a> <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>
+    <a>
+        <form action="/logout" method="POST">
+            @csrf
+            <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit">
+                <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i>
+            </button>
+        </form>
+    </a>
     </div>
 </div>
 <div>
