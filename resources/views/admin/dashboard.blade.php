@@ -21,7 +21,7 @@
         <p>As salas receberam <span class="stat-highlight"> @if($chamadaDia -> sum('visitantes') > 0)+@endif {{ $chamadaDia -> sum('visitantes') }}</span> visitante(s)</p>
         <h3>Bíblias e revistas</h3>
 
-        Bíblias: <span class="@if( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 80) stat-good @elseif( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('biblias') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes')) ), 1, ',')}}%</span> trouxeram
+        Bíblias: <span class="@if( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 80) stat-good @elseif( ($chamadaDia -> sum('biblias') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('biblias') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes')) ), 1, ',')}}%</span> trouxeram<br>
         Revistas: <span class="@if( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) > 80) stat-good @elseif( ($chamadaDia -> sum('revistas') * 100) / ($chamadaDia->sum('presentes') + $chamadaDia->sum('visitantes')) >= 50) stat-warning @else stat-bad @endif">{{number_format((($chamadaDia -> sum('revistas') * 100) / ($chamadaDia -> sum('presentes') + $chamadaDia -> sum('visitantes'))), 1, ',')}}%</span> trouxeram
     @else
     Nenhum Relatório

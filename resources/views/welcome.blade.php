@@ -105,6 +105,12 @@
             </button>
 
         </form>
+        <div class="login-landing-hint">
+            Ainda não conhece o EBDControl?
+            <a href="https://ebdcontrol-landing-page-dqey.vercel.app/" target="_blank" class="login-landing-link">
+                Saiba mais <i class='bx bx-link-external'></i>
+            </a>
+        </div>
 
     </div>
 </main>

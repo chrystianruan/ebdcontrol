@@ -141,9 +141,9 @@ form .title{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
     gap: 8px;
 }
-
 
 .itens {
     display: flex;
@@ -1514,3 +1514,84 @@ tbody tr:hover .classes-list .class-item {
     line-height: 1;
 }
 
+.search-inline-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.search-inline-input {
+    width: 100%;
+    padding: 0.55rem 2.75rem 0.55rem 1rem; /* espaço à direita para o botão */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #334155;
+    background: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.search-inline-input::placeholder { color: #9ca3af; }
+
+.search-inline-input:focus {
+    outline: none;
+    border-color: #7B4EA5;
+    box-shadow: 0 0 0 3px rgba(123, 78, 165, 0.1);
+}
+
+.search-inline-btn {
+    position: absolute;
+    right: 6px;
+    background: #7B4EA5;
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background 0.2s, transform 0.15s;
+}
+
+.search-inline-btn:hover {
+    background: #6a3d93;
+    transform: scale(1.08);
+}
+
+.search-inline-btn:active {
+    transform: scale(0.96);
+}
+
+/* Awesomplete fix */
+.search-inline-wrapper .awesomplete {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+}
+
+.search-inline-wrapper .awesomplete > input {
+    width: 100%;
+    padding-right: 2.5rem; /* garante espaço para o botão sobre o awesomplete */
+}
+
+@media screen and (max-width: 768px) {
+    .div-btn-register {
+        flex-direction: row; /* mantém botões em linha */
+        flex-wrap: wrap;
+    }
+
+    .search-inline-wrapper {
+        order: 9; /* vai para depois de todos os botões */
+        width: 100%;
+        flex: none;
+    }
+
+    .search-inline-input {
+        width: 100%;
+    }
+}

@@ -30,7 +30,7 @@
         {{-- HEADER --}}
         <h1 class="forgot-title">Esqueceu a senha?</h1>
         <p class="forgot-desc">
-            Sem problemas! Entre em contato com o DENEC Parnamirim por um dos canais abaixo e iremos te ajudar a recuperar o acesso.
+            Sem problemas! Entre em contato conosco por um dos canais abaixo e iremos te ajudar a recuperar o acesso.
         </p>
 
         {{-- CONTATOS --}}
@@ -53,7 +53,7 @@
                 </div>
                 <div class="forgot-contact-body">
                     <span class="forgot-contact-name">Instagram</span>
-                    <span class="forgot-contact-hint">Mande uma mensagem direta</span>
+                    <span class="forgot-contact-hint">Perfil do DENEC Parnamirim</span>
                 </div>
                 <i class='bx bx-chevron-right forgot-contact-arrow'></i>
             </a>

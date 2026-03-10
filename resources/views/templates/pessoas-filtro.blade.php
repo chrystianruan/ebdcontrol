@@ -10,19 +10,13 @@
     <div>
         <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
 
-        <form action="/admin/filtro/pessoa" method="GET">
+        <form action="/admin/filtro/pessoa" method="GET" id="form-filtro">
             <div class="fields">
                 <div class="filter-header">
                     <span class="title">Filtros: </span>
                 </div>
 
                 <div class="itens">
-                    <div>
-                        <div class="input-autocomplete-wrapper">
-                            <input type="text" name="nome" id="filter-nome" class="input" placeholder="Digite o nome da pessoa" autocomplete="off">
-                        </div>
-                    </div>
-
                     <div>
                         <select name="filter-sexo" class="select">
                             <option selected disabled value="">Sexo</option>
@@ -152,6 +146,20 @@
     @endif
 </div>
     <div class="div-btn-register">
+        <div class="search-inline-wrapper">
+            <input
+                type="text"
+                name="filter-nome"
+                form="form-filtro"
+                id="filter-nome"
+                class="search-inline-input"
+                placeholder="Buscar pessoa..."
+                autocomplete="off"
+            >
+            <button type="submit" form="form-filtro" class="search-inline-btn" title="Buscar">
+                <i class="bx bx-search"></i>
+            </button>
+        </div>
         <button class="btn btn-primary" onclick="openModalRegister()">Cadastrar Pessoa <i class="bx bx-user-plus" style="font-size: 1.5em; padding-left: 10px"></i> </button>
         <button class="btn btn-secondary btn-notification" onclick="openModalBirthday()">
             Aniversariantes

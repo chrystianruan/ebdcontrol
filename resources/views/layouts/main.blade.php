@@ -13,12 +13,13 @@
     @stack('chamadas.admin.css')
     @stack('modal.admin.css')
     <title>EBDControl</title>
+    <link rel="icon" type="image/png" href="/img/logo_ebd.png" />
 </head>
 <body>
 <header class="header" id="header">
     <nav class="nav container">
         <div class="div-nav__logo">
-            <a href="#" class="nav__logo">
+            <a href="/admin" class="nav__logo">
                 <img width="140"  src="/img/logo_ebd_extend.png" alt="logo_ebd">
             </a>
         </div>

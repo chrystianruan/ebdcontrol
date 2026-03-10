@@ -130,45 +130,45 @@ class AdminController extends Controller
 
     public function showFilterPessoa(Request $request) {
         $nome = request('filter-nome');
-        $sexo = request('filter-sexo');
-        $paternidade_maternidade = request('filter-paternidade_maternidade');
-        $sala1 = request('filter-sala');
-        $interesse = request('filter-interesse');
-        $id_funcao = request('filter-id_funcao');
-        $situacao = request('filter-situacao');
-        $niver = request('niver');
+        $sexo = empty($nome) ? request('filter-sexo') : null;
+        $paternidade_maternidade = empty($nome) ? request('filter-paternidade_maternidade') : null;
+        $sala1 = empty($nome) ? request('filter-sala') : null;
+        $interesse = empty($nome) ? request('filter-interesse') : null;
+        $id_funcao = empty($nome) ? request('filter-id_funcao') : null;
+        $situacao = empty($nome) ? request('filter-situacao') : null;
+        $niver = empty($nome) ? request('niver') : null;
 
         $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
-        if ($request->nome) {
-            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
+        if ($nome) {
+            $pessoas = $pessoas->where([['nome', 'like', '%'.$nome.'%']]);
         }
 
-        if ($request->sexo) {
-            $pessoas = $pessoas->where('sexo', $request->sexo);
+        if ($sexo) {
+            $pessoas = $pessoas->where('sexo', $sexo);
         }
 
-        if ($request->paternidade_maternidade) {
-            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
+        if ($paternidade_maternidade) {
+            $pessoas = $pessoas->where('paternidade_maternidade', $paternidade_maternidade);
         }
 
-        if ($request->sala) {
-            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
+        if ($sala1) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $sala1);
         }
 
-        if($request->id_funcao) {
-            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
+        if($id_funcao) {
+            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $id_funcao);
         }
 
-        if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse);
+        if($interesse) {
+            $pessoas = $pessoas->where('interesse', $interesse);
         }
 
-        if ($request->situacao) {
-            $pessoas = $pessoas->where('situacao', $request->situacao);
+        if ($situacao) {
+            $pessoas = $pessoas->where('situacao', $situacao);
         }
 
-        if ($request->niver) {
-            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
+        if ($niver) {
+            $pessoas = $pessoas->whereMonth('data_nasc', $niver);
         }
 
         $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
