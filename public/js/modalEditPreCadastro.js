@@ -215,7 +215,7 @@ function toggleProfessorFields() {
 }
 
 function fillEditForm(pessoa) {
-    document.getElementById('editPessoaId').value = pessoa.id;
+    document.getElementById('editPreCadastroPessoaId').value = pessoa.id;
     document.getElementById('editNome').value = pessoa.nome || '';
     document.getElementById('editDataNasc').value = pessoa.data_nasc ? pessoa.data_nasc.split('T')[0] : '';
     document.getElementById('editSexo').value = pessoa.sexo || '';
@@ -231,7 +231,7 @@ function fillEditForm(pessoa) {
     document.getElementById('editEstado').value = pessoa.id_uf || '';
     document.getElementById('editFormacao').value = pessoa.id_formation || '';
     document.getElementById('editCurso').value = pessoa.curso || '';
-    document.getElementById('editInteresseProfessor').checked = pessoa.interesse == 1;
+    document.getElementById('editInteresseProfessor').checked = pessoa.interesse == 1 || pessoa.interesse == 3;
 
     // Campos do professor
     document.getElementById('editFrequenciaEbd').value = pessoa.frequencia_ebd || '';
@@ -245,7 +245,7 @@ function fillEditForm(pessoa) {
 }
 
 function savePreCadastro() {
-    const pessoaId = document.getElementById('editPessoaId').value;
+    const pessoaId = document.getElementById('editPreCadastroPessoaId').value;
     const form = document.getElementById('formEditPreCadastro');
 
     if (!form.checkValidity()) {

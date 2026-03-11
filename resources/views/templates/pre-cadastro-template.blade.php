@@ -5,7 +5,7 @@
 
 <form id="formEditPreCadastro" style="display: none;">
     <input type="hidden" id="editCongregacao" value="{{ encryptId(auth()->user()->congregacao_id) }}">
-    <input type="hidden" id="editPessoaId">
+    <input type="hidden" id="editPreCadastroPessoaId">
 
     <div class="form-row">
         <div class="form-group">
@@ -78,7 +78,7 @@
         <div class="form-group">
             <label for="editCidade">Cidade</label>
             <input type="text" id="editCidade" class="input">
-        </div>table-wrapper
+        </div>
     </div>
 
     <div class="form-row">

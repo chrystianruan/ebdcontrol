@@ -6,11 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cadastro Geral - {{ $congregacao->congregacao_nome }} | {{$congregacao->setor_nome}}</title>
     <link rel="icon" type="imagem/png" href="/img/logo_ebd.png" />
-    <link rel="stylesheet" href="{{ cacheBust('css/rootAdmin.css') }}">
-    <link rel="stylesheet" href="{{ cacheBust('css/navbarAdmin.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/cadastroClasse.css') }}">
-    <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 </head>
 <body>
 @if(session('msg'))

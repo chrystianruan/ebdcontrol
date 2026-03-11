@@ -329,7 +329,7 @@
 @include('templates.modal-admin-template', [
     'modalId' => 'modalRegister',
     'modalTitle' => 'Cadastro',
-    'modalBody' => 'templates.cadastro-template',
+    'modalBody' => 'templates.modal-cadastro-template',
     'routeModal' => 'cadastro.pessoa.admin',
     'closeModal' => 'closeModalRegister()',
     'actionButton' => 'savePessoa()'
@@ -430,5 +430,6 @@
 @push('pessoas-filtro.admin.script')
     <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
+    <script src="{{ cacheBust('js/pessoas.js') }}"></script>
 @endpush
 
