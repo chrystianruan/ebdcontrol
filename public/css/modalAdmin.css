@@ -210,6 +210,9 @@ body:has(.modal-overlay.active) {
         grid-template-columns: 1fr;
         gap: 12px;
     }
+    .padding-minor {
+        padding: 0 !important;
+    }
 }
 
 /* Modal largo */

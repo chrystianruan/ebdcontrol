@@ -31,12 +31,7 @@
                 <input type="hidden" name="route" value="{{ url('/admin/chamadas') }}">
 
                 {{-- Tabela de Pessoas --}}
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <i class='bx bx-group' style="margin-right: 6px;"></i>
-                        <span id="modal-span-nome-classe"></span> — {{ date('d/m/Y') }}
-                    </div>
-
+                <div class="form-section padding-minor">
                     <div class="chamada-modal-table-wrapper">
                         <table class="chamada-modal-table">
                             <thead>
@@ -56,7 +51,7 @@
                 <div class="form-section">
                     <div class="form-section-title">
                         <i class='bx bx-bar-chart-alt-2' style="margin-right: 6px;"></i>
-                        Dados da Chamada
+                        Dados da Chamada - <span id="modal-span-nome-classe"></span>
                     </div>
 
                     <div class="form-row">
