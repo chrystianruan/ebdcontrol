@@ -632,3 +632,49 @@ document.addEventListener('keydown', function(e) {
         if (editModal && editModal.classList.contains('active')) closeEditPessoaModal();
     }
 });
+
+function confirmDeletePessoa() {
+    const nome = document.getElementById('editPessoaNome').value;
+    const id = document.getElementById('editPessoaId').value;
+
+    const confirmado = confirm(
+        `⚠️ ATENÇÃO\n\nVocê está prestes a apagar permanentemente:\n"${nome}"\n\nEssa ação não pode ser desfeita. Confirma?`
+    );
+
+    if (!confirmado) return;
+
+    // segundo confirm para garantir
+    const confirmado2 = confirm(`Tem absoluta certeza? "${nome}" será removida definitivamente do sistema.`);
+    if (!confirmado2) return;
+
+    deletePessoa(id);
+}
+
+function deletePessoa(pessoaId) {
+    const modal = document.getElementById('modalEditPessoa');
+    const btnSave = modal.querySelector('#btnSaveEdit');
+    btnSave.disabled = true;
+    btnSave.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Salvando...';
+
+    $.ajax({
+        url: `/delete-pessoa/${pessoaId}`,
+        type: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        success: function() {
+            closeEditPessoaModal();
+            alert('Pessoa deletada com sucesso!');
+            window.location.reload();
+        },
+        error: function(xhr) {
+            let msg = 'Erro ao deletar a pessoa. Tente novamente.';p
+            alert(msg);
+        },
+        complete: function() {
+            btnSave.disabled = false;
+            btnSave.innerHTML = 'Salvar';
+        }
+    });
+}

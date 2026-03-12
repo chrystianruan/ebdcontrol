@@ -4,7 +4,7 @@
 .chamada-modal-table-wrapper {
     border-radius: 10px;
     border: 1px solid #e2e8f0;
-    max-height: 320px;
+    max-height: 420px;
     overflow-y: auto;
     overflow-x: hidden !important;
 }
@@ -320,7 +320,7 @@
 /* Responsivo - garantir 3 colunas visíveis no mobile */
 @media (max-width: 768px) {
     .chamada-modal-table-wrapper {
-        max-height: 280px;
+        max-height: 380px;
         overflow-x: hidden !important;
     }
 

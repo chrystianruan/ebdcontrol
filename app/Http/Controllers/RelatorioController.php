@@ -138,7 +138,7 @@ class RelatorioController extends Controller {
                 'relatorio', 'chamadas', 'destaques', 'piores', 'comparativo', 'classesFaltantes'
             ]))
             ->setPaper('a4', 'landscape')
-            ->stream('relatorio.pdf');
+            ->download('relatorio_'.date('d-m-Y', strtotime($relatorio->created_at)).'.pdf');
     }
 
 

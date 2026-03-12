@@ -205,4 +205,24 @@
             </div>
         </div>
     </div>
+    <div class="form-section danger-zone">
+        <h4 class="form-section-title danger-zone-title">
+            <i class="bx bx-error-circle"></i> Zona de Cautela
+        </h4>
+        <p class="danger-zone-desc">
+            <strong>Apagar pessoa do sistema</strong><br><br>
+            Essa função só deve ser usada dentro do sistema se houver a real necessidade
+            de exclusão definitiva, como por exemplo:
+        </p>
+        <ul class="danger-zone-list">
+            <li><i class="bx bx-x"></i> Duplicação de cadastro</li>
+            <li><i class="bx bx-x"></i> Saída definitiva da pessoa da congregação</li>
+        </ul>
+        <p class="danger-zone-warn">
+            Só clique no botão abaixo se tiver a certeza de que há necessidade de apagar esta pessoa.
+        </p>
+        <button type="button" class="btn-delete-pessoa" onclick="confirmDeletePessoa()">
+            <i class="bx bx-trash"></i> Apagar pessoa permanentemente
+        </button>
+    </div>
 </form>
