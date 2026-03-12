@@ -24,6 +24,8 @@ html, body {
     font-family: 'Sora', sans-serif;
     background: var(--bg);
     color: var(--text);
+    overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 a { text-decoration: none; }

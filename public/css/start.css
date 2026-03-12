@@ -39,6 +39,7 @@ html, body {
     font-family: var(--font-main);
     color: var(--text);
     overflow-x: hidden;
+    overflow-y: hidden;
 }
 
 a { text-decoration: none; color: inherit; }
