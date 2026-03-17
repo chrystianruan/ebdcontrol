@@ -11,7 +11,7 @@
     @stack('dash.admin.css')
     @stack('pessoas.admin.css')
     @stack('chamadas.admin.css')
-    @stack('modal.admin.css')
+    @stack('relatorios.admin.css')
     <title>EBDControl</title>
     <link rel="icon" type="image/png" href="/img/logo_ebd.png" />
 </head>

@@ -3,6 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
+@push('relatorios.admin.css')
 <link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/cards-list.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
@@ -10,6 +11,8 @@
 <link rel="stylesheet" href="{{ cacheBust('css/tabs-relatorios.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
 <link rel="stylesheet" href="{{ cacheBust('css/modalRelatorio.css') }}">
+@endpush
+
 <input type="hidden" id="url-get-chamadas" value="{{ route('relatorios.presenca-classe-post') }}">
 
 <div class="container-intern">
@@ -356,16 +359,17 @@
     </div>
 </div>
 
-<script src="{{ cacheBust('js/modalRelatorio.js') }}"></script>
+
+@push('scripts-relatorio-presenca')
+    <script src="{{ cacheBust('js/modalRelatorio.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" integrity="sha512-2/YdOMV+YNpanLCF5MdQwaoFRVbTmrJ4u4EpqS/USXAQNUDgI5uwYi6J98WVtJKcfe1AbgerygzDFToxAlOGEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const { jsPDF } = window.jspdf;
+    </script>
+    <script src="{{ cacheBust('js/relatorio-presenca.js') }}"></script>
+@endpush
 
 @endsection
 
-@push('scripts-relatorio-presenca')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" integrity="sha512-qZvrmS2ekKPF2mSznTQsxqPgnpkI4DNTlrdUmTzrDgektczlKNRRhy5X5AAOnx5S09ydFYWWNSfcEqDTTHgtNA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" integrity="sha512-2/YdOMV+YNpanLCF5MdQwaoFRVbTmrJ4u4EpqS/USXAQNUDgI5uwYi6J98WVtJKcfe1AbgerygzDFToxAlOGEQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script>
-    const { jsPDF } = window.jspdf;
-</script>
-<script src="{{ cacheBust('js/relatorio-presenca.js') }}"></script>
-@endpush
 

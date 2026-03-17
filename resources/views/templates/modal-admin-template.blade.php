@@ -1,7 +1,3 @@
-@push('modal.admin.css')
-    <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
-@endpush
-
 <div class="modal-overlay" id="{{ $modalId }}">
     <div class="modal {{ $modalClass ?? '' }}">
         <div class="modal-header">

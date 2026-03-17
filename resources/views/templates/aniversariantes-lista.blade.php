@@ -1,9 +1,3 @@
-@push('pessoas.admin.css')
-    <link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
-    <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
-    <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
-@endpush
-
 <div class="container-intern">
     <div>
         <form method="GET" onsubmit="event.preventDefault(); getAniversariantes(); return false;">

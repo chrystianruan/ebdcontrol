@@ -3,9 +3,9 @@
     <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/modalPessoa.css') }}">
-{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">--}}
+    <link rel="stylesheet" href="{{ cacheBust('css/modalAdmin.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">
 @endpush
-
 <div class="container-intern">
     <div>
         <input type="hidden" value="{{ encryptId(auth()->user()->congregacao_id)  }}" name="congregacao_id" id="congregacao-input">
@@ -426,7 +426,7 @@
         }
     </script>
     <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
-{{--    <script src="{{ cacheBust('js/pessoas.js') }}"></script>--}}
-{{--    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>--}}
+    <script src="{{ cacheBust('js/pessoas.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
 @endpush
 
