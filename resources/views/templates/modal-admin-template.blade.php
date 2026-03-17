@@ -7,7 +7,12 @@
             </button>
         </div>
 
+        <div class="loading-container" style="display: none">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Carregando...</p>
+        </div>
         <div class="modal-body" id="modalBody">
+
             @include($modalBody, [
                         'route' => $routeModal ?? null
                        ])

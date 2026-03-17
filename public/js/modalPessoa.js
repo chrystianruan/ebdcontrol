@@ -184,8 +184,10 @@ function openEditPessoaModal(pessoaId) {
         headers: { 'Accept': 'application/json' },
         success: function(pessoa) {
             fillEditPessoaForm(pessoa);
-            loading.style.display = 'none';
-            form.style.display = 'block';
+            setTimeout(() => {
+                loading.style.display = 'none';
+                form.style.display = 'block';
+            }, 500);
         },
         error: function() {
             loading.innerHTML = `

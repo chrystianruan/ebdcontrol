@@ -326,22 +326,22 @@
     </div>
 </div>
 
-{{--@include('templates.modal-admin-template', [--}}
-{{--    'modalId' => 'modalRegister',--}}
-{{--    'modalTitle' => 'Cadastro',--}}
-{{--    'modalBody' => 'templates.modal-cadastro-template',--}}
-{{--    'routeModal' => 'cadastro.pessoa.admin',--}}
-{{--    'closeModal' => 'closeModalRegister()',--}}
-{{--    'actionButton' => 'savePessoa()'--}}
-{{--])--}}
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalRegister',
+    'modalTitle' => 'Cadastro',
+    'modalBody' => 'templates.modal-cadastro-template',
+    'routeModal' => 'cadastro.pessoa.admin',
+    'closeModal' => 'closeModalRegister()',
+    'actionButton' => 'savePessoa()'
+])
 
-{{--@include('templates.modal-admin-template', [--}}
-{{--    'modalId' => 'modalBirthday',--}}
-{{--    'modalTitle' => 'Aniversariantes',--}}
-{{--    'modalBody' => 'templates.aniversariantes-lista',--}}
-{{--    'closeModal' => 'closeModalBirthday()',--}}
-{{--    'modalClass' => 'modal-wide',--}}
-{{--])--}}
+@include('templates.modal-admin-template', [
+    'modalId' => 'modalBirthday',
+    'modalTitle' => 'Aniversariantes',
+    'modalBody' => 'templates.aniversariantes-lista',
+    'closeModal' => 'closeModalBirthday()',
+    'modalClass' => 'modal-wide',
+])
 
 @include('templates.modal-admin-template', [
     'modalId' => 'modalPreRegister',
@@ -382,9 +382,26 @@
         const modalPreRegister = document.getElementById('modalPreRegister');
         const modalBirthday = document.getElementById('modalBirthday');
 
+        function buildModal(modal) {
+            const body = modal.querySelector('.modal-body');
+            const footer = modal.querySelector('.modal-footer');
+            const loading = modal.querySelector('.loading-container');
+
+            body.style.display = 'none';
+            footer.style.display = 'none';
+            loading.style.display = 'flex';
+
+            setTimeout(() => {
+                loading.style.display = 'none';
+                body.style.display = '';
+                footer.style.display = '';
+            }, 500);
+        }
+
 
         function openModalRegister() {
             modalRegister.classList.add('active');
+            buildModal(modalRegister)
         }
 
         function closeModalRegister() {
@@ -411,6 +428,7 @@
             modalBirthday.classList.add('active');
             initAniversariantes();
             getAniversariantes();
+            buildModal(modalBirthday)
         }
 
         function closeModalBirthday() {
@@ -419,6 +437,7 @@
 
         function openModalPreRegister() {
             modalPreRegister.classList.add('active');
+            buildModal(modalPreRegister)
         }
 
         function closeModalPreRegister() {
