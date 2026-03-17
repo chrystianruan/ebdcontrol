@@ -425,11 +425,8 @@
             modalPreRegister.classList.remove('active');
         }
     </script>
-@endpush
-
-@push('pessoas-filtro.admin.script')
     <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
     <script src="{{ cacheBust('js/pessoas.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
 @endpush
 
