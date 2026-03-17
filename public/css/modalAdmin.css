@@ -34,12 +34,12 @@ body:has(.modal-overlay.active) {
     display: flex;
     flex-direction: column;
     max-height: 90vh;
-    transform: translateY(20px);
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(20px) scale(0.98);
+    transition: all 0.3s ease;
 }
 
 .modal-overlay.active .modal {
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
 }
 
 /* Header */
