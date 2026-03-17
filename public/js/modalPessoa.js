@@ -227,6 +227,7 @@ function closeEditPessoaModal() {
 
 function loadEditPessoaEstados() {
     const select = document.getElementById('editPessoaEstado');
+    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
     $.ajax({
         url: '/api/estados',
         type: 'GET',
@@ -246,6 +247,8 @@ function loadEditPessoaEstados() {
 
 function loadEditPessoaFormacoes() {
     const select = document.getElementById('editPessoaFormacao');
+    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
+
     $.ajax({
         url: '/api/formacoes',
         type: 'GET',
@@ -265,6 +268,7 @@ function loadEditPessoaFormacoes() {
 
 function loadEditPessoaPublicos() {
     const select = document.getElementById('editPessoaPublico');
+    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
     $.ajax({
         url: '/api/publicos',
         type: 'GET',
@@ -476,7 +480,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ---- Listeners mudança de classe/função ----
-$(document).on('change', '.editPessoaSelectClasse', function() {
+$(document).off('change', '.editPessoaSelectClasse').on('change', '.editPessoaSelectClasse', function() {
     const id = $(this).data('id');
     const classe = editPessoaClasses.find(c => c.id == id);
     if (classe) {
@@ -485,7 +489,7 @@ $(document).on('change', '.editPessoaSelectClasse', function() {
     document.getElementById('editPessoaListSalas').value = JSON.stringify(editPessoaClasses);
 });
 
-$(document).on('change', '.editPessoaSelectFuncao', function() {
+$(document).off('change', '.editPessoaSelectFuncao').on('change', '.editPessoaSelectFuncao', function() {
     const id = $(this).data('id');
     const classe = editPessoaClasses.find(c => c.id == id);
     if (classe) {
@@ -621,6 +625,10 @@ function saveEditPessoa() {
 document.addEventListener('click', function(e) {
     if (e.target.id === 'modalViewPessoa') closeViewPessoaModal();
     if (e.target.id === 'modalEditPessoa') closeEditPessoaModal();
+    if (e.target.id === 'modalEditPreCadastro') closeEditPessoaModal();
+    if (e.target.id === 'modalPreRegister') closeEditPessoaModal();
+    if (e.target.id === 'modalBirthday') closeEditPessoaModal();
+    if (e.target.id === 'modalRegister') closeEditPessoaModal();
 });
 
 // Fechar com ESC
