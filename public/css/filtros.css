@@ -462,8 +462,8 @@ tbody tr:last-child td {
 
 tbody tr:hover {
     background: #f8fafc;
-    /*transform: scale(1.01);*/
-    /*box-shadow: 0 2px 8px rgba(123, 78, 165, 0.08);*/
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(123, 78, 165, 0.08);
 }
 
 /* Linhas desabilitadas */

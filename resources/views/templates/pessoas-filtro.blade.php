@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="{{ cacheBust('css/formGroup.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/buttonsAdmin.css') }}">
     <link rel="stylesheet" href="{{ cacheBust('css/modalPessoa.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">
+{{--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.css">--}}
 @endpush
 
 <div class="container-intern">
@@ -426,7 +426,7 @@
         }
     </script>
     <script src="{{ cacheBust('js/modalPessoa.js') }}"></script>
-    <script src="{{ cacheBust('js/pessoas.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>
+{{--    <script src="{{ cacheBust('js/pessoas.js') }}"></script>--}}
+{{--    <script src="https://cdn.jsdelivr.net/npm/awesomplete@1.1.7/awesomplete.min.js"></script>--}}
 @endpush
 
