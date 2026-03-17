@@ -207,7 +207,9 @@
         bottomSheet.classList.remove('open');
         overlay.classList.remove('open');
         setTimeout(() => overlay.style.display = 'none', 300);
-        document.body.style.overflow = '';
+        if (!document.querySelector('.modal-overlay.active')) {
+            document.body.style.overflow = '';
+        }
     }
 
     userBtn.addEventListener('click', (e) => {
@@ -223,6 +225,8 @@
     overlay.addEventListener('click', closeBottomSheet);
 
     document.addEventListener('click', () => {
+        if (document.querySelector('.modal-overlay.active')) return;
+
         userBtn.classList.remove('open');
         userDropdown.classList.remove('open');
     });
