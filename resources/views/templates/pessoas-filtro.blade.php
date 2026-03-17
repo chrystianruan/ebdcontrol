@@ -326,22 +326,22 @@
     </div>
 </div>
 
-@include('templates.modal-admin-template', [
-    'modalId' => 'modalRegister',
-    'modalTitle' => 'Cadastro',
-    'modalBody' => 'templates.modal-cadastro-template',
-    'routeModal' => 'cadastro.pessoa.admin',
-    'closeModal' => 'closeModalRegister()',
-    'actionButton' => 'savePessoa()'
-])
+{{--@include('templates.modal-admin-template', [--}}
+{{--    'modalId' => 'modalRegister',--}}
+{{--    'modalTitle' => 'Cadastro',--}}
+{{--    'modalBody' => 'templates.modal-cadastro-template',--}}
+{{--    'routeModal' => 'cadastro.pessoa.admin',--}}
+{{--    'closeModal' => 'closeModalRegister()',--}}
+{{--    'actionButton' => 'savePessoa()'--}}
+{{--])--}}
 
-@include('templates.modal-admin-template', [
-    'modalId' => 'modalBirthday',
-    'modalTitle' => 'Aniversariantes',
-    'modalBody' => 'templates.aniversariantes-lista',
-    'closeModal' => 'closeModalBirthday()',
-    'modalClass' => 'modal-wide',
-])
+{{--@include('templates.modal-admin-template', [--}}
+{{--    'modalId' => 'modalBirthday',--}}
+{{--    'modalTitle' => 'Aniversariantes',--}}
+{{--    'modalBody' => 'templates.aniversariantes-lista',--}}
+{{--    'closeModal' => 'closeModalBirthday()',--}}
+{{--    'modalClass' => 'modal-wide',--}}
+{{--])--}}
 
 @include('templates.modal-admin-template', [
     'modalId' => 'modalPreRegister',
