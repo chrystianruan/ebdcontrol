@@ -25,8 +25,10 @@ function openEditModal(pessoaId) {
         },
         success: function(pessoa) {
             fillEditForm(pessoa);
-            loading.style.display = 'none';
-            form.style.display = 'block';
+            setTimeout( () => {
+                loading.style.display = 'none';
+                form.style.display = 'block';
+            })
         },
         error: function(xhr, status, error) {
             console.error('Erro ao carregar pessoa:', error);
