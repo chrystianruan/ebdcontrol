@@ -28,7 +28,7 @@ function openEditModal(pessoaId) {
             setTimeout( () => {
                 loading.style.display = 'none';
                 form.style.display = 'block';
-            })
+            }, 500)
         },
         error: function(xhr, status, error) {
             console.error('Erro ao carregar pessoa:', error);
