@@ -16,8 +16,10 @@ function openViewPessoaModal(pessoaId) {
         headers: { 'Accept': 'application/json' },
         success: function(pessoa) {
             fillViewPessoa(pessoa);
-            loading.style.display = 'none';
-            content.style.display = 'block';
+            setTimeout(() => {
+                loading.style.display = 'none';
+                content.style.display = 'block';
+            }, 500);
         },
         error: function() {
             loading.innerHTML = `
