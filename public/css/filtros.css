@@ -1594,4 +1594,37 @@ tbody tr:hover .classes-list .class-item {
     .search-inline-input {
         width: 100%;
     }
+    .fields {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .itens {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .itens > div {
+        width: 100%;
+    }
+
+    .itens .select,
+    .itens .input {
+        width: 100%;
+    }
+
+    .div-buttons-filter {
+        display: flex;
+        gap: 8px;
+    }
+
+    .div-buttons-filter .btnFilter {
+        flex: 1;
+    }
+
+    .div-buttons-filter .btnFilter button {
+        width: 100%;
+        justify-content: center;
+    }
 }

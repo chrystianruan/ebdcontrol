@@ -199,7 +199,7 @@
                     <div class="sobre-agradecimento-item">
                         <i class='bx bx-bible'></i>
                         <span>
-                            A Deus, em primeiro lugar, pelo Seu infinito amor, misericórdia e cuidado. A Ele somos gratos
+                            A Deus, em primeiro lugar, pelo Seu infinito amor, misericórdia e cuidado. Além disso, somos gratos a Ele
                             pela força, criatividade e capacidade concedidas para que possamos servir com dedicação e excelência!
                         </span>
                     </div>
@@ -214,8 +214,8 @@
                         <i class='bx bx-group'></i>
                         <span>
                             Aos irmãos em Cristo que colaboraram e apoiaram este projeto ao longo do tempo, seja com
-                            ideias, incentivo ou contribuição direta. Por ordem cronológica: Abner Irineu, Ev. Assis Irineu, Pb. Domingos José,
-                            Pr. Elinaldo Renovato, Hartur e Pr. Abdênego Xavier.
+                            ideias, incentivo ou contribuição direta. Por ordem cronológica: Abner Irineu, Ev. Assis Irineu,
+                            Pb. Domingos José, Simon Costa, Pr. Elinaldo Renovato, Hartur, Pr. Abdênego Xavier e Pr. Kleber Maia.
                         </span>
                     </div>
                 </div>
