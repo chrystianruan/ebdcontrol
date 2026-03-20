@@ -173,32 +173,24 @@ function openEditPessoaModal(pessoaId) {
     loading.style.display = 'flex';
     form.style.display = 'none';
 
-    // Carregar selects
-    loadEditPessoaEstados();
-    loadEditPessoaFormacoes();
-    loadEditPessoaPublicos();
-
-    // Buscar dados da pessoa
-    $.ajax({
-        url: `/api/pessoa/${pessoaId}`,
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(pessoa) {
-            fillEditPessoaForm(pessoa);
-            setTimeout(() => {
-                loading.style.display = 'none';
-                form.style.display = 'block';
-            }, 500);
-        },
-        error: function() {
-            loading.innerHTML = `
-                <div style="text-align:center; color:#ef4444;">
-                    <i class="bx bx-error" style="font-size:2.5rem;"></i>
-                    <p style="margin-top:8px;">Erro ao carregar dados da pessoa</p>
-                </div>
-            `;
-        }
+    Promise.all([
+        loadEditPessoaEstados(),
+        loadEditPessoaFormacoes(),
+        loadEditPessoaPublicos(),
+        fetchPessoa(pessoaId)
+    ]).then(([, , , pessoa]) => {
+        fillEditPessoaForm(pessoa);
+        setTimeout(() => {
+            loading.style.display = 'none';
+            form.style.display = 'block';
+        }, 300);
+    }).catch(() => {
+        loading.innerHTML = `
+            <div style="text-align:center; color:#ef4444;">
+                <i class="bx bx-error" style="font-size:2.5rem;"></i>
+                <p style="margin-top:8px;">Erro ao carregar dados da pessoa</p>
+            </div>
+        `;
     });
 }
 
@@ -228,65 +220,85 @@ function closeEditPessoaModal() {
 }
 
 // ---- Carregar selects ----
+function fetchPessoa(pessoaId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/pessoa/${pessoaId}`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: resolve,
+            error: reject
+        });
+    });
+}
 
 function loadEditPessoaEstados() {
-    const select = document.getElementById('editPessoaEstado');
-    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
-    $.ajax({
-        url: '/api/estados',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled>Selecionar</option>';
-            response.data.forEach(function(estado) {
-                const opt = document.createElement('option');
-                opt.value = estado.id;
-                opt.textContent = estado.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/estados',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaEstado');
+                select.innerHTML = '<option value="" disabled>Selecionar</option>';
+                response.data.forEach(function(estado) {
+                    const opt = document.createElement('option');
+                    opt.value = estado.id;
+                    opt.textContent = estado.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
 function loadEditPessoaFormacoes() {
-    const select = document.getElementById('editPessoaFormacao');
-    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
-
-    $.ajax({
-        url: '/api/formacoes',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled>Selecionar</option>';
-            response.data.forEach(function(f) {
-                const opt = document.createElement('option');
-                opt.value = f.id;
-                opt.textContent = f.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/formacoes',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaFormacao');
+                select.innerHTML = '<option value="" disabled>Selecionar</option>';
+                response.data.forEach(function(f) {
+                    const opt = document.createElement('option');
+                    opt.value = f.id;
+                    opt.textContent = f.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
 function loadEditPessoaPublicos() {
-    const select = document.getElementById('editPessoaPublico');
-    select.innerHTML = '<option value="" disabled>Selecionar</option>'; // limpa antes
-    $.ajax({
-        url: '/api/publicos',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled selected>Selecionar</option>';
-            response.data.forEach(function(p) {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/publicos',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaPublico');
+                select.innerHTML = '<option value="" disabled selected>Selecionar</option>';
+                response.data.forEach(function(p) {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = p.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 

@@ -9,36 +9,134 @@ function openEditModal(pessoaId) {
     loading.style.display = 'flex';
     form.style.display = 'none';
 
-    // Carregar dados dos selects
-    loadClassesForModal();
-    loadEstadosForModal();
-    loadFormacoesForModal();
-    loadPublicosForModal();
+    // Carrega selects e dados em paralelo
+    Promise.all([
+        loadClassesForModal(),
+        loadEstadosForModal(),
+        loadFormacoesForModal(),
+        loadPublicosForModal(),
+        fetchPreCadastro(pessoaId)
+    ]).then(([, , , , pessoa]) => {
+        fillEditForm(pessoa);
+        setTimeout(() => {
+            loading.style.display = 'none';
+            form.style.display = 'block';
+        }, 500);
+    }).catch(err => {
+        console.error(err);
+        loading.innerHTML = `
+            <div class="text-danger">
+                <i class="bx bx-error"></i>
+                <p>Erro ao carregar dados</p>
+            </div>
+        `;
+    });
+}
 
-    // Buscar dados da pessoa
-    $.ajax({
-        url: `/api/pre-cadastros/${pessoaId}`,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            'Accept': 'application/json',
-        },
-        success: function(pessoa) {
-            fillEditForm(pessoa);
-            setTimeout( () => {
-                loading.style.display = 'none';
-                form.style.display = 'block';
-            }, 500)
-        },
-        error: function(xhr, status, error) {
-            console.error('Erro ao carregar pessoa:', error);
-            loading.innerHTML = `
-                <div class="text-danger">
-                    <i class="bx bx-error"></i>
-                    <p>Erro ao carregar dados da pessoa</p>
-                </div>
-            `;
-        }
+function fetchPreCadastro(pessoaId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/pre-cadastros/${pessoaId}`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: resolve,
+            error: reject
+        });
+    });
+}
+
+function loadEstadosForModal() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/estados`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editEstado');
+                select.innerHTML = '<option value="">Selecionar</option>';
+                response.data.forEach(function(estado) {
+                    const option = document.createElement('option');
+                    option.value = estado.id;
+                    option.textContent = estado.nome;
+                    select.appendChild(option);
+                });
+                resolve();
+            },
+            error: reject
+        });
+    });
+}
+
+function loadFormacoesForModal() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/formacoes`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editFormacao');
+                select.innerHTML = '<option value="">Selecionar</option>';
+                response.data.forEach(function(formacao) {
+                    const option = document.createElement('option');
+                    option.value = formacao.id;
+                    option.textContent = formacao.nome;
+                    select.appendChild(option);
+                });
+                resolve();
+            },
+            error: reject
+        });
+    });
+}
+
+function loadPublicosForModal() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/publicos`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPublico');
+                select.innerHTML = '<option value="">Selecionar</option>';
+                response.data.forEach(function(publico) {
+                    const option = document.createElement('option');
+                    option.value = publico.id;
+                    option.textContent = publico.nome;
+                    select.appendChild(option);
+                });
+                resolve();
+            },
+            error: reject
+        });
+    });
+}
+
+function loadClassesForModal() {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/salas?congregacao_id=${congregacaoId}`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(salas) {
+                const select = document.getElementById('editClasse');
+                select.innerHTML = '<option value="">Selecionar</option>';
+                salas.forEach(function(sala) {
+                    if (sala.id > 2) {
+                        const option = document.createElement('option');
+                        option.value = sala.id;
+                        option.textContent = `${sala.nome} - ${sala.tipo}`;
+                        select.appendChild(option);
+                    }
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
@@ -60,111 +158,6 @@ function closeEditModal() {
     document.getElementById('editPublico').removeAttribute('required');
 }
 
-function loadClassesForModal() {
-    const selectClasse = document.getElementById('editClasse');
-
-    $.ajax({
-        url: `/api/salas?congregacao_id=${congregacaoId}`,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            'Accept': 'application/json',
-        },
-        success: function(salas) {
-            selectClasse.innerHTML = '<option value="">Selecionar</option>';
-
-            salas.forEach(function(sala) {
-                if (sala.id > 2) {
-                    const option = document.createElement('option');
-                    option.value = sala.id;
-                    option.textContent = `${sala.nome} - ${sala.tipo}`;
-                    selectClasse.appendChild(option);
-                }
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Erro ao carregar classes:', error);
-        }
-    });
-}
-
-function loadEstadosForModal() {
-    const selectEstado = document.getElementById('editEstado');
-
-    $.ajax({
-        url: `/api/estados`,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            'Accept': 'application/json',
-        },
-        success: function(response) {
-            selectEstado.innerHTML = '<option value="">Selecionar</option>';
-
-            response.data.forEach(function(estado) {
-                const option = document.createElement('option');
-                option.value = estado.id;
-                option.textContent = estado.nome;
-                selectEstado.appendChild(option);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Erro ao carregar estados:', error);
-        }
-    });
-}
-
-function loadFormacoesForModal() {
-    const selectFormacao = document.getElementById('editFormacao');
-
-    $.ajax({
-        url: `/api/formacoes`,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            'Accept': 'application/json',
-        },
-        success: function(response) {
-            selectFormacao.innerHTML = '<option value="">Selecionar</option>';
-
-            response.data.forEach(function(formacao) {
-                const option = document.createElement('option');
-                option.value = formacao.id;
-                option.textContent = formacao.nome;
-                selectFormacao.appendChild(option);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Erro ao carregar formações:', error);
-        }
-    });
-}
-
-function loadPublicosForModal() {
-    const selectPublico = document.getElementById('editPublico');
-
-    $.ajax({
-        url: `/api/publicos`,
-        type: 'GET',
-        dataType: 'json',
-        headers: {
-            'Accept': 'application/json',
-        },
-        success: function(response) {
-            selectPublico.innerHTML = '<option value="">Selecionar</option>';
-
-            response.data.forEach(function(publico) {
-                const option = document.createElement('option');
-                option.value = publico.id;
-                option.textContent = publico.nome;
-                selectPublico.appendChild(option);
-            });
-        },
-        error: function(xhr, status, error) {
-            console.error('Erro ao carregar públicos:', error);
-        }
-    });
-}
 
 function toggleResponsavelFields() {
     const checkbox = document.getElementById('editMenorIdade');
