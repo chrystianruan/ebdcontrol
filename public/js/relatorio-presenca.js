@@ -168,7 +168,6 @@
             rows += '<tr>';
             rows += '<td>' + escapeHtml(data.pessoa_nome) + '</td>';
             rows += '<td>' + escapeHtml(data.funcao_nome) + '</td>';
-            rows += '<td>' + escapeHtml(data.data_nascimento) + '</td>';
             rows += '<td>' + data.presencas + '</td>';
             rows += '</tr>';
         });
@@ -193,7 +192,6 @@
                 rows += '<tr>';
                 rows += '<td>' + escapeHtml(data.pessoa_nome) + '</td>';
                 rows += '<td>' + escapeHtml(data.funcao_nome) + '</td>';
-                rows += '<td>' + escapeHtml(data.data_nascimento) + '</td>';
                 rows += '<td>' + data.presencas + '</td>';
                 rows += '</tr>';
             });

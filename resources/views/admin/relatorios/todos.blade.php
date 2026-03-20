@@ -270,7 +270,6 @@
                     <tr>
                         <th>Nome</th>
                         <th>Função</th>
-                        <th>Data de nascimento</th>
                         <th>Presenças</th>
                     </tr>
                 </thead>
@@ -285,7 +284,6 @@
                         <tr>
                             <th>Nome</th>
                             <th>Função</th>
-                            <th>Data de nascimento</th>
                             <th>Presenças</th>
                         </tr>
                     </thead>
