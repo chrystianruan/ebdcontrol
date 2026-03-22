@@ -9,43 +9,4 @@ $('#btn-adicionar-classe').click(function() {
 
 
 
-function appendOptionsInSelectSala(congregacao, selectClasseId) {
-    $.ajax({
-        url: $('#url').val()+"/api/salas/congregacao/"+congregacao,
-        type: 'GET',
-        dataType: 'json',
-        success: data => {
-            var option;
-            option += '<option selected value="" disabled>Selecionar</option>'
-            $.each(data, function(i, obj){
-                option += `<option value="${obj.id}">${obj.nome}</option>`;
-            })
-            $('#'+selectClasseId).append(option);
-        },
-        error: data => {
-            alert(data)
-        }
-    });
-}
-function appendOptionsInSelectFuncao(selectFuncaoId) {
-    $.ajax({
-        url: $('#url').val()+"/api/funcaos",
-        type: 'GET',
-        dataType: 'json',
-        success: data => {
-            var option;
-            option += '<option  selected value="" disabled>Selecionar</option>'
-            $.each(data, function(i, obj){
-                option += `<option value="${obj.id}">${obj.nome}</option>`;
-            })
-            $('#'+selectFuncaoId).append(option);
-        },
-        error: data => {
-            alert(data)
-        }
-    });
-}
-
-
-
 

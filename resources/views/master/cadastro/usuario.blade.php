@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/cadastroClasse.css">
+<link rel="stylesheet" href="{{ cacheBust('css/cadastroClasse.css') }}">
 
 <div class="row" style="margin: 2%">
   <div class="col-75">

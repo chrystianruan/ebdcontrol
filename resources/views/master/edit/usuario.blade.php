@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/cadastroAviso.css">
+<link rel="stylesheet" href="{{ cacheBust('css/cadastroAviso.css') }}">
 <div class="container" >
         <header>Edição de Usuário - {{date('d/m/Y')}}</header>
         <form action="/master/update/usuario/{{$user -> id}}" method="POST" style=" min-height: 240px">
@@ -80,7 +80,7 @@
         $("#nivel").change(function() {
             if (this.value == 4) {
                 $.ajax({
-                    url: $('#url').val()+"/api/salas/congregacao/{{ base64_encode(auth()->user()->congregacao_id) }}",
+                    url: $('#url').val()+"/api/salas?congregacao_id={{ encryptId(auth()->user()->congregacao_id) }}",
                     type: 'GET',
                     dataType: 'json',
                     success: data => {

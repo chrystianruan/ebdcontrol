@@ -9,7 +9,7 @@
         color: yellow
     }
 </style>
-<link rel="stylesheet" href="/css/saber.css">
+<link rel="stylesheet" href="{{ cacheBust('css/saber.css') }}">
 <div class="card-container">
 	<span class="pro" @if($pessoa->situacao == 1) style="background-color: green" @else  style="background-color: red" @endif>@if($pessoa->situacao == 1)Ativo @else Inativo @endif</span>
 	<span class="pro2" @if($pessoa->sexo == 1) style="background-color: blue" @else  style="background-color: pink" @endif> @if($pessoa->sexo == 1) Masculino @else Feminino @endif</span>

@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/filtrosClasse.css">
+<link rel="stylesheet" href="{{ cacheBust('css/filtrosClasse.css') }}">
 
  <div style="margin: 15px; color: white; display: flex; flex-direction: column" >
 

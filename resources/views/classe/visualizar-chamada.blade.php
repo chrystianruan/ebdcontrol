@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/chamada.css">
+<link rel="stylesheet" href="{{ cacheBust('css/chamada.css') }}">
 
 
 <div class="tables">

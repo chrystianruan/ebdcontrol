@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </form>
-                <script src="/js/getLocation.js"></script>
+                <script src="{{ cacheBust('js/getLocation.js') }}"></script>
             @else
                 <div class="alert alert-success mt-5">
                     <i class="bx bxs-check-info" style="font-size: 1.2em"></i>

@@ -1,0 +1,528 @@
+/* ========== MODAL RELATÓRIO - Visualização detalhada ========== */
+
+/* ===== Resumo Geral ===== */
+.rel-modal-resumo {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.rel-modal-resumo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 14px 10px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    gap: 4px;
+}
+
+.rel-modal-resumo-valor {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.rel-modal-resumo-label {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+/* ===== Seção com Título ===== */
+.rel-modal-section {
+    margin-bottom: 22px;
+}
+
+.rel-modal-section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #475569;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.rel-modal-section-title i {
+    font-size: 1.05rem;
+}
+
+.rel-modal-section-title.destaques-title {
+    color: #16a34a;
+}
+
+.rel-modal-section-title.piores-title {
+    color: #dc2626;
+}
+
+.rel-modal-section-title.comparativo-title {
+    color: #7B4EA5;
+}
+
+.rel-modal-section-title.classes-title {
+    color: #1e293b;
+}
+
+/* ===== Destaques & Piores — Grid lado a lado ===== */
+.rel-modal-dp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 22px;
+}
+
+.rel-modal-dp-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rel-modal-dp-col-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 4px;
+}
+
+.rel-modal-dp-col-title.destaque {
+    color: #16a34a;
+}
+
+.rel-modal-dp-col-title.pior {
+    color: #dc2626;
+}
+
+.rel-modal-dp-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+}
+
+.rel-modal-dp-item.destaque {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+}
+
+.rel-modal-dp-item.pior {
+    background: #fef2f2;
+    border-color: #fecaca;
+}
+
+.rel-modal-dp-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.rel-modal-dp-icon.presenca.destaque { background: #dcfce7; color: #16a34a; }
+.rel-modal-dp-icon.visitantes.destaque { background: #dbeafe; color: #2563eb; }
+.rel-modal-dp-icon.biblias.destaque { background: #fef9c3; color: #d97706; }
+.rel-modal-dp-icon.revistas.destaque { background: #f3e8ff; color: #7c3aed; }
+
+.rel-modal-dp-icon.presenca.pior { background: #fee2e2; color: #dc2626; }
+.rel-modal-dp-icon.visitantes.pior { background: #fee2e2; color: #dc2626; }
+.rel-modal-dp-icon.biblias.pior { background: #fee2e2; color: #dc2626; }
+.rel-modal-dp-icon.revistas.pior { background: #fee2e2; color: #dc2626; }
+
+.rel-modal-dp-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+}
+
+.rel-modal-dp-label {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.rel-modal-dp-value {
+    font-size: 0.85rem;
+    color: #334155;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rel-modal-dp-value em {
+    font-style: normal;
+    color: #94a3b8;
+    font-size: 0.75rem;
+}
+
+/* ===== Destaque Geral (troféu) ===== */
+.rel-modal-destaque-geral {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #fef9c3 0%, #fef3c7 100%);
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid #fde68a;
+    margin-bottom: 22px;
+}
+
+.rel-modal-destaque-geral i {
+    color: #d97706;
+    font-size: 1.3rem;
+}
+
+.rel-modal-destaque-geral span {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #92400e;
+}
+
+.rel-modal-destaque-geral em {
+    font-style: normal;
+    font-size: 0.78rem;
+    color: #b45309;
+    margin-left: auto;
+}
+
+/* ===== Comparativo com Relatório Anterior ===== */
+.rel-modal-comparativo {
+    margin-bottom: 22px;
+}
+
+.rel-modal-comp-no-prev {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    background: #f3f0f7;
+    color: #5b3a80;
+    border-left: 3px solid #7B4EA5;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+.rel-modal-comp-no-prev i {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.rel-modal-comp-ref {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.rel-modal-comp-ref strong {
+    color: #334155;
+}
+
+.rel-modal-comp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.rel-modal-comp-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    gap: 6px;
+    text-align: center;
+}
+
+.rel-modal-comp-item-label {
+    font-size: 0.65rem;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.rel-modal-comp-item-values {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.rel-modal-comp-item-current {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.rel-modal-comp-item-prev {
+    font-size: 0.75rem;
+    color: #94a3b8;
+}
+
+.rel-modal-comp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.rel-modal-comp-badge.up {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.rel-modal-comp-badge.down {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.rel-modal-comp-badge.neutral {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.rel-modal-comp-badge i {
+    font-size: 0.8rem;
+}
+
+/* ===== Barras de comparativo visual ===== */
+.rel-modal-comp-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.rel-modal-comp-bar-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.rel-modal-comp-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.rel-modal-comp-bar-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.rel-modal-comp-bar-values {
+    font-size: 0.72rem;
+    color: #64748b;
+}
+
+.rel-modal-comp-bar-values .current {
+    font-weight: 700;
+    color: #7B4EA5;
+}
+
+.rel-modal-comp-bar-track {
+    width: 100%;
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.rel-modal-comp-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.8s ease;
+}
+
+.rel-modal-comp-bar-fill.current {
+    background: linear-gradient(90deg, #7B4EA5, #9B6EC7);
+}
+
+.rel-modal-comp-bar-fill.prev {
+    background: #cbd5e1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0.5;
+}
+
+/* ===== Tabela de Classes ===== */
+.rel-modal-table-wrapper {
+    overflow-x: auto;
+    margin-top: 4px;
+}
+
+.rel-modal-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.82rem;
+}
+
+.rel-modal-table thead th {
+    background: #f8fafc;
+    color: #64748b;
+    font-weight: 600;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 10px 12px;
+    text-align: center;
+    border-bottom: 2px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.rel-modal-table thead th:first-child {
+    text-align: left;
+    border-radius: 8px 0 0 0;
+}
+
+.rel-modal-table thead th:last-child {
+    border-radius: 0 8px 0 0;
+}
+
+.rel-modal-table tbody td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    text-align: center;
+    color: #334155;
+}
+
+.rel-modal-table tbody td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.rel-modal-table tbody tr:hover {
+    background: #faf5ff;
+}
+
+.rel-modal-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.rel-modal-table tfoot td {
+    padding: 12px 12px;
+    font-weight: 700;
+    color: #1e293b;
+    border-top: 2px solid #7B4EA5;
+    text-align: center;
+    background: #faf5ff;
+}
+
+.rel-modal-table tfoot td:first-child {
+    text-align: left;
+    border-radius: 0 0 0 8px;
+}
+
+.rel-modal-table tfoot td:last-child {
+    border-radius: 0 0 8px 0;
+}
+
+/* ===== Loader do Modal ===== */
+.rel-modal-loader {
+    text-align: center;
+    padding: 60px 20px;
+    color: #94a3b8;
+}
+
+.rel-modal-loader .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #7B4EA5;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 12px;
+}
+
+.rel-modal-loader p {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ===== Erro no Modal ===== */
+.rel-modal-erro {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    background: #fef2f2;
+    color: #991b1b;
+    border-left: 3px solid #ef4444;
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+}
+
+.rel-modal-erro i {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+
+/* ===== Responsivo ===== */
+@media (max-width: 768px) {
+    .rel-modal-resumo {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rel-modal-dp-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rel-modal-comp-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .rel-modal-table {
+        font-size: 0.75rem;
+    }
+
+    .rel-modal-table thead th,
+    .rel-modal-table tbody td,
+    .rel-modal-table tfoot td {
+        padding: 8px 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rel-modal-resumo {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .rel-modal-comp-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+

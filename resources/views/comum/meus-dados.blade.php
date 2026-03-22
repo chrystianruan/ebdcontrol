@@ -106,7 +106,7 @@
     integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
     crossorigin="anonymous">
 </script>
-<script src="/js/changePassword.js"></script>
+<script src="{{ cacheBust('js/changePassword.js') }}"></script>
 @endpush
 
 @endsection

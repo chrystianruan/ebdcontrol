@@ -1,6 +1,5 @@
 @push('cadastro-pessoa-css')
     <link rel="stylesheet" href="/css/cadastroClasse.css">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 @endpush
 <div class="row" style="margin: 2%">
     <input type="hidden" id="url" value="{{ url('/api/pessoas') }}">
@@ -11,14 +10,14 @@
                 @csrf
                 <input type="hidden" name="congregacao" id="congregacao" value="{{ $congregacao->congregacao_id }}">
                 @if ($route == "cadastro.pessoa.classe")
-                <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->sala_id }}">
+                    <input type="hidden" name="classe" id="classe" value="{{ auth()->user()->sala_id }}">
                 @endif
                 <div class="col-50">
                     <h2>{{$title}} - <span style="color: #1d10a7">{{$congregacao->congregacao_nome}} | {{ $congregacao->setor_nome }} | IEADERN PARNAMIRIM</span></h2>
                     <hr>
-{{--                    <div class="caution">--}}
-{{--                        <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/classe/pessoas">pessoas</a>.</p>--}}
-{{--                    </div>--}}
+                    {{--                    <div class="caution">--}}
+                    {{--                        <p><i class="fa fa-exclamation-circle"></i> Antes de cadastrar alguém, certifique-se de que ela já não esteja cadastrada em <a href="/classe/pessoas">pessoas</a>.</p>--}}
+                    {{--                    </div>--}}
 
                     <h3>Informações Pessoais</h3>
                     @if ($errors->any())
@@ -34,7 +33,7 @@
                     <label>
                         <input type="checkbox"  id="scales" @if(old('scales')) checked @endif name="scales"> Menor de idade
                     </label>
-                    <div class="ui-widget">
+                    <div class="input-field">
                         <label for="nome"><i class="fa fa-user"></i>Nome <font style="color:red;font-weight: bold">*</font></label>
                         <input type="text" id="nome" required name="nome" placeholder="Digite o nome do aluno" value="{{old('nome')}}">
                     </div>
@@ -95,13 +94,13 @@
                     </div>
 
                     @if ($route != "cadastro.pessoa.classe")
-                    <label>Classe <font style="color:red;font-weight: bold">*</font></label>
-                    <select class="inputprof" name="classe">
-                        <option selected disabled value="">Selecionar</option>
-                        @foreach($classes as $c)
-                            <option @if(old('classe') == $c->id) selected @endif value="{{ $c->id }}">{{ $c->nome }}</option>
-                        @endforeach
-                    </select>
+                        <label>Classe <font style="color:red;font-weight: bold">*</font></label>
+                        <select class="inputprof" name="classe">
+                            <option selected disabled value="">Selecionar</option>
+                            @foreach($classes as $c)
+                                <option @if(old('classe') == $c->id) selected @endif value="{{ $c->id }}">{{ $c->nome }}</option>
+                            @endforeach
+                        </select>
                     @endif
                     <div class="col-50">
                         <h3>Informações Gerais</h3>
@@ -182,7 +181,5 @@
 </div>
 
 @push('scripts-cadastro')
-    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-    <script src="/js/pessoas.js"></script>
-    <script src="/js/cadastroPessoa.js"></script>
+    <script src="{{ cacheBust('/js/cadastroPessoa.js') }}"></script>
 @endpush

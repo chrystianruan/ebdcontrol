@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/chamada.css">
+<link rel="stylesheet" href="{{ cacheBust('css/chamada.css') }}">
 @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
 @if(empty($chamadaPadraoRealizada))
     @if ($errors->any())
@@ -112,5 +112,5 @@
     <div class="notRegister"> Hoje não é domingo </div>
 @endif
   <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
- <script src="/js/chamada.js"></script>
+ <script src="{{ cacheBust('js/chamada.js') }}"></script>
 @endsection

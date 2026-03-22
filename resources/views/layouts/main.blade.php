@@ -1,200 +1,242 @@
 <!DOCTYPE html>
-<!-- Created by CodingLab |www.youtube.com/CodingLabYT-->
-<html lang="pt-br" dir="ltr">
-  <head>
+<html lang="pt-br">
+<head>
     <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-      <meta name="csrf-token" content="{{ csrf_token() }}" />
-     <link rel="stylesheet" href="/css/bar.css">
-     <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-     <link rel="icon" type="imagem/png" href="/img/logo_ebd.png" />
-      @stack('cadastro-pessoa-css')
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
+
+    <link rel="stylesheet" href="{{ cacheBust('css/rootAdmin.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/navbarAdmin.css') }}">
+    @stack('dash.admin.css')
+    @stack('pessoas.admin.css')
+    @stack('chamadas.admin.css')
+    @stack('relatorios.admin.css')
     <title>EBDControl</title>
-   </head>
+    <link rel="icon" type="image/png" href="/img/logo_ebd.png" />
+</head>
 <body>
-  <div class="sidebar close">
-    <div class="logo-details">
-      <img width=50 style="margin: 12px" src="/img/logo_ebd.png">
-      <span class="logo_name">Admin</span>
-    </div>
-    <ul class="nav-links">
-      <li>
-        <a href="/admin/">
-          <i class='bx bx-grid-alt' ></i>
-          <span class="link_name">Dashboard</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/admin/">Dashboard</a></li>
-        </ul>
-      </li>
-      <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-user-plus' ></i>
-            <span class="link_name">Cadastro</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
+<header class="header" id="header">
+    <nav class="nav container">
+        <div class="div-nav__logo">
+            <a href="/admin" class="nav__logo">
+                <img width="140"  src="/img/logo_ebd_extend.png" alt="logo_ebd">
+            </a>
         </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Cadastro</a></li>
-          <li><a href="/admin/cadastro/pessoa">Pessoa</a></li>
-        </ul>
-      </li>
-      <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-filter-alt' ></i>
-            <span class="link_name">Filtros</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Filtros</a></li>
-          <li><a href="/admin/filtro/pessoa">Pessoas</a></li>
-          <li><a href="/admin/filtro/pre-cadastros">Pré-Cadastros</a></li>
-        </ul>
-      </li>
-{{--      <li>--}}
-{{--        <div class="iocn-link">--}}
-{{--          <a href="#">--}}
-{{--            <i class='bx bx-dollar' ></i>--}}
-{{--            <span class="link_name">Financeiro</span>--}}
-{{--          </a>--}}
-{{--          <i class='bx bxs-chevron-down arrow' ></i>--}}
-{{--        </div>--}}
-{{--        <ul class="sub-menu">--}}
-{{--          <li><a class="link_name" href="#">Financeiro</a></li>--}}
-{{--          <li><a href="/admin/financeiro/geral">Geral</a></li>--}}
-{{--          <li><a href="/admin/financeiro/filtro">Filtro</a></li>--}}
-{{--          <li><a href="/admin/financeiro/entrada">Entrada</a></li>--}}
-{{--          <li><a href="/admin/financeiro/saida">Saída</a></li>--}}
-{{--        </ul>--}}
-{{--      </li>--}}
-        <li>
-            <div class="iocn-link">
-                <a href="#">
-                    <i class='bx bx-list-ul' ></i>
-                    <span class="link_name">Chamadas</span>
-                </a>
-                <i class='bx bxs-chevron-down arrow' ></i>
-            </div>
-            <ul class="sub-menu">
-                <li><a class="link_name" href="#">Chamadas</a></li>
-                <li><a href="/admin/realizar-chamadas">Realizar Chamada</a></li>
-                <li><a href="/admin/chamadas">Filtrar Chamadas</a></li>
-            </ul>
-        </li>
-      <li>
-        <div class="iocn-link">
-          <a href="#">
-            <i class='bx bx-trending-up' ></i>
-            <span class="link_name">Relatórios</span>
-          </a>
-          <i class='bx bxs-chevron-down arrow' ></i>
-        </div>
-        <ul class="sub-menu">
-          <li><a class="link_name" href="#">Relatórios</a></li>
-          <li><a href="/admin/relatorios/todos">De chamadas</a></li>
-            <li><a href="/admin/relatorios/presenca-classe">De presenças</a></li>
 
-        </ul>
-      </li>
-
-      <li>
-        <a href="/sobre">
-          <i class='bx bx-info-circle' ></i>
-          <span class="link_name">Sobre</span>
-        </a>
-        <ul class="sub-menu blank">
-          <li><a class="link_name" href="/sobre">Sobre</a></li>
-        </ul>
-      </li>
-        @if (auth()->user()->permissao_id < 3)
-            <li style="margin-top: 20%">
-                <div class="iocn-link">
-                    <a href="#">
-                        <i class='bx bx-shield' ></i>
-                        <span class="link_name">Usuário</span>
+        <div class="nav__menu" id="nav-menu">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a href="/admin" class="nav__link @if($blade == \App\Http\Enums\ViewEnum::HOME->value) active-link @endif">
+                        <i class='bx bx-home-alt nav__icon'></i>
+                        <span class="nav__name">Home</span>
                     </a>
-                    <i class='bx bxs-chevron-down arrow' ></i>
+                </li>
+
+                <li class="nav__item">
+                    <a href="/admin/filtro/pessoa" class="nav__link @if($blade == \App\Http\Enums\ViewEnum::PESSOAS->value) active-link @endif">
+                        <i class='bx bx-user nav__icon'></i>
+                        <span class="nav__name">Pessoas</span>
+                    </a>
+                </li>
+
+                <li class="nav__item">
+                    <a href="/admin/chamadas" class="nav__link @if($blade == App\Http\Enums\ViewEnum::CHAMADAS->value) active-link @endif">
+                        <i class='bx bx-list-ul nav__icon'></i>
+                        <span class="nav__name">Chamadas</span>
+                    </a>
+                </li>
+
+                <li class="nav__item">
+                    <a href="/admin/relatorios" class="nav__link @if($blade == App\Http\Enums\ViewEnum::RELATORIOS) active-link @endif">
+                        <i class='bx bx-trending-up nav__icon'></i>
+                        <span class="nav__name">Relatórios</span>
+                    </a>
+                </li>
+
+                <li class="nav__item">
+                    <a href="/admin/about" class="nav__link @if($blade == "about") active-link @endif">
+                        <i class='bx bx-info-circle nav__icon'></i>
+                        <span class="nav__name">Sobre</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="nav__user" id="nav-user">
+            <button class="nav__user-btn" id="userDropdownBtn">
+                <div class="nav__user-avatar">
+                    <i class='bx bx-user'></i>
                 </div>
-                <ul class="sub-menu">
-                    <li><a class="link_name" href="#">Usuário</a></li>
-                    @if (auth()->user()->permissao_id == 1)<li><a href="/super-master">SuperMaster</a></li>@endif
-                    @if (auth()->user()->permissao_id <= 2)<li><a href="/master">Master</a></li>@endif
-                    @if(auth()->user()->pessoa_id)<li><a href="/comum">Comum</a></li>@endif
-                </ul>
-            </li>
-        @endif
+                <div class="nav__user-info">
+                    <span class="nav__user-name">{{ auth()->user()->formattedNome() }}</span>
+                    <span class="nav__user-role">{{ auth()->user()->matricula }}</span>
+                </div>
+                <i class='bx bx-chevron-down nav__user-chevron'></i>
+            </button>
 
-      <li>
-    <div class="profile-details">
-      <div class="profile-content">
-        <!--<img src="image/profile.jpg" alt="profileImg">-->
-      </div>
-      <div class="name-job">
-        <div class="profile_name" style="color: rgb(9, 150, 115)">{{auth()->user()->matricula}}</div>
-        <div class="job">{{auth()->user()->permissao->name}}</div>
-      </div>
-      <a > <form action="/logout" method="POST"> @csrf <button style="border: none; font-size: 1em; background: none;cursor:pointer" type="submit"> <i style="color: red; font-size: 1.1em"class="bx bx-exit"></i></button></form></a>
-    </div>
-  </li>
-</ul>
-  </div>
-            <div>
-                @if(session('msg'))
-                    <p class="msg" id="msg">{{session('msg')}}</p>
-                @endif
-                @if(session('msg2'))
-                    <p class="msg2" id="msg2">{{session('msg2')}}</p>
-                @endif
-                @if(session('msg3'))
-                    <p class="msg3" id="msg3">{{session('msg3')}}</p>
-                @endif
+            <div class="nav__user-dropdown" id="userDropdown">
+                <div class="nav__user-dropdown-header">
+                    <strong>{{ auth()->user()->pessoa->nome }}</strong>
+                    <span>{{ auth()->user()->matricula }}</span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <div class="nav__user-roles">
+                    <span class="nav__user-roles-label">Permissão Atual</span>
+                    <span class="nav__user-role-badge nav__user-role-badge--active">Admin</span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <div class="nav__user-roles">
+                    <span class="nav__user-roles-label">Permissões Disponíveis</span>
+                    @if (auth()->user()->permissao_id == 1)
+                        <span class="nav__user-role-badge">
+                            <a href="/super-master"> Supermaster </a>
+                        </span>
+                    @endif
+                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 )
+                        <span class="nav__user-role-badge">
+                            <a href="/master">Master</a>
+                        </span>
+                    @endif
+                    <span class="nav__user-role-badge">
+                        <a href="/comum">Comum</a>
+                    </span>
+                </div>
+                <div class="nav__user-dropdown-divider"></div>
+                <form action="/logout" method="POST">
+                    @csrf
+                    <button class="nav__user-dropdown-item nav__user-logout">
+                        <i class='bx bx-log-out'></i> Sair
+                    </button>
+                </form>
             </div>
-  <section class="home-section" >
-    <div class="home-content" >
+        </div>
 
-      <i class='bx bx-menu' ></i>
-      @yield('content')
+        {{-- Bottom Sheet (mobile) --}}
+        <div class="bottom-sheet-overlay" id="bottomSheetOverlay"></div>
+        <div class="bottom-sheet" id="bottomSheet">
+            <div class="bottom-sheet-handle"></div>
+            <div class="bottom-sheet-header">
+                <div class="nav__user-avatar nav__user-avatar--lg">
+                    <i class='bx bx-user'></i>
+                </div>
+                <div>
+                    <strong>{{ auth()->user()->pessoa->nome }}</strong>
+                    <span>{{ auth()->user()->matricula }}</span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <div class="bottom-sheet-section">
+                <span class="bottom-sheet-label">Permissão Atual</span>
+                <div class="bottom-sheet-roles">
+                    <span class="nav__user-role-badge">
+                        Admin
+                    </span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <div class="bottom-sheet-section">
+                <span class="bottom-sheet-label">Permissões Disponíveis</span>
+                <div class="bottom-sheet-roles">
+                    @if (auth()->user()->permissao_id == 1)
+                        <span class="nav__user-role-badge">
+                            <a href="/super-master"> Supermaster </a>
+                        </span>
+                    @endif
+                    @if (auth()->user()->permissao_id == 1 || auth()->user()->permissao_id == 2 )
+                        <span class="nav__user-role-badge">
+                            <a href="/master">Master</a>
+                        </span>
+                    @endif
+                    <span class="nav__user-role-badge">
+                        <a href="/comum">Comum</a>
+                    </span>
+                </div>
+            </div>
+            <div class="bottom-sheet-divider"></div>
+            <form action="/logout" method="POST">
+                @csrf
+                <button class="bottom-sheet-logout">
+                    <i class='bx bx-log-out'></i>
+                    Sair
+                </button>
+            </form>
+        </div>
 
-  </section>
-  <script
-  src="https://code.jquery.com/jquery-3.6.0.js"
-  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
-  crossorigin="anonymous">
-  </script>
+{{--        <img src="assets/img/perfil.png" alt="" class="nav__img">--}}
+    </nav>
+</header>
 
-  <script src="/js/layoutMain.js"></script>
+<main>
+    <section class="container section section__height" id="home">
+        @yield('content')
+    </section>
+</main>
 
-  <script>
-@if(session('msg') || session('msg2') || session('msg3'))
-  function hideMsg() {
-    let msg = document.getElementById("msg");
-    msg.style = "display:none";
-  }
+<script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous">
+</script>
 
-  function hideMsg2() {
-    let msg2 = document.getElementById("msg2");
-    msg2.style = "display:none";
-  }
+@stack('scripts-cadastro')
+@stack('pre-cadastro.script')
+@stack('pessoas-filtro.admin.script')
+@stack('preRegister.admin.js')
+@stack('aniversariantes.admin.js')
+@stack('chamadas.admin.script')
+@stack('scripts-relatorio-presenca')
 
-  function hideMsg3() {
-    let msg3 = document.getElementById("msg3");
-    msg3.style = "display:none";
-  }
-    setTimeout(hideMsg3, 20000);
+<script>
+    const userBtn = document.getElementById('userDropdownBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    const bottomSheet = document.getElementById('bottomSheet');
+    const overlay = document.getElementById('bottomSheetOverlay');
 
-  setTimeout(hideMsg, 2000);
-  setTimeout(hideMsg2, 3000);
+    const isMobile = () => window.innerWidth < 767;
 
-      @endif
-  </script>
-  @stack('scripts-relatorio-presenca')
-  @stack('scripts-cadastro')
-  @stack('script-edit-pessoa')
+    function openBottomSheet() {
+        overlay.style.display = 'block';
+        requestAnimationFrame(() => {
+            bottomSheet.classList.add('open');
+            overlay.classList.add('open');
+        });
+        document.body.style.overflow = 'hidden';
+    }
 
+    function closeBottomSheet() {
+        bottomSheet.classList.remove('open');
+        overlay.classList.remove('open');
+        setTimeout(() => overlay.style.display = 'none', 300);
+        if (!document.querySelector('.modal-overlay.active')) {
+            document.body.style.overflow = '';
+        }
+    }
+
+    userBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (isMobile()) {
+            openBottomSheet();
+        } else {
+            userBtn.classList.toggle('open');
+            userDropdown.classList.toggle('open');
+        }
+    });
+
+    overlay.addEventListener('click', closeBottomSheet);
+
+    document.addEventListener('click', () => {
+        if (document.querySelector('.modal-overlay.active')) return;
+
+        userBtn.classList.remove('open');
+        userDropdown.classList.remove('open');
+    });
+
+    // Swipe down para fechar
+    let startY = 0;
+    bottomSheet.addEventListener('touchstart', e => startY = e.touches[0].clientY);
+    bottomSheet.addEventListener('touchend', e => {
+        if (e.changedTouches[0].clientY - startY > 80) closeBottomSheet();
+    });
+</script>
 </body>
 </html>

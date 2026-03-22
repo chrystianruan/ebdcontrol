@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/financeiro_filter.css">
+<link rel="stylesheet" href="{{ cacheBust('css/financeiro_filter.css') }}">
 <div  style="margin: 15px">
 <form action="/admin/financeiro/filtro" method="POST">
     @csrf

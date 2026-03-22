@@ -63,4 +63,20 @@ class Pessoa extends Model
         return null;
     }
 
+    public function getFormattedPhoneNumber()
+    {
+        $tel = preg_replace('/\D/', '', $this->telefone);
+
+        if (strlen($tel) === 11) {
+            return sprintf(
+                '(%s) %s-%s',
+                substr($tel, 0, 2),
+                substr($tel, 2, 5),
+                substr($tel, 7, 4)
+            );
+        }
+
+        return $this->telefone;
+    }
+
 }

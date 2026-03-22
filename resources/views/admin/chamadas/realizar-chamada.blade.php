@@ -4,8 +4,8 @@
 
 @section('content')
 
-    <link rel="stylesheet" href="/css/chamada.css">
-    <link rel="stylesheet" href="/css/filtros.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/chamada.css') }}">
+    <link rel="stylesheet" href="{{ cacheBust('css/filtros.css') }}">
     @if(date('w') == 0 || date('Y-m-d') == $dateChamadaDia)
         <input type="hidden" id="buscar-pessoas" value="{{ url('/api/pessoas_sala') }}">
         <div style="margin: 20px">
@@ -115,6 +115,6 @@
     @endif
     <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-    <script src="/js/chamada.js"></script>
-    <script src="/js/chamadaAdmin.js"></script>
+    <script src="{{ cacheBust('js/chamada.js') }}"></script>
+    <script src="{{ cacheBust('js/chamadaAdmin.js') }}"></script>
 @endsection

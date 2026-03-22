@@ -56,4 +56,3 @@ $('#btn-store').click(function () {
         }
     })
 })
-

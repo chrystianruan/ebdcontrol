@@ -54,16 +54,16 @@ class PresencaPessoaController extends Controller
     }
 
     public function getPresencasOfClasse(Request $request) : ?string {
-        if (Sala::findOrFail((int) base64_decode($request->classeId))->congregacao_id != auth()->user()->congregacao_id) {
+        if (Sala::findOrFail(decryptIdToInt($request->classeId))->congregacao_id != auth()->user()->congregacao_id) {
             return response()->json(['error' => "Não autorizado"], 403);
         }
         if ((int) auth()->user()->permissao_id == 4) {
-            if ((int) auth()->user()->sala_id != (int) base64_decode($request->classeId)) {
+            if ((int) auth()->user()->sala_id != decryptIdToInt($request->classeId)) {
                 return response()->json(['error' => "Não autorizado"], 403);
             }
         }
         $presencaPessoaDTO = new PresencaPessoaDTO();
-        $presencaPessoaDTO->setSalaId((int) base64_decode($request->classeId));
+        $presencaPessoaDTO->setSalaId(decryptIdToInt($request->classeId));
         $presencaPessoaDTO->setDataInicio($request->initialDate);
         $presencaPessoaDTO->setDataFim($request->finalDate);
         $presencaPessoaDTO->setOrderBy([

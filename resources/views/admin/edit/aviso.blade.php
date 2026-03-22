@@ -4,8 +4,8 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/cadastroAviso.css">
-         
+<link rel="stylesheet" href="{{ cacheBust('css/cadastroAviso.css') }}">
+
 <div class="container" >
         <header>Edição de aviso - {{date('d/m/Y')}}</header>
         <form action="/admin/update/aviso/{{$aviso -> id}}" method="POST" style="min-height: 500px">
@@ -23,29 +23,29 @@
             @endif
                 <div class="details personal">
                     <span class="title">Informações</span>
-                    
+
                     <div class="fields">
 
                         <div class="input-field" >
                             <label>Título<font style="color:red;font-weight: bold">*</font></label>
                             <input type="text" name="titulo" placeholder="Digite o título do aviso" required value="{{$aviso -> titulo}}">
                         </div>
-                                    
+
                         <div class="input-field" >
-                        
+
                             <label>Descrição <font style="color:red;font-weight: bold">*</font></label>
                             <textarea  name="descricao"  style="resize: none;height: auto!important" rows=7 required> {{$aviso -> descricao}}</textarea>
-                          
+
                             </div>
 
 
-                            <div style="display: flex; flex-wrap; wrap; justify-content: space-around "> 
+                            <div style="display: flex; flex-wrap; wrap; justify-content: space-around ">
                             <div class="input-field" style="width: 200px;margin: 5px">
                                 <label>Data de Post<font style="color:red;font-weight: bold">*</font></label>
                                 <input type="date" name="data_post"  required value="{{date('Y-m-d', strtotime($aviso -> data_post))}}">
                             </div>
 
-                        
+
                         <div class="input-field" style="width: 150px; margin: 5px">
                             <label>Destinatário <font style="color:red;font-weight: bold">*</font> </label>
                             <select name="destinatario" required>
@@ -91,10 +91,10 @@
                                         @endif
                                     @endif
                                 @endforeach
-                                
+
                                 @endif
 
-                                   
+
                             </select>
                         </div>
 
@@ -108,16 +108,16 @@
                             </select>
                         </div>
                     </div>
-                        
+
                         <button type="submit" class="sumbit">
                             <span class="btnText">Enviar</span>
                             <i class="uil uil-navigator"></i>
                         </button>
 
 
-            
-                </div> 
-            
+
+                </div>
+
 
 
         </form>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Chamada - PDF</title>
+    <title>Chamada - {{ $chamada->sala->nome }} | {{ date('d/m/Y', strtotime($chamada->created_at)) }}</title>
 </head>
 <style>
 
@@ -13,13 +13,19 @@
         margin-bottom: 3%;
         position: relative;
     }
+    /* ===== Cabecalho ===== */
+    .header-table { width: 100%; border: none;}
+    .header-table td { border: none; vertical-align: middle; padding: 0; }
+    .header-table .logo-cell { width: 70px; text-align: center; }
+    .header-table .title-cell { text-align: center; }
+    .header-table .title-cell h3 { font-size: 14px; margin: 0; }
+    .header-table .title-cell span { font-size: 11px; font-weight: normal; }
     .center {
         text-align: center;
         font-size: 12px;
-
     }
     .center-item {
-        margin-left: 5%;
+        margin-left: 2%;
         float: left;
     }
 
@@ -36,7 +42,7 @@
 
 
     .infos {
-        margin: 15% 0;
+        margin: 5% 0;
         border: 1px solid black;
         padding: 5px 12px;
         font-size: 11px;
@@ -67,7 +73,7 @@
     th {
         border-bottom: 1px solid black;
         padding: 5px;
-        background-color: #ccc:
+        background-color: #ccc;
     }
 
 
@@ -88,31 +94,31 @@
         font-weight: bolder;
     }
 
-    #presentes {
-        color: @if(100 * $chamada->presentes / $chamada->matriculados <= 50) red
-        @elseif(100 * $chamada->presentes / $chamada->matriculados > 50 && 100 * $chamada->presentes / $chamada->matriculados <= 75) orange
-        @elseif(100 * $chamada->presentes / $chamada->matriculados > 75 && 100 * $chamada->presentes / $chamada->matriculados <= 100) green
-        @else blue @endif
-    }
+    @php
+        $assistTotalCss = $chamada->presentes + $chamada->visitantes;
+        $percPresCss = $chamada->matriculados > 0 ? round(100 * $chamada->presentes / $chamada->matriculados, 1) : 0;
+        $percBibCss = $assistTotalCss > 0 ? round(100 * $chamada->biblias / $assistTotalCss, 1) : 0;
+        $percRevCss = $assistTotalCss > 0 ? round(100 * $chamada->revistas / $assistTotalCss, 1) : 0;
+    @endphp
 
-    #assist_total {
-        color: @if(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 50) red
-        @elseif(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados > 50 && 100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 75) orange
-        @elseif(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados > 75 && 100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados <= 100) green
+    #presentes {
+        color: @if($percPresCss <= 50) red
+        @elseif($percPresCss <= 75) orange
+        @elseif($percPresCss <= 100) green
         @else blue @endif
     }
 
     #biblias {
-        color: @if(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 50) red
-        @elseif(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes > 50 && 100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 75) orange
-        @elseif(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes > 75 && 100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes <= 100) green
+        color: @if($percBibCss <= 50) red
+        @elseif($percBibCss <= 75) orange
+        @elseif($percBibCss <= 100) green
         @else blue @endif
     }
 
     #revistas {
-        color: @if(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 50) red
-        @elseif(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes > 50 && 100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 75) orange
-        @elseif(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes > 75 && 100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes <= 100) green
+        color: @if($percRevCss <= 50) red
+        @elseif($percRevCss <= 75) orange
+        @elseif($percRevCss <= 100) green
         @else blue @endif
     }
 
@@ -120,7 +126,7 @@
         padding: 1px 3px;
         border-radius: 3px;
         border: 1px solid black;
-        background-color: none;
+        background-color: transparent;
         font-weight: bolder
     }
 
@@ -129,25 +135,56 @@
         border: 1px solid;
         border-radius: 15px;
         padding: 0px 2px;
-
     }
 
     .normal-table {
         width: 100%;
-
         border-collapse: collapse;
-
     }
+
+    .footer-fixed {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 5px 0;
+        font-size: 12px;
+        color: #64748b;
+        border-top: 1px solid #e2e8f0;
+        background-color: #fff;
+        text-align: left;
+    }
+    .span-emphasis { font-weight: 700; font-style: italic; color: #334155; }
+    body { padding-bottom: 40px; }
 
 </style>
 <body>
-<div class="container">
-    <div class="center">
-        <img src="img/logo-nova-adpar.jpg" class="center-item" width="100">
-        <h3 class="center-item" >Igreja Evangélica Assembleia de Deus em Parnamirim/RN <br> <span style="font-size: 12px; font-weight: lighter">Departamento de Escola Bíblica Dominical </span></h3>
-        <img class="center-item" src="img/logo_ebd.jpg" width="70">
+<div class="footer-fixed">
+    Documento gerado automaticamente em <span class="span-emphasis">{{ date('d/m/Y') }}</span> as <span class="span-emphasis">{{ date('H:i:s') }}</span>, pelo sistema de administração <span class="span-emphasis">EBDControl</span>
+</div>
 
-    </div>
+<div class="container">
+
+    <table class="header-table">
+        <tr>
+            <td class="logo-cell">
+                <img src="img/logo-nova-adpar.jpg" width="80" alt="Logo">
+            </td>
+            <td class="logo-cell">
+                <img src="img/logo_denec_full.jpg" width="75" alt="Logo">
+            </td>
+            <td class="title-cell">
+                <h3>Igreja Evangélica Assembleia de Deus em Parnamirim/RN</h3>
+                <span>Departamento de Ensino e Educação Cristã (DENEC)</span>
+            </td>
+            <td class="logo-cell">
+
+            </td>
+            <td class="logo-cell">
+                <img src="img/logo_ebd.jpg" width="55" alt="Logo EBD">
+            </td>
+        </tr>
+    </table>
 
     <div class="infos">
         <p>Frequência da classe: <span style="font-weight: bolder">{{ $chamada->nome }}</span>
@@ -160,20 +197,25 @@
                 <th>Matriculados</th>
                 <th>Presentes</th>
                 <th>Visitantes</th>
-                <th>Assistência total</th>
+                <th>Assist. Total</th>
                 <th>Bíblias</th>
                 <th>Revistas</th>
             </tr>
             </thead>
             <tbody>
+            @php
+                $assistTotal = $chamada->presentes + $chamada->visitantes;
+                $percPresentes = $chamada->matriculados > 0 ? round(100 * $chamada->presentes / $chamada->matriculados, 1) : 0;
+                $percBiblias = $assistTotal > 0 ? round(100 * $chamada->biblias / $assistTotal, 1) : 0;
+                $percRevistas = $assistTotal > 0 ? round(100 * $chamada->revistas / $assistTotal, 1) : 0;
+            @endphp
             <tr>
-                <td style="text-align: center"><span class="result">{{ $chamada->matriculados }}</span> </td>
-                <td style="text-align: center"><span class="result">{{ $chamada->presentes }}</span> <span class="color" id="presentes">({{  number_format(100 * $chamada->presentes / $chamada->matriculados, 1, ',', '.') }}%)</span> </td>
+                <td style="text-align: center"><span class="result">{{ $chamada->matriculados }}</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->presentes }}</span> <span class="color" id="presentes">({{ number_format($percPresentes, 1, ',', '.') }}%)</span></td>
                 <td style="text-align: center"><span class="result">{{ $chamada->visitantes }}</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->presentes+$chamada->visitantes }}</span> <span class="color" id="assist_total">({{  number_format(100 * $chamada->presentes+$chamada->visitantes / $chamada->matriculados, 1, ',', '.') }}%)</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{  number_format(100 * $chamada->biblias / $chamada->presentes+$chamada->visitantes, 1, ',', '.') }}%)</span></td>
-                <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format(100 * $chamada->revistas / $chamada->presentes+$chamada->visitantes, 1, ',', '.') }}%)</span></td>
-
+                <td style="text-align: center"><span class="result">{{ $assistTotal }}</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->biblias }}</span> <span class="color" id="biblias">({{ number_format($percBiblias, 1, ',', '.') }}%)</span></td>
+                <td style="text-align: center"><span class="result">{{ $chamada->revistas }}</span> <span class="color" id="revistas">({{ number_format($percRevistas, 1, ',', '.') }}%)</span></td>
             </tr>
             </tbody>
         </table>
@@ -181,7 +223,6 @@
             <span class="caption" style="background-color: red;color:red  ">F</span> = Ruim/Péssimo |
             <span class="caption" style="background-color: orange; color:orange ">F</span> = Médio |
             <span class="caption" style="background-color: green;color:green ">F</span> = Bom |
-            <span class="caption" style="background-color: blue;color:blue ">F</span> = Muito Bom/Excelente
         </div>
 
 
@@ -207,7 +248,7 @@
                     <td>{{ $p->pessoa->nome }}</td>
                     <td>{{ date('d/m', strtotime($p->pessoa->data_nasc)) }}</td>
                     <td>{{ $p->funcao->nome }}</td>
-                    <td> @if($p->presente == 1) <span style="color: rgb(12, 223, 12)" class="bx bx-check">Sim</span> @else <span style="color: red" class="bx bx-x">Não</i> @endif</td>
+                    <td> @if($p->presente == 1) <span style="color: rgb(12, 223, 12)">Sim</span> @else <span style="color: red">Não</span> @endif</td>
                 </tr>
             @endforeach
 
@@ -217,10 +258,6 @@
 
 
 </div>
-
-
-
-<p class="small">Documento gerado automaticamente em <span class="span-emphasis">{{date('d/m/Y')}}</span> às <span class="span-emphasis">{{date('H:i:s')}}</span>, pelo sistema de administração <span class="span-emphasis">EBDControl</span></p>
 
 </body>
 </html>

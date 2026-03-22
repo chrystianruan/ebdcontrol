@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Enums\ViewEnum;
 use App\Http\Repositories\PessoaRepository;
 use App\Http\Repositories\SalaRepository;
 use App\Http\Requests\StorePessoaRequest;
@@ -151,13 +152,14 @@ class PreCadastroController extends Controller
         if ($request->nome) {
             $pessoas = $pessoas->where([['nome', 'like', '%' . $request->nome . '%']]);
         }
-        $pessoas = $pessoas->get();
+        $pessoas = $pessoas->paginate(10)->withQueryString();
         $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
 
         $nome = $request->nome;
         $classe = $request->classe;
+        $blade = ViewEnum::PESSOAS->value;
 
-        return view('/admin/filtro/pre-cadastro', compact(['pessoas', 'salas', 'nome', 'classe']));
+        return view('/admin/filtro/pre-cadastro', compact(['pessoas', 'salas', 'nome', 'classe', 'blade']));
     }
 
     public function approve(int $id) : ?RedirectResponse {

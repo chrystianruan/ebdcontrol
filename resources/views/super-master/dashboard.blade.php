@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/supermaster.css">
+<link rel="stylesheet" href="{{ cacheBust('css/supermaster.css') }}">
 
 <input type="hidden" value="{{ url('/api/congregacoes') }}" id="route-congregacoes-api">
 <div class="div-btn-modal" id="div-btn-modal">
@@ -112,5 +112,5 @@
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-<script src="/js/super-master.js"></script>
+<script src="{{ cacheBust('js/super-master.js') }}"></script>
 @endsection

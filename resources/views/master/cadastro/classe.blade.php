@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/cadastroAviso.css">
+<link rel="stylesheet" href="{{ cacheBust('css/cadastroAviso.css') }}">
 
 <div class="container" style="width:60%;">
         <header>Cadastro de sala - {{$dataAtual}}</header>

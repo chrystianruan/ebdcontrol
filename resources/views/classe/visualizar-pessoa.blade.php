@@ -3,7 +3,7 @@
 @section('title', 'Início')
 
 @section('content')
-<link rel="stylesheet" href="/css/saber.css">
+<link rel="stylesheet" href="{{ cacheBust('css/saber.css') }}">
 <style>
     .marker {
         font-weight: bolder;

@@ -4,7 +4,7 @@
 
 @section('content')
 
-    <link rel="stylesheet" href="/css/cadastroAviso.css">
+    <link rel="stylesheet" href="{{ cacheBust('css/cadastroAviso.css') }}">
     <div class="container" >
         <header>Edição de Usuário - {{date('d/m/Y')}}</header>
         <form action="/super-master/update/user/{{ $user->id }}" method="POST" style=" min-height: 240px">

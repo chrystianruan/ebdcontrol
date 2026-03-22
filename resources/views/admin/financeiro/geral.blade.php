@@ -4,7 +4,7 @@
 
 @section('content')
 
-<link rel="stylesheet" href="/css/financeiro.css">
+<link rel="stylesheet" href="{{ cacheBust('css/financeiro.css') }}">
 <div class="divPositions">
 
 <div class="positions">
