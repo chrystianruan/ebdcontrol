@@ -30,7 +30,7 @@
         {{-- HEADER --}}
         <h1 class="forgot-title">Esqueceu a senha?</h1>
         <p class="forgot-desc">
-            Sem problemas! Entre em contato conosco por um dos canais abaixo e iremos te ajudar a recuperar o acesso.
+            Sem problemas! Entre em contato com o administrador da congregação ou conosco por um dos canais abaixo e iremos te ajudar a recuperar o acesso.
         </p>
 
         {{-- CONTATOS --}}
