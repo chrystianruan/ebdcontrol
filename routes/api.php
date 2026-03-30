@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\api\controllers\OrdersRestController;
 use App\Http\api\controllers\PreCadastroRestController;
 use App\Http\api\controllers\StatesRestController;
 use App\Http\api\controllers\EducationRestController;
@@ -52,4 +53,6 @@ Route::get('/publicos/{id}', [PublicoRestController::class, 'show']);
 
 // Rotas de Chamadas
 Route::get('/chamada/{id}', [ChamadaRestController::class, 'show']);
+
+Route::apiResource('orders',OrdersRestController::class);
 
