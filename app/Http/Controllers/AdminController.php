@@ -9,6 +9,7 @@ use App\Http\Repositories\PessoaRepository;
 use App\Http\Services\ChamadaService;
 use App\Models\Congregacao;
 use App\Models\PreCadastro;
+use App\Models\PresencaPessoa;
 use Illuminate\Http\Request;
 use App\Models\Formation;
 use App\Models\Pessoa;
@@ -128,46 +129,46 @@ class AdminController extends Controller
     }
 
     public function showFilterPessoa(Request $request) {
-        $nome = request('nome');
-        $sexo = request('sexo');
-        $paternidade_maternidade = request('paternidade_maternidade');
-        $sala1 = request('sala');
-        $interesse = request('interesse');
-        $id_funcao = request('id_funcao');
-        $situacao = request('situacao');
-        $niver = request('niver');
+        $nome = request('filter-nome');
+        $sexo = empty($nome) ? request('filter-sexo') : null;
+        $paternidade_maternidade = empty($nome) ? request('filter-paternidade_maternidade') : null;
+        $sala1 = empty($nome) ? request('filter-sala') : null;
+        $interesse = empty($nome) ? request('filter-interesse') : null;
+        $id_funcao = empty($nome) ? request('filter-id_funcao') : null;
+        $situacao = empty($nome) ? request('filter-situacao') : null;
+        $niver = empty($nome) ? request('niver') : null;
 
         $pessoas = Pessoa::select('pessoas.*')->join('pessoa_salas', 'pessoas.id', '=', 'pessoa_salas.pessoa_id');
-        if ($request->nome) {
-            $pessoas = $pessoas->where([['nome', 'like', '%'.$request->nome.'%']]);
+        if ($nome) {
+            $pessoas = $pessoas->where([['nome', 'like', '%'.$nome.'%']]);
         }
 
-        if ($request->sexo) {
-            $pessoas = $pessoas->where('sexo', $request->sexo);
+        if ($sexo) {
+            $pessoas = $pessoas->where('sexo', $sexo);
         }
 
-        if ($request->paternidade_maternidade) {
-            $pessoas = $pessoas->where('paternidade_maternidade', $request->paternidade_maternidade);
+        if ($paternidade_maternidade) {
+            $pessoas = $pessoas->where('paternidade_maternidade', $paternidade_maternidade);
         }
 
-        if ($request->sala) {
-            $pessoas = $pessoas->where('pessoa_salas.sala_id', $request->sala);
+        if ($sala1) {
+            $pessoas = $pessoas->where('pessoa_salas.sala_id', $sala1);
         }
 
-        if($request->id_funcao) {
-            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $request->id_funcao);
+        if($id_funcao) {
+            $pessoas = $pessoas->where('pessoa_salas.funcao_id', $id_funcao);
         }
 
-        if($request->interesse) {
-            $pessoas = $pessoas->where('interesse', $request->interesse);
+        if($interesse) {
+            $pessoas = $pessoas->where('interesse', $interesse);
         }
 
-        if ($request->situacao) {
-            $pessoas = $pessoas->where('situacao', $request->situacao);
+        if ($situacao) {
+            $pessoas = $pessoas->where('situacao', $situacao);
         }
 
-        if ($request->niver) {
-            $pessoas = $pessoas->whereMonth('data_nasc', $request->niver);
+        if ($niver) {
+            $pessoas = $pessoas->whereMonth('data_nasc', $niver);
         }
 
         $pessoas = $pessoas->where('congregacao_id', '=', auth()->user()->congregacao_id)
@@ -193,6 +194,8 @@ class AdminController extends Controller
         $classes = Sala::where('id', '>', 2)
             ->where('congregacao_id', '=', auth()->user()->congregacao_id)
             ->orderBy('nome')->get();
+        $preRegisters = PreCadastro::where('congregacao', auth()->user()->congregacao_id)->count();
+        $birthdays = $this->pessoaRepository->getAniversariantesMes()->count();
         return view('/admin/filtro/pessoa',
             [
                 'pessoas' => $pessoas,
@@ -215,6 +218,8 @@ class AdminController extends Controller
                 'id_funcao' => $id_funcao,
                 'situacao' => $situacao,
                 'paternidade_maternidade' => $paternidade_maternidade,
+                'preRegisters' => $preRegisters,
+                'birthdays' => $birthdays
             ]
         );
     }
@@ -706,46 +711,73 @@ class AdminController extends Controller
             ->get();
         $meses_abv = [1 => 'Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 
-        if ($request->classe || $request->mes || $request->ano) {
+        if ($request->mes && $request->ano) {
 
-        $chamadas = Chamada::where('congregacao_id', '=', auth()->user()->congregacao_id);
+            $chamadas = Chamada::where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->whereMonth('created_at', '=', $request->mes)
+                ->whereYear('created_at', '=', $request->ano);
 
-        if(isset($request -> classe)) {
-            $chamadas = $chamadas->where('id_sala', '=', $request -> classe);
+            if(isset($request->classe)) {
+                $chamadas = $chamadas->where('id_sala', '=', $request->classe);
+            }
 
-        }
-        if(isset($request -> mes))  {
-            $chamadas = $chamadas->whereMonth('created_at', '=', $request -> mes);
-
-        }
-
-        if(isset($request -> ano))  {
-            $chamadas = $chamadas->whereYear('created_at', '=', $request -> ano);
-
-        }
-
-        $chamadas = $chamadas->orderBy('created_at', 'DESC')->paginate(10)->withQueryString();;
+            $chamadas = $chamadas->orderBy('created_at', 'DESC')->get();
 
         } else {
-            $chamadas = Chamada::whereDate('created_at', Carbon::today())
-            ->where('congregacao_id', '=', auth()->user()->congregacao_id)
-            ->orderBy('created_at', 'DESC')
-            ->paginate(10)->withQueryString();;
+            $classe = null;
+            $mes = null;
+            $ano = null;
 
+            $chamadas = Chamada::whereDate('created_at', Carbon::today())
+                ->where('congregacao_id', '=', auth()->user()->congregacao_id)
+                ->orderBy('created_at', 'DESC')
+                ->get();
         }
+        $groupedChamadas = $this->groupByDate($chamadas);
+
+        // Dados para o modal de realizar chamada
+        $dateChamadaDia = null;
+        $chamadaDiaCongregacaoRepository = app(\App\Http\Repositories\ChamadaDiaCongregacaoRepository::class);
+        $chamadaDiaBD = $chamadaDiaCongregacaoRepository->findChamadaDiaToday(auth()->user()->congregacao_id, date('Y-m-d'));
+        if ($chamadaDiaBD) {
+            $dateChamadaDia = $chamadaDiaBD->date;
+        }
+
+        $chamadasHoje = Chamada::where('congregacao_id', auth()->user()->congregacao_id)
+            ->whereDate('created_at', Carbon::today())
+            ->where('chamada_padrao', true)
+            ->get();
+        $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadasHoje);
+
+        $isDiaChamada = (date('w') == 0 || date('Y-m-d') == $dateChamadaDia);
 
         return view('/admin/chamadas',
             [
-                'chamadas' => $chamadas,
+                'chamadas' => $groupedChamadas,
                 'salas' => $salas,
                 'meses_abv' => $meses_abv,
                 'classe' => $classe,
                 'mes' => $mes,
                 'ano' => $ano,
-                'blade' => ViewEnum::CHAMADAS->value
+                'blade' => ViewEnum::CHAMADAS->value,
+                'classesFaltantes' => $classesFaltantes,
+                'isDiaChamada' => $isDiaChamada,
+                'dateChamadaDia' => $dateChamadaDia,
             ]
         );
 
+    }
+
+    private function groupByDate($chamadas) {
+        $grouped = [];
+        foreach ($chamadas as $chamada) {
+            $date = Carbon::parse($chamada->created_at)->format('d-m-Y');
+            if (!isset($grouped[$date])) {
+                $grouped[$date] = [];
+            }
+            $grouped[$date][] = $chamada;
+        }
+        return $grouped;
     }
 
     public function indexRelatorioToday() {
@@ -859,8 +891,19 @@ class AdminController extends Controller
         'funcoes' => $funcoes, 'function' => $function]);
     }
 
-    public function sobre() {
-        return view('/admin/sobre');
+    public function about() {
+
+        $stats = [
+            'pessoas'  => Pessoa::all()->count(),
+            'chamadas' => Chamada::all()->count(),
+            'classes'  => Sala::where('id', '>', 2)->count(),
+            'presencas' => PresencaPessoa::all()->count()
+        ];
+
+        return view('/admin/about', [
+            'blade' => ViewEnum::ABOUT->value,
+            'stats' => $stats,
+        ]);
     }
 
 }

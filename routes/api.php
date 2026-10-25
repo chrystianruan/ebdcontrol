@@ -9,6 +9,7 @@ use App\Http\api\controllers\ApiController;
 use App\Http\api\controllers\SalaRestController;
 use App\Http\api\controllers\FuncaoRestController;
 use App\Http\api\controllers\PessoaRestController;
+use App\Http\api\controllers\ChamadaRestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,4 +49,7 @@ Route::get('/formacoes/{id}', [EducationRestController::class, 'show']);
 // Rotas de Públicos
 Route::get('/publicos', [PublicoRestController::class, 'index']);
 Route::get('/publicos/{id}', [PublicoRestController::class, 'show']);
+
+// Rotas de Chamadas
+Route::get('/chamada/{id}', [ChamadaRestController::class, 'show']);
 

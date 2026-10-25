@@ -50,7 +50,7 @@ class ChamadaAdminController extends Controller
         $salas = $this->salaRepository->findSalasByCongregacaoId(auth()->user()->congregacao_id);
 
         return Pdf::loadView('/admin/visualizar/pdf-chamada', compact(['chamada', 'presencas', 'salas']))
-            ->stream('frequencia-finalizada.pdf');
+            ->download('chamada'.'-'.$this->formatSala($chamada->sala->nome).'_'.date('d-m-Y', strtotime($chamada->created_at)).'.pdf');
     }
 
     public function indexRealizarChamadas() :? View {
@@ -67,5 +67,9 @@ class ChamadaAdminController extends Controller
         $classesFaltantes = $this->chamadaService->classesNotSendChamada($salas, $chamadas);
 
         return view('admin.chamadas.realizar-chamada', compact('dateChamadaDia', 'classesFaltantes'));
+    }
+
+    private function formatSala($nomeSala) : string {
+        return strtolower(str_replace(' ', '_',$nomeSala));
     }
 }

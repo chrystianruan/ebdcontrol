@@ -34,7 +34,6 @@ body:has(.modal-overlay.active) {
     display: flex;
     flex-direction: column;
     max-height: 90vh;
-
     transform: translateY(20px) scale(0.98);
     transition: all 0.3s ease;
 }
@@ -209,6 +208,9 @@ body:has(.modal-overlay.active) {
     .form-row {
         grid-template-columns: 1fr;
         gap: 12px;
+    }
+    .padding-minor {
+        padding: 0 !important;
     }
 }
 

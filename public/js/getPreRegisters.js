@@ -51,7 +51,6 @@ function getPreRegisterList(page = 1) {
             'Accept': 'application/json',
         },
         success: function(response) {
-            console.log('Pessoas:', response);
             renderList(response);
         },
         error: function(xhr, status, error) {
@@ -262,6 +261,7 @@ function batchApprove() {
         success: function(response) {
             getPreRegisterList();
             alert(response.message || `${ids.length} pré-cadastro(s) aprovado(s) com sucesso!`);
+            window.location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Erro ao aprovar em lote:', error);
@@ -292,6 +292,7 @@ function batchDelete() {
         success: function(response) {
             getPreRegisterList();
             alert(response.message || `${ids.length} pré-cadastro(s) excluído(s) com sucesso!`);
+            window.location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Erro ao excluir em lote:', error);

@@ -41,12 +41,12 @@ class UpdatePessoaRequest extends FormRequest
             'id_formation' => ['required', 'integer', 'min: 1', 'max:'.$formations->count()],
             'list_salas' => ['required'],
             'interesse' => ['required'],
-            'frequencia_ebd' => ['integer', 'min: 1', 'max: 3'],
+            'frequencia_ebd' => ['nullable','integer', 'min: 1', 'max: 3'],
             'situacao' => ['integer', 'min:1', 'max:2'],
-            'curso_teo' => ['integer', 'min: 1', 'max: 2'],
-            'prof_ebd' => ['integer', 'min: 1', 'max: 2'],
-            'prof_comum' => ['integer', 'min: 1', 'max: 2'],
-            'id_public' => ['integer', 'min: 1', 'max:'.$publicos->count()]
+            'curso_teo' => ['nullable', 'integer', 'min: 1', 'max: 2'],
+            'prof_ebd' => ['nullable', 'integer', 'min: 1', 'max: 2'],
+            'prof_comum' => ['nullable', 'integer', 'min: 1', 'max: 2'],
+            'id_public' => ['nullable', 'integer', 'min: 1', 'max:'.$publicos->count()]
         ];
     }
 

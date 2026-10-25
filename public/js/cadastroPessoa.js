@@ -34,84 +34,25 @@ $(document).ready(function() {
 });
 
 
-function savePessoa() {
-    const modal = document.getElementById('modalRegister');
-    const btnSave = modal.querySelector('#btnSaveEdit');
-    const form = document.getElementById('form-store');
-
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
-
-    btnSave.disabled = true;
-    btnSave.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Salvando...';
-
+$('#btn-store').click(function () {
     $.ajax({
         url: $('#url-verify').val(),
         type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
         data: {
             nome: $('#nome').val(),
             congregacao: $('#congregacao').val(),
+            _token: $('meta[name="csrf-token"]').attr('content'),
         }
-    }).done(function(){
-        submitFormPessoa(form, btnSave);
+    }).done(function(data){
+        $('#form-store').submit();
     }).fail(function(jqXHR, textStatus, msg){
         if(jqXHR.status === 403) {
             var check = confirm("[VALIDAÇÃO] Provavelmente está pessoa já está cadastrada no sistema. Tem certeza que deseja cadastrar mesmo assim?")
             if (check) {
-                submitFormPessoa(form, btnSave);
-                return;
+                $('#form-store').submit();
             }
         } else {
-            alert('Erro ao validar cadastro. Tente novamente.');
+            alert(msg)
         }
-        btnSave.disabled = false;
-        btnSave.innerHTML = 'Salvar';
-    });
-}
-
-function submitFormPessoa(form, btnSave) {
-    const formData = new FormData(form);
-
-    $.ajax({
-        url: form.action,
-        type: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function() {
-            alert('Pessoa cadastrada com sucesso!');
-            form.reset();
-            closeModalRegister();
-            location.reload();
-        },
-        error: function(xhr) {
-            if (xhr.status === 422 && xhr.responseJSON && xhr.responseJSON.errors) {
-                var errors = xhr.responseJSON.errors;
-                var errorMessages = [];
-                for (var field in errors) {
-                    errors[field].forEach(function(message) {
-                        errorMessages.push(message);
-                    });
-                }
-                alert('Erros de validação:\n\n' + errorMessages.join('\n'));
-            } else {
-                alert('Erro ao cadastrar pessoa. Tente novamente.');
-            }
-        },
-        complete: function() {
-            btnSave.disabled = false;
-            btnSave.innerHTML = 'Salvar';
-        }
-    });
-}
-
+    })
+})

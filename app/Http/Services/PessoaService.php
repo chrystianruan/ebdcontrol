@@ -176,7 +176,10 @@ class PessoaService
             $user->status = 1;
             $user->save();
 
-            return redirect('/admin/filtro/pessoa')->with('msg', 'Pessoa foi deletada com sucesso');
+            return response()->json([
+                'response' => 'Pessoa deletada com sucesso',
+                'status' => true
+            ]);
         } catch (\Exception $e) {
             Log::info($e->getMessage());
             throw $e;

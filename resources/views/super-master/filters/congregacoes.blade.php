@@ -181,7 +181,6 @@
                         $('#ico-link-cadastro-inative-'+congregacaoId).css('display', 'none');
                         $('#ico-link-cadastro-active-'+congregacaoId).css('display', 'block');
                     } else {
-                        console.log("fechou")
                         $('#ico-link-cadastro-active-'+congregacaoId).css('display', 'none');
                         $('#ico-link-cadastro-inative-'+congregacaoId).css('display', 'block');
                     }

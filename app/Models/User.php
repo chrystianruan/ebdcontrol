@@ -52,6 +52,15 @@ class User extends Authenticatable
         return $this->belongsTo(Pessoa::class);
     }
 
+    public function formattedNome(): string
+    {
+        if ($this->pessoa == null) {
+            return 'Usuário';
+        }
+        $nome = explode(' ', $this->pessoa->nome);
+        return $nome[0] . ' ' . $nome[count($nome) - 1];
+    }
+
     public function permissao(): BelongsTo
     {
         return $this->belongsTo(Permissao::class);

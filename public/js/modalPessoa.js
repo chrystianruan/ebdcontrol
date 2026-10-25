@@ -16,8 +16,10 @@ function openViewPessoaModal(pessoaId) {
         headers: { 'Accept': 'application/json' },
         success: function(pessoa) {
             fillViewPessoa(pessoa);
-            loading.style.display = 'none';
-            content.style.display = 'block';
+            setTimeout(() => {
+                loading.style.display = 'none';
+                content.style.display = 'block';
+            }, 500);
         },
         error: function() {
             loading.innerHTML = `
@@ -171,30 +173,24 @@ function openEditPessoaModal(pessoaId) {
     loading.style.display = 'flex';
     form.style.display = 'none';
 
-    // Carregar selects
-    loadEditPessoaEstados();
-    loadEditPessoaFormacoes();
-    loadEditPessoaPublicos();
-
-    // Buscar dados da pessoa
-    $.ajax({
-        url: `/api/pessoa/${pessoaId}`,
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(pessoa) {
-            fillEditPessoaForm(pessoa);
+    Promise.all([
+        loadEditPessoaEstados(),
+        loadEditPessoaFormacoes(),
+        loadEditPessoaPublicos(),
+        fetchPessoa(pessoaId)
+    ]).then(([, , , pessoa]) => {
+        fillEditPessoaForm(pessoa);
+        setTimeout(() => {
             loading.style.display = 'none';
             form.style.display = 'block';
-        },
-        error: function() {
-            loading.innerHTML = `
-                <div style="text-align:center; color:#ef4444;">
-                    <i class="bx bx-error" style="font-size:2.5rem;"></i>
-                    <p style="margin-top:8px;">Erro ao carregar dados da pessoa</p>
-                </div>
-            `;
-        }
+        }, 300);
+    }).catch(() => {
+        loading.innerHTML = `
+            <div style="text-align:center; color:#ef4444;">
+                <i class="bx bx-error" style="font-size:2.5rem;"></i>
+                <p style="margin-top:8px;">Erro ao carregar dados da pessoa</p>
+            </div>
+        `;
     });
 }
 
@@ -224,61 +220,85 @@ function closeEditPessoaModal() {
 }
 
 // ---- Carregar selects ----
+function fetchPessoa(pessoaId) {
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: `/api/pessoa/${pessoaId}`,
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: resolve,
+            error: reject
+        });
+    });
+}
 
 function loadEditPessoaEstados() {
-    const select = document.getElementById('editPessoaEstado');
-    $.ajax({
-        url: '/api/estados',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled>Selecionar</option>';
-            response.data.forEach(function(estado) {
-                const opt = document.createElement('option');
-                opt.value = estado.id;
-                opt.textContent = estado.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/estados',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaEstado');
+                select.innerHTML = '<option value="" disabled>Selecionar</option>';
+                response.data.forEach(function(estado) {
+                    const opt = document.createElement('option');
+                    opt.value = estado.id;
+                    opt.textContent = estado.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
 function loadEditPessoaFormacoes() {
-    const select = document.getElementById('editPessoaFormacao');
-    $.ajax({
-        url: '/api/formacoes',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled>Selecionar</option>';
-            response.data.forEach(function(f) {
-                const opt = document.createElement('option');
-                opt.value = f.id;
-                opt.textContent = f.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/formacoes',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaFormacao');
+                select.innerHTML = '<option value="" disabled>Selecionar</option>';
+                response.data.forEach(function(f) {
+                    const opt = document.createElement('option');
+                    opt.value = f.id;
+                    opt.textContent = f.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
 function loadEditPessoaPublicos() {
-    const select = document.getElementById('editPessoaPublico');
-    $.ajax({
-        url: '/api/publicos',
-        type: 'GET',
-        dataType: 'json',
-        headers: { 'Accept': 'application/json' },
-        success: function(response) {
-            select.innerHTML = '<option value="" disabled selected>Selecionar</option>';
-            response.data.forEach(function(p) {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.nome;
-                select.appendChild(opt);
-            });
-        }
+    return new Promise((resolve, reject) => {
+        $.ajax({
+            url: '/api/publicos',
+            type: 'GET',
+            dataType: 'json',
+            headers: { 'Accept': 'application/json' },
+            success: function(response) {
+                const select = document.getElementById('editPessoaPublico');
+                select.innerHTML = '<option value="" disabled selected>Selecionar</option>';
+                response.data.forEach(function(p) {
+                    const opt = document.createElement('option');
+                    opt.value = p.id;
+                    opt.textContent = p.nome;
+                    select.appendChild(opt);
+                });
+                resolve();
+            },
+            error: reject
+        });
     });
 }
 
@@ -476,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ---- Listeners mudança de classe/função ----
-$(document).on('change', '.editPessoaSelectClasse', function() {
+$(document).off('change', '.editPessoaSelectClasse').on('change', '.editPessoaSelectClasse', function() {
     const id = $(this).data('id');
     const classe = editPessoaClasses.find(c => c.id == id);
     if (classe) {
@@ -485,7 +505,7 @@ $(document).on('change', '.editPessoaSelectClasse', function() {
     document.getElementById('editPessoaListSalas').value = JSON.stringify(editPessoaClasses);
 });
 
-$(document).on('change', '.editPessoaSelectFuncao', function() {
+$(document).off('change', '.editPessoaSelectFuncao').on('change', '.editPessoaSelectFuncao', function() {
     const id = $(this).data('id');
     const classe = editPessoaClasses.find(c => c.id == id);
     if (classe) {
@@ -621,6 +641,10 @@ function saveEditPessoa() {
 document.addEventListener('click', function(e) {
     if (e.target.id === 'modalViewPessoa') closeViewPessoaModal();
     if (e.target.id === 'modalEditPessoa') closeEditPessoaModal();
+    if (e.target.id === 'modalEditPreCadastro') closeEditPessoaModal();
+    if (e.target.id === 'modalPreRegister') closeEditPessoaModal();
+    if (e.target.id === 'modalBirthday') closeEditPessoaModal();
+    if (e.target.id === 'modalRegister') closeEditPessoaModal();
 });
 
 // Fechar com ESC
@@ -632,3 +656,49 @@ document.addEventListener('keydown', function(e) {
         if (editModal && editModal.classList.contains('active')) closeEditPessoaModal();
     }
 });
+
+function confirmDeletePessoa() {
+    const nome = document.getElementById('editPessoaNome').value;
+    const id = document.getElementById('editPessoaId').value;
+
+    const confirmado = confirm(
+        `⚠️ ATENÇÃO\n\nVocê está prestes a apagar permanentemente:\n"${nome}"\n\nEssa ação não pode ser desfeita. Confirma?`
+    );
+
+    if (!confirmado) return;
+
+    // segundo confirm para garantir
+    const confirmado2 = confirm(`Tem absoluta certeza? "${nome}" será removida definitivamente do sistema.`);
+    if (!confirmado2) return;
+
+    deletePessoa(id);
+}
+
+function deletePessoa(pessoaId) {
+    const modal = document.getElementById('modalEditPessoa');
+    const btnSave = modal.querySelector('#btnSaveEdit');
+    btnSave.disabled = true;
+    btnSave.innerHTML = '<i class="bx bx-loader-alt bx-spin"></i> Salvando...';
+
+    $.ajax({
+        url: `/delete-pessoa/${pessoaId}`,
+        type: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+        },
+        success: function() {
+            closeEditPessoaModal();
+            alert('Pessoa deletada com sucesso!');
+            window.location.reload();
+        },
+        error: function(xhr) {
+            let msg = 'Erro ao deletar a pessoa. Tente novamente.';p
+            alert(msg);
+        },
+        complete: function() {
+            btnSave.disabled = false;
+            btnSave.innerHTML = 'Salvar';
+        }
+    });
+}
